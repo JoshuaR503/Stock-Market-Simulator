@@ -18,31 +18,26 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.dark,
-        child: GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
-          child: Stack(
-            children: <Widget>[
-              
-              Container(
-                height: double.infinity,
-                width: double.infinity,
-                color: Colors.white,
-              ),
-
-              Container(
-                height: double.infinity,
-                child: SingleChildScrollView(
-                  physics: AlwaysScrollableScrollPhysics(),
-                  padding: EdgeInsets.symmetric(horizontal: 40.0,vertical: 120.0),
-                  child: this._buildBody()
-                ),
-              )
-            ],
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Stack(
+        children: <Widget>[
+          
+          Container(
+            height: double.infinity,
+            width: double.infinity,
+            color: Colors.white,
           ),
-        ),
+          
+          Container(
+            height: double.infinity,
+            child: SingleChildScrollView(
+              physics: AlwaysScrollableScrollPhysics(),
+              padding: EdgeInsets.symmetric(horizontal: 40.0,vertical: 120.0),
+              child: this._buildBody()
+            ),
+          )
+        ],
       ),
     );
   }
