@@ -2,15 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 final kHintTextStyle = TextStyle(
-  color: Colors.black,
+  color: Color(0xff7b7b7b),
   fontFamily: 'OpenSans',
   fontWeight: FontWeight.bold
 );
 
-final kLabelStyle = TextStyle(
-  color: Colors.black,
-  fontWeight: FontWeight.bold,
-  fontFamily: 'OpenSans',
+final kBoxDecorationStyle = BoxDecoration(
+  border: Border.all(color: Colors.black, width: 1.5),
 );
 
 void main() => runApp(MyApp());
@@ -23,8 +21,8 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Login UI',
       debugShowCheckedModeBanner: false,
       home: SafeArea(
-        bottom: false,
         top: false,
+        bottom: false,
         child: LoginScreen(),
       )
     );
@@ -38,24 +36,26 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
 
-  BoxDecoration kBoxDecorationStyle = BoxDecoration(
-    color: Color(0xFFfbfdff),
-    borderRadius: BorderRadius.circular(1.0),
-    border: Border.all(color: Colors.black, width: 2.5),
-    
-  );
 
   Widget _buildEmailTF() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(
-          'Introducir credenciales:',
-          style: kLabelStyle,
+        Padding(
+          padding: EdgeInsets.only(bottom: 8),
+          child: Text(
+            'Introducir credenciales:',
+            style: TextStyle(
+              color: Colors.black,
+              wordSpacing: 2,
+              fontSize: 16.5,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'OpenSans',
+            ),
+          ),
         ),
         SizedBox(height: 10.0),
         Container(
-          
           alignment: Alignment.centerLeft,
           decoration: kBoxDecorationStyle,
           height: 60.0,
@@ -65,8 +65,11 @@ class _LoginScreenState extends State<LoginScreen> {
             decoration: InputDecoration(
               border: InputBorder.none,
               contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(  Icons.email  ),
-              hintText: 'Introduzca su correo electrónico',
+              prefixIcon: Icon(
+                Icons.email, 
+                color: Colors.black,  
+              ),
+              hintText: 'Correo electrónico',
               hintStyle: kHintTextStyle,
             ),
           ),
@@ -96,7 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Icons.lock,
                 color: Colors.black,
               ),
-              hintText: 'Introduzca su contraseña',
+              hintText: 'Contraseña',
               hintStyle: kHintTextStyle,
             ),
           ),
@@ -105,38 +108,15 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildForgotPasswordBtn() {
-    return Container(
-      alignment: Alignment.centerRight,
-      child: FlatButton(
-        onPressed: () => print('Forgot Password Button Pressed'),
-        padding: EdgeInsets.only(right: 0.0),
-        child: Text(
-          '¿Ha olvidado su contraseña?',
-          style: kLabelStyle,
-        ),
-      ),
-    );
-  }
-
-
   Widget _buildLoginBtn() {
     return Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.black, width: 2.5),
-        
-      ),
+      decoration: kBoxDecorationStyle,
       width: double.infinity,
-
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          
-          elevation: 2,
+           elevation: 2,
           primary: Colors.white,
           padding: EdgeInsets.all(16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(2.0),
-          ),
         ),
         onPressed: () => print('Login Button Pressed'),
         child: Text(
@@ -144,6 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
           style: TextStyle(
             color: Colors.black,
             fontSize: 18.0,
+            wordSpacing: -2,
             fontWeight: FontWeight.bold,
             fontFamily: 'OpenSans',
           ),
@@ -157,20 +138,13 @@ class _LoginScreenState extends State<LoginScreen> {
     @required String text,
   }) {
     return Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.black, width: 2.5),
-        
-      ),
+      decoration: kBoxDecorationStyle,
       width: double.infinity,
-
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           elevation: 2,
           primary: Colors.white,
           padding: EdgeInsets.all(16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4.0),
-          ),
         ),
         onPressed: () => print('Login Button Pressed'),
         child: Row(
@@ -178,8 +152,8 @@ class _LoginScreenState extends State<LoginScreen> {
           children: [
             Center(
               child: Container(
-                height: 25.0,
-                width: 25.0,
+                height: 22.0,
+                width: 22.0,
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: AssetImage(imageUrl)
@@ -188,14 +162,14 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
 
-            SizedBox(width: 20.0),
+            SizedBox(width: 15.0),
             Center(
               child: Text(
                 text,
                 style: TextStyle(
-                  color: Color(0xFF527DAA),
+                  color: Colors.black,
                   fontSize: 18.0,
-                  wordSpacing: -1,
+                  wordSpacing: -2,
                   fontWeight: FontWeight.bold,
                   fontFamily: 'OpenSans',
                 ),
@@ -208,18 +182,18 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildSignInWithText() {
-    return Column(
-      children: <Widget>[
-         SizedBox(height: 10,),
-        Text(
-          '- O -',
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-          ),
+    return Padding(
+      padding: EdgeInsets.all(20),
+      child: Text(
+        '- Métodos alternativos -',
+        style: TextStyle(
+          color: Colors.black,
+          wordSpacing: 2,
+          fontSize: 16.0,
+          fontWeight: FontWeight.bold,
+          fontFamily: 'OpenSans',
         ),
-        SizedBox(height: 10,)
-      ],
+      )
     );
   }
 
@@ -227,7 +201,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light,
+        value: SystemUiOverlayStyle.dark,
         child: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
           child: Stack(
@@ -236,19 +210,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: double.infinity,
                 width: double.infinity,
                 color: Colors.white,
-                // decoration: BoxDecoration(
-                //   gradient: LinearGradient(
-                //     begin: Alignment.topCenter,
-                //     end: Alignment.bottomCenter,
-                //     colors: [
-                //       Color(0xFF73AEF5),
-                //       Color(0xFF61A4F1),
-                //       Color(0xFF478DE0),
-                //       Color(0xFF398AE5),
-                //     ],
-                //     stops: [0.1, 0.4, 0.6, 0.8],
-                //   ),
-                // ),
               ),
               Container(
                 height: double.infinity,
@@ -262,7 +223,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(
-                        'Iniciar Sesión',
+                        'Simulador de Bolsa: Iniciar Sesión',
                         style: TextStyle(
                           color: Colors.black,
                           fontFamily: 'OpenSans',
@@ -270,14 +231,19 @@ class _LoginScreenState extends State<LoginScreen> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(height: 8*6.0),
+                      SizedBox(height: 40),
                       _buildEmailTF(),
                       SizedBox(
                         height: 24.0,
                       ),
                       _buildPasswordTF(),
-                      _buildForgotPasswordBtn(),
+                      SizedBox(
+                        height: 24.0,
+                      ),
+
+                      // _buildForgotPasswordBtn(),
                       _buildLoginBtn(),
+                    
                       _buildSignInWithText(),
                       SizedBox(height: 10,),
                       _buildAlternativeLoginBtn(
