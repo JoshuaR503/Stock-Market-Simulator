@@ -5,6 +5,8 @@ import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:simulador/screens/login/login.dart';
+import 'package:simulador/screens/login/profile.dart';
 
 import 'package:simulador/services/auth.dart';
 
@@ -38,10 +40,10 @@ class MyApp extends StatelessWidget {
         ],
 
         routes: {
-          // '/': (context) => LoginScreen(),
+          '/': (context) => LoginScreen(),
           // '/topics': (context) => TopicsScreen(),
-          // '/profile': (context) => ProfileScreen(),
-          '/': (context) => AboutScreen(),
+          '/profile': (context) => ProfileScreen(),
+          '/about': (context) => AboutScreen(),
         },
 
         theme: ThemeData(
