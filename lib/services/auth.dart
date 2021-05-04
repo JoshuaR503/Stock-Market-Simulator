@@ -62,8 +62,11 @@ class AuthService {
         AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName])
       ]);
 
+      print(appleResult.status);
+
       if (appleResult.error != null) {
         // handle errors from Apple here
+        print(appleResult.error);
       }
 
       final AuthCredential credential = OAuthProvider('apple.com').credential(
@@ -99,9 +102,4 @@ class AuthService {
   Future<void> signOut() {
     return _auth.signOut();
   }
-
-
-
-
-
 }

@@ -11,29 +11,38 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    // var user = Provider.of<User>(context);
+    User user = Provider.of<User>(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.deepOrange,
-        title: Text('Culo'),
-      ),
+    if (user != null) {
 
-      body: Center(
-        child: TextButton(
-          child: Text('Logout'),
-          style: TextButton.styleFrom(
-            backgroundColor: Colors.red
-          ),
-          onPressed: () async {
-            await auth.signOut();
+      print(user);
 
-            Navigator
-            .of(context)
-            .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
-          },
+      return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.deepOrange,
+          title: Text(user.displayName ?? 'Guest'),
         ),
-      ),
-    );
+
+        body: Center(
+          child: TextButton(
+            child: Text('Logout', style: TextStyle(
+              color: Colors.white
+            ),),
+            style: TextButton.styleFrom(
+              backgroundColor: Colors.deepOrange
+            ),
+            onPressed: () async {
+              await auth.signOut();
+
+              Navigator
+              .of(context)
+              .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+            },
+          ),
+        ),
+      );
+    } else {
+      return Text('not logged in...');
+    }
   }
 }

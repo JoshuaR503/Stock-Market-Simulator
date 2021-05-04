@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "421682571851",
+    "project_id": "stock-market-simulator-b467a",
+    "storage_bucket": "stock-market-simulator-b467a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:421682571851:android:94025528fa0b0b9f687bce",
+        "android_client_info": {
+          "package_name": "com.blkstne.market.simulator"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "421682571851-0uj2os2oee9leo8bkv7omt1ss1er2pef.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.blkstne.market.simulator",
+            "certificate_hash": "e1ed0e7715b55cde239e150761bafc01c0dfc2a9"
+          }
+        },
+        {
+          "client_id": "421682571851-h89371f0o1dpk3ruaik1o6oc5c5ednko.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0jZqnAL0BXBrl_nPZeXM_IBf5PeuYp2s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "421682571851-h89371f0o1dpk3ruaik1o6oc5c5ednko.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "421682571851-09vf2hi9o9qb0igh2ln3f12jf8iq6el5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.blkstne.market.simulator"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

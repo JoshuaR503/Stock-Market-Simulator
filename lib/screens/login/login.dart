@@ -23,7 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
       auth.getUser;
 
       if (auth.getUser != null) {
-        Navigator.pushReplacementNamed(context, '/topics');
+        Navigator.pushReplacementNamed(context, '/profile');
       }
 
     }
@@ -73,7 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       onPressed: () async { 
                         User user = await auth.appleSignIn();
                         if (user != null) {
-                          Navigator.pushReplacementNamed(context, '/topics');
+                          Navigator.pushReplacementNamed(context, '/profile');
                         }
                       },
                     );
