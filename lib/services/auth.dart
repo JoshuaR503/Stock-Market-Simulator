@@ -9,33 +9,38 @@ import 'dart:async';
 
 class AuthService {
 
-
+  /// Firebase tools.
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final FirebaseFirestore _database = FirebaseFirestore.instance;
+
+  /// Google Sign.
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
+  /// Current user.
   User get getUser =>  _auth.currentUser;
 
+  /// Check if Apple Sign In is available.
   Future<bool> get appleSignInAvailable => AppleSignIn.isAvailable();
-
 
   Stream<User> get user => _auth.authStateChanges();
 
+  /// Anonymous login. 
   Future<User> annLogin() async {
 
-    UserCredential result = await _auth.signInAnonymously();
-    User user = result.user;
+    final UserCredential result = await _auth.signInAnonymously();
+    final User user = result.user;
 
     updateUserData(user);
 
     return user;
   }
 
+  /// Google Sign in.
   Future<User> googleSignIn() async {
     try {
 
-      GoogleSignInAccount googleSignInAccount = await _googleSignIn.signIn();
-      GoogleSignInAuthentication googleAuth = await googleSignInAccount.authentication;
+      final GoogleSignInAccount googleSignInAccount = await _googleSignIn.signIn();
+      final GoogleSignInAuthentication googleAuth = await googleSignInAccount.authentication;
 
       final AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
@@ -55,6 +60,7 @@ class AuthService {
     }
   }
 
+  /// Apple Sign in.
   Future<User> appleSignIn() async {
     try {
 
@@ -62,7 +68,6 @@ class AuthService {
         AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName])
       ]);
 
-      print(appleResult.status);
 
       if (appleResult.error != null) {
         // handle errors from Apple here
@@ -74,8 +79,8 @@ class AuthService {
         idToken: String.fromCharCodes(appleResult.credential.identityToken),
       );
 
-      UserCredential firebaseResult = await _auth.signInWithCredential(credential);
-      User user = firebaseResult.user;
+      final UserCredential firebaseResult = await _auth.signInWithCredential(credential);
+      final User user = firebaseResult.user;
 
       // Optional, Update user data in Firestore
       updateUserData(user);
@@ -87,18 +92,17 @@ class AuthService {
     }
   }
 
+  /// Update user data in Firestore.
   Future<void> updateUserData(User user) {
-    DocumentReference reportRef = _db.collection('reports').doc(user.uid);
+    final DocumentReference reportRef = _database.collection('users').doc(user.uid);
+    final Map<String, dynamic> data = {
+      'uid': user.uid, 
+      'lastActivity': DateTime.now()
+    };
 
-    return reportRef.set(
-      {
-        'uid': user.uid, 
-        'lastActivity': DateTime.now()
-      },
-      SetOptions(merge: true)
-    );
+    return reportRef.set(data, SetOptions(merge: true));
   }
-
+  
   Future<void> signOut() {
     return _auth.signOut();
   }
