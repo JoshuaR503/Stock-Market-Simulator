@@ -18,7 +18,6 @@ class AuthService {
   /// Google Sign.
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
-
   /// Current user.
   User get getUser =>  _auth.currentUser;
 
@@ -42,7 +41,6 @@ class AuthService {
     @required String email,
     @required String password
   }) async {
-
     try {
 
       final UserCredential userCredential = await _auth.signInWithEmailAndPassword(
@@ -50,23 +48,11 @@ class AuthService {
         password: password
       );
 
-      final User user = userCredential.user;
-
-      return user;
+      return userCredential.user;
     } catch (e) {
       return null;
     }
-    // } on FirebaseAuthException catch (e) {
-    //   if (e.code == 'user-not-found') {
-    //     print('No user found for that email.');
-    //     return null;
-    //   } else if (e.code == 'wrong-password') {
-    //     print('Wrong password provided for that user.');
-    //     return null;
-    //   }
-    // }
   }
-
 
   /// Google Sign in.
   Future<User> googleSignIn() async {

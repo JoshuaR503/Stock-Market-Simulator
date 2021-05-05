@@ -62,6 +62,7 @@ flutter:
    - assets/search.png
    - assets/apple.png
    - assets/facebook.png
+   - assets/user.png
 
   fonts:
     - family: OpenSans

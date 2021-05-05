@@ -13,6 +13,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
 
   AuthService auth = AuthService();
+  bool rememberMe = false;
 
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -49,7 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: double.infinity,
                   child: SingleChildScrollView(
                     physics: AlwaysScrollableScrollPhysics(),
-                    padding: EdgeInsets.symmetric(horizontal: 40.0,vertical: 120.0),
+                    padding: EdgeInsets.symmetric(horizontal: 40.0,vertical: 60.0),
                     child: this._buildBody()
                   ),
                 )
@@ -63,7 +64,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildBody() {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
         Text(
           'Simulador de Bolsa: Iniciar Sesión',
@@ -84,32 +85,31 @@ class _LoginScreenState extends State<LoginScreen> {
           showLabel: true,
         ),
 
-        SizedBox(height: 20.0),
+        SizedBox(height: 15),
         LoginInput(
           hintText: "Contraseña",
           icon: Icons.lock,
           keyboardType: TextInputType.visiblePassword,
           controller: _passwordController,
-        ),
+        ),        
 
-        SizedBox(height: 20.0),
+        SizedBox(height: 15),
         _buildLoginBtn(),
       
-        _altLoginText(),
-
-        AltLoginButton(imageUrl: 'assets/search.png', text: 'Continuar con Google', loginMethod: auth.googleSignIn),
+        _uiText("- Métodos alternativos -"),
+        AltLoginButton(imageUrl: "assets/search.png", text: "Continuar con Google", loginMethod: auth.googleSignIn),
     
-        SizedBox(height: 10,),
-        AltLoginButton(imageUrl: 'assets/facebook.png',text: 'Continuar con Facebook', loginMethod: auth.signInWithFacebook),
+        SizedBox(height: 15),
+        AltLoginButton(imageUrl: "assets/facebook.png",text: "Continuar con Facebook", loginMethod: auth.signInWithFacebook),
         
-        SizedBox(height: 15,),
+        SizedBox(height: 15),
         FutureBuilder(
           future: auth.appleSignInAvailable,
           builder: (context, snapshot) {
             if (snapshot.data == true) {
               return AltLoginButton(
-                imageUrl: 'assets/apple.png',
-                text: 'Continuar con Apple', 
+                imageUrl: "assets/apple.png",
+                text: "Continuar con Apple", 
                 loginMethod: auth.appleSignIn
               );
             } else {
@@ -117,6 +117,9 @@ class _LoginScreenState extends State<LoginScreen> {
             }
           }
         ),
+
+        SizedBox(height: 15),
+        AltLoginButton(imageUrl: "assets/user.png",text: "Continuar como invitado", loginMethod: auth.annLogin),
       ],
     );
   }
@@ -151,11 +154,11 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _altLoginText() {
+  Widget _uiText(String text) {
     return Padding(
       padding: EdgeInsets.all(25),
       child: Text(
-        '- Métodos alternativos -',
+        text,
         style: TextStyle(
           color: Colors.black,
           wordSpacing: 2,
