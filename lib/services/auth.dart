@@ -1,6 +1,7 @@
 
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -37,6 +38,36 @@ class AuthService {
     return user;
   }
 
+  Future<User> signInWithEmailAndPassword({
+    @required String email,
+    @required String password
+  }) async {
+
+    try {
+
+      final UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password
+      );
+
+      final User user = userCredential.user;
+
+      return user;
+    } catch (e) {
+      return null;
+    }
+    // } on FirebaseAuthException catch (e) {
+    //   if (e.code == 'user-not-found') {
+    //     print('No user found for that email.');
+    //     return null;
+    //   } else if (e.code == 'wrong-password') {
+    //     print('Wrong password provided for that user.');
+    //     return null;
+    //   }
+    // }
+  }
+
+
   /// Google Sign in.
   Future<User> googleSignIn() async {
     try {
@@ -67,8 +98,6 @@ class AuthService {
     try {
       // Trigger the sign-in flow
       final LoginResult facebookLogin = await FacebookAuth.instance.login();
-
-      print(facebookLogin.status);
 
       // Create a credential from the access token
       final facebookAuthCredential = FacebookAuthProvider.credential(facebookLogin.accessToken.token);

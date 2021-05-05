@@ -1,109 +1,9 @@
-
-
-// import 'package:flutter/material.dart';
-// import 'package:simulador/services/auth.dart';
-// import 'package:simulador/shared/login_button.dart';
-// import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-// import 'package:apple_sign_in/apple_sign_in.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
-
-// class LoginScreen extends StatefulWidget {
-//   @override
-//   _LoginScreenState createState() => _LoginScreenState();
-// }
-
-// class _LoginScreenState extends State<LoginScreen> {
-
-//   AuthService auth = AuthService();
-
-//   @override
-//     void initState() {
-//       // TODO: implement initState
-//       super.initState();
-//       auth.getUser;
-
-//       if (auth.getUser != null) {
-//         Navigator.pushReplacementNamed(context, '/profile');
-//       }
-
-//     }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: Container(
-//         padding: EdgeInsets.all(30),
-//         decoration: BoxDecoration(),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.center,
-//           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-
-
-//           children: [
-
-//             FlutterLogo(size: 150,),
-//             Text(
-//               'Login to Start',
-//               style: Theme.of(context).textTheme.headline6,
-//               textAlign: TextAlign.center,
-//             ),
-
-//             Text('Your tagline'),
-//             LoginButton(
-//               text: 'LOGIN WITH GOOGLE',
-//               icon: FontAwesomeIcons.google,
-//               color: Colors.black45,
-//               loginMethod: auth.googleSignIn,
-//             ),
-
-
-//             // LoginButton(
-//             //   text: 'LOGIN WITH APPLE',
-//             //   icon: FontAwesomeIcons.apple,
-//             //   color: Colors.black45,
-//             //   loginMethod: auth.appleSignIn,
-//             // ),
-
-//             FutureBuilder(
-//                 future: auth.appleSignInAvailable,
-//                 builder: (context, snapshot) {
-                
-//                 if (snapshot.data == true) {
-//                     return AppleSignInButton(
-//                       onPressed: () async { 
-//                         User user = await auth.appleSignIn();
-//                         if (user != null) {
-//                           Navigator.pushReplacementNamed(context, '/profile');
-//                         }
-//                       },
-//                     );
-//                 } else {
-//                     return Container();
-//                 }
-//               },
-//             ),
-
-
-//           ],
-//         )
-//       )
-//     );
-//   }
-// }
-
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:simulador/screens/login/loginInput.dart';
 import 'package:simulador/screens/login/styles.dart';
 import 'package:simulador/screens/login/widgets.dart';
 import 'package:simulador/services/auth.dart';
-
-final kHintTextStyle = TextStyle(
-  color: Color(0xff7b7b7b),
-  fontFamily: 'OpenSans',
-  fontWeight: FontWeight.bold
-);
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -113,6 +13,9 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
 
   AuthService auth = AuthService();
+
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   @override
   void initState() {
@@ -124,6 +27,13 @@ class _LoginScreenState extends State<LoginScreen> {
       Navigator.pushReplacementNamed(context, '/profile');
     }
   }
+
+  @override
+    void dispose() {
+      _emailController.dispose();
+      _passwordController.dispose();
+      super.dispose();
+    }
 
   @override
   Widget build(BuildContext context) {
@@ -165,19 +75,28 @@ class _LoginScreenState extends State<LoginScreen> {
             fontWeight: FontWeight.bold,
           ),
         ),
-
-        SizedBox(height: 34),
-        _buildEmailInput(),
+        SizedBox(height: 28),
+        LoginInput(
+          hintText: "Correo electrónico",
+          icon: Icons.email,
+          keyboardType: TextInputType.emailAddress,
+          controller: _emailController,
+          showLabel: true,
+        ),
 
         SizedBox(height: 20.0),
-        _buildPasswordInput(),
+        LoginInput(
+          hintText: "Contraseña",
+          icon: Icons.lock,
+          keyboardType: TextInputType.visiblePassword,
+          controller: _passwordController,
+        ),
 
         SizedBox(height: 20.0),
         _buildLoginBtn(),
       
-        _buildSignInWithText(),
+        _altLoginText(),
 
-        SizedBox(height: 10),
         AltLoginButton(imageUrl: 'assets/search.png', text: 'Continuar con Google', loginMethod: auth.googleSignIn),
     
         SizedBox(height: 10,),
@@ -191,83 +110,12 @@ class _LoginScreenState extends State<LoginScreen> {
               return AltLoginButton(
                 imageUrl: 'assets/apple.png',
                 text: 'Continuar con Apple', 
-                loginMethod: auth.annLogin
+                loginMethod: auth.appleSignIn
               );
             } else {
               return Container();
             }
           }
-        ),
-      ],
-    );
-  }
-
-  Widget _buildEmailInput() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Padding(
-          padding: EdgeInsets.only(bottom: 8),
-          child: Text(
-            'Introducir credenciales:',
-            style: TextStyle(
-              color: Colors.black,
-              wordSpacing: 2,
-              fontSize: 16.5,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'OpenSans',
-            ),
-          ),
-        ),
-        SizedBox(height: 10.0),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: kBoxDecorationStyle,
-          height: 60.0,
-          child: TextField(
-            keyboardType: TextInputType.emailAddress,
-            style: TextStyle( fontFamily: 'OpenSans' ),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
-                Icons.email, 
-                color: Colors.black,  
-              ),
-              hintText: 'Correo electrónico',
-              hintStyle: kHintTextStyle,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildPasswordInput() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: kBoxDecorationStyle,
-          height: 60.0,
-          child: TextField(
-            obscureText: true,
-            style: TextStyle(
-              color: Colors.black,
-              fontFamily: 'OpenSans',
-            ),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
-                Icons.lock,
-                color: Colors.black,
-              ),
-              hintText: 'Contraseña',
-              hintStyle: kHintTextStyle,
-            ),
-          ),
         ),
       ],
     );
@@ -284,14 +132,18 @@ class _LoginScreenState extends State<LoginScreen> {
           primary: Colors.white,
           padding: EdgeInsets.all(8),
         ),
-        onPressed: () => print('Login Button Pressed'),
+        onPressed: () {
+          auth.signInWithEmailAndPassword(
+            email: _emailController.text, 
+            password: _passwordController.text
+          );
+        },
         child: Text(
           'Iniciar sesión',
           style: TextStyle(
             color: Colors.black,
-            fontSize: 18.0,
-            wordSpacing: -2,
-            fontWeight: FontWeight.bold,
+            fontSize: 17.5,
+            fontWeight: FontWeight.w500,
             fontFamily: 'OpenSans',
           ),
         ),
@@ -299,16 +151,16 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildSignInWithText() {
+  Widget _altLoginText() {
     return Padding(
-      padding: EdgeInsets.all(20),
+      padding: EdgeInsets.all(25),
       child: Text(
         '- Métodos alternativos -',
         style: TextStyle(
           color: Colors.black,
           wordSpacing: 2,
           fontSize: 16.0,
-          fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.w500,
           fontFamily: 'OpenSans',
         ),
       )

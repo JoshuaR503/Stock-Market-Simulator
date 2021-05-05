@@ -27,13 +27,11 @@ class AltLoginButton extends StatelessWidget {
           padding: EdgeInsets.all(16),
         ),
         onPressed: () async {
-
-          var user = await loginMethod();
+          final user = await loginMethod();
           
           if (user != null) {
             Navigator.pushReplacementNamed(context, '/profile');
           }
-
         },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -57,8 +55,6 @@ class AltLoginButton extends StatelessWidget {
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 18.0,
-                  wordSpacing: -2,
-                  fontWeight: FontWeight.bold,
                   fontFamily: 'OpenSans',
                 ),
               ),
