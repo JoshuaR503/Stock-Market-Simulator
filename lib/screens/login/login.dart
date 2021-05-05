@@ -180,8 +180,8 @@ class _LoginScreenState extends State<LoginScreen> {
         SizedBox(height: 10),
         AltLoginButton(imageUrl: 'assets/search.png', text: 'Continuar con Google', loginMethod: auth.googleSignIn),
     
-        // SizedBox(height: 10,),
-        // AltLoginButton(imageUrl: 'assets/facebook.png',text: 'Continuar con Facebook'),
+        SizedBox(height: 10,),
+        AltLoginButton(imageUrl: 'assets/facebook.png',text: 'Continuar con Facebook', loginMethod: auth.signInWithFacebook),
         
         SizedBox(height: 15,),
         FutureBuilder(

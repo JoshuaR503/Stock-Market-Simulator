@@ -3,6 +3,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:apple_sign_in/apple_sign_in.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
@@ -15,6 +16,7 @@ class AuthService {
 
   /// Google Sign.
   final GoogleSignIn _googleSignIn = GoogleSignIn();
+
 
   /// Current user.
   User get getUser =>  _auth.currentUser;
@@ -54,6 +56,33 @@ class AuthService {
       updateUserData(user);
 
       return user;
+    } catch (error) {
+      print(error);
+      return null;
+    }
+  }
+
+  Future<User> signInWithFacebook() async {
+    
+    try {
+      // Trigger the sign-in flow
+      final LoginResult facebookLogin = await FacebookAuth.instance.login();
+
+      print(facebookLogin.status);
+
+      // Create a credential from the access token
+      final facebookAuthCredential = FacebookAuthProvider.credential(facebookLogin.accessToken.token);
+
+      final UserCredential result = await _auth.signInWithCredential(facebookAuthCredential);
+
+      final User user = result.user;
+
+       // Update user data
+      updateUserData(user);
+
+      // Once signed in, return the UserCredential
+      return user;
+
     } catch (error) {
       print(error);
       return null;
@@ -101,6 +130,7 @@ class AuthService {
     };
 
     return reportRef.set(data, SetOptions(merge: true));
+
   }
   
   Future<void> signOut() {
