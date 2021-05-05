@@ -7,10 +7,12 @@ class AltLoginButton extends StatelessWidget {
 
   final String imageUrl;
   final String text;
+  final Function loginMethod;
 
   AltLoginButton({
     @required this.imageUrl,
     @required this.text,
+    @required this.loginMethod
   });
 
   @override
@@ -24,7 +26,15 @@ class AltLoginButton extends StatelessWidget {
           primary: Colors.white,
           padding: EdgeInsets.all(16),
         ),
-        onPressed: () => print('Login Button Pressed'),
+        onPressed: () async {
+
+          var user = await loginMethod();
+          
+          if (user != null) {
+            Navigator.pushReplacementNamed(context, '/profile');
+          }
+
+        },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
