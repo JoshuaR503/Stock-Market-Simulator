@@ -12,7 +12,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Color(0xffedf3f7),
+        color: Color(0xfff2f1f6),
         child: SafeArea(
           child: GestureDetector(
             onTap: () => FocusScope.of(context).unfocus(),
@@ -38,15 +38,19 @@ class _HomeScreenState extends State<HomeScreen> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
+
+                        
                         SizedBox(height: 16,),
                         this._buildPortfolioCard(
                           title: "Valor de la cartera:",
                           value: '\$5,439,00',
+                          action: 'Ver posiciones'
                         ),
                         SizedBox(height: 14,),
                         this._buildPortfolioCard(
                           title: "Cambio en la cartera:",
-                          value: '+583 (+5.98%)',
+                          value: '+5.98%',
+                          action: '',
                           color: Colors.green
                         ),
                         SizedBox(height: 16),
@@ -81,9 +85,19 @@ class _HomeScreenState extends State<HomeScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Expanded(child: this._buildGainersAndLosers(),),
-                            SizedBox(width: 20,),
-                            Expanded(child: this._buildGainersAndLosers(),),
+                            Expanded(child: this._buildGainersAndLosers(
+                              name: 'Apple',
+                              image: 'apple',
+                              change: 6.32,
+                              price: '\$324.34'
+                            ),),
+                            SizedBox(width: 24),
+                            Expanded(child: this._buildGainersAndLosers(
+                              name: 'Facebook',
+                              image: 'facebook2',
+                              change: -2.32,
+                              price: '\$254.74'
+                            ),),
                           ],
                         ),
                         SizedBox(height: 20,),
@@ -149,10 +163,11 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildPortfolioCard({
     String title,
     String value,
+    String action,
     Color color = Colors.black,
   }) {
     return Container(
-      padding: EdgeInsets.all(18),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Color(0xffffffff),
         borderRadius: BorderRadius.all(
@@ -163,16 +178,27 @@ class _HomeScreenState extends State<HomeScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 18.0,
-              height: 1.5,
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 16.5,
+                  height: 1.5,
+                  color: Colors.grey.shade600,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
 
+              FaIcon(
+                FontAwesomeIcons.angleRight,
+                color: Colors.grey,
+                size: 24,
+              ),
+            ],
+          ),
+          
           Text(
             value,
             style: TextStyle(
@@ -188,7 +214,12 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildGainersAndLosers() {
+  Widget _buildGainersAndLosers({
+    String image,
+    String name,
+    double change,
+    String price
+  }) {
     return Container(
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -212,14 +243,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
             child: Padding(
               padding: EdgeInsets.all(10),
-              child: Image(image: AssetImage('assets/apple.png')),
+              child: Image(image: AssetImage('assets/$image.png')),
             )
           ),
 
           SizedBox(height: 8),
 
           Text(
-            'Apple',
+            name,
             style: TextStyle(
               fontSize: 20.0,
               height: 1.5,
@@ -228,37 +259,36 @@ class _HomeScreenState extends State<HomeScreen> {
               fontWeight: FontWeight.bold,
             ),
           ),
+          SizedBox(height: 4),
 
           Text(
-            '\$148.09',
+            price,
             style: TextStyle(
-              fontSize: 18.0,
+              fontSize: 17.5,
               height: 1.5,
               letterSpacing: -1,
               color: Colors.black,
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 8,),
+          SizedBox(height: 14),
 
           Container(
             padding: EdgeInsets.all(0),
             decoration: BoxDecoration(
-              color: Color(0xffdaf4e3),
-              borderRadius: BorderRadius.all(
-                Radius.circular(8)
-              ),
+              color:  change > 0 ? Color(0xffdaf4e3) : Colors.red.shade100,
+              borderRadius: BorderRadius.all(Radius.circular(4)),
             ),
 
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               child: Text(
-                '+ 15.18 ',
+                change > 0 ? '+ ' + change.toString() : '- ${change.toString().replaceFirst(RegExp('-'), '')}',
                 style: TextStyle(
-                  fontSize: 18.0,
+                  fontSize: 16.0,
                   height: 1.5,
                   letterSpacing: -1,
-                  color: Color(0xff51cd7b),
+                  color: change > 0 ? Color(0xff51cd7b) : Colors.red,
                   fontWeight: FontWeight.bold,
                 ),
               )
