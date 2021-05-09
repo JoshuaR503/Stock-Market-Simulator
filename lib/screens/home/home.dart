@@ -53,33 +53,22 @@ class _HomeScreenState extends State<HomeScreen> {
                           action: '',
                           color: Colors.green
                         ),
+                        SizedBox(height: 24,),
+
+                        this._buildPortfolioSubtitle(title: 'Lista de seguimiento'),
+
                         SizedBox(height: 16),
+                        _buildWatchlistItem( image: 'netflix', ticker: 'NFLX', change: '2.48'),
 
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Expanded(child: Text(
-                              'Ganadores y Perdedores',
-                              style: TextStyle(
-                                fontSize: 20.0,
-                                height: 1.5,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w800,
-                              ),
-                            )),
+                        SizedBox(height: 16),
+                        _buildWatchlistItem( image: 'search', ticker: 'GOOG', change: '2.48'),
 
-                            Text(
-                              'Ver todos',
-                              style: TextStyle(
-                                fontSize: 16.0,
-                                height: 1.5,
-                                color: Colors.blueAccent,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
+                        SizedBox(height: 16),
+                        _buildWatchlistItem( image: 'facebook', ticker: 'FB', change: '2.48'),
+                        
+                        SizedBox(height: 24),
+
+                        this._buildPortfolioSubtitle(title: 'Ganadores y Perdedores'),
 
                         SizedBox(height: 16),
                         Row(
@@ -100,54 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),),
                           ],
                         ),
-                        SizedBox(height: 20,),
-
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Expanded(child: Text(
-                          'Lista de seguimiento',
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            height: 1.5,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w800,
-                          ),
-                        ),),
-
-                            Text(
-                              'Ver todos',
-                              style: TextStyle(
-                                fontSize: 16.0,
-                                height: 1.5,
-                                color: Colors.blueAccent,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        SizedBox(height: 16),
-                        _buildWatchlistItem(
-                          image: 'netflix',
-                          ticker: 'NFLX',
-                          change: '2.48'
-                        ),
-
-                        SizedBox(height: 16),
-                        _buildWatchlistItem(
-                          image: 'search',
-                          ticker: 'GOOG',
-                          change: '2.48'
-                        ),
-
-                        SizedBox(height: 16),
-                        _buildWatchlistItem(
-                          image: 'facebook',
-                          ticker: 'FB',
-                          change: '2.48'
-                        ),
+                        
                       ],
                     )
                   ),
@@ -214,6 +156,35 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Widget _buildPortfolioSubtitle({
+    String title
+  }) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Expanded(child: Text(
+          title,
+          style: TextStyle(
+            fontSize: 20.0,
+            height: 1.5,
+            color: Colors.black,
+            fontWeight: FontWeight.w700,
+          ),
+        )),
+        Text(
+          'Ver todos',
+          style: TextStyle(
+            fontSize: 16.0,
+            height: 1.5,
+            color: Colors.blueAccent,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildGainersAndLosers({
     String image,
     String name,
@@ -259,19 +230,16 @@ class _HomeScreenState extends State<HomeScreen> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 4),
-
           Text(
             price,
             style: TextStyle(
               fontSize: 17.5,
               height: 1.5,
-              letterSpacing: -1,
               color: Colors.black,
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 14),
+          SizedBox(height: 16),
 
           Container(
             padding: EdgeInsets.all(0),
@@ -368,7 +336,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
               
-              SizedBox(width: 80,),
+              SizedBox(width: MediaQuery.of(context).size.width / 2 * .4),
 
               Text(
                 '\$328',
