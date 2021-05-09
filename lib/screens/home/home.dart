@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -22,10 +23,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   width: double.infinity,
                   child: SingleChildScrollView(
                     physics: AlwaysScrollableScrollPhysics(),
-                    padding: EdgeInsets.symmetric(horizontal: 28.0,vertical: 40.0),
+                    padding: EdgeInsets.symmetric(horizontal: 24.0,vertical: 40.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
+                        
                         Text(
                           'Simulador de Bolsa: Cartera',
                           style: TextStyle(
@@ -38,9 +40,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         SizedBox(height: 16,),
                         this._buildPortfolioValue(),
-                        SizedBox(height: 16,),
+                        SizedBox(height: 14,),
                         this._buildPortfolioValueChange(),
-                        SizedBox(height: 24,),
+                        SizedBox(height: 16),
 
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -49,17 +51,17 @@ class _HomeScreenState extends State<HomeScreen> {
                             Expanded(child: Text(
                               'Ganadores y Perdedores',
                               style: TextStyle(
-                                fontSize: 24.0,
+                                fontSize: 20.0,
                                 height: 1.5,
                                 color: Colors.black,
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w800,
                               ),
                             )),
 
                             Text(
                               'Ver todos',
                               style: TextStyle(
-                                fontSize: 18.0,
+                                fontSize: 16.0,
                                 height: 1.5,
                                 color: Colors.blueAccent,
                                 fontWeight: FontWeight.bold,
@@ -68,18 +70,65 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
 
-                        SizedBox(height: 16,),
-                        
-
+                        SizedBox(height: 16),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Expanded(child: this._buildGainersAndLosers(),),
                             SizedBox(width: 20,),
                             Expanded(child: this._buildGainersAndLosers(),),
-
                           ],
-                        )
+                        ),
+                        SizedBox(height: 20,),
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Expanded(child: Text(
+                          'Lista de seguimiento',
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            height: 1.5,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),),
+
+                            Text(
+                              'Ver todos',
+                              style: TextStyle(
+                                fontSize: 16.0,
+                                height: 1.5,
+                                color: Colors.blueAccent,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        
+
+                        SizedBox(height: 16),
+                        _buildWatchlistItem(
+                          image: 'netflix',
+                          ticker: 'NFLX',
+                          change: '2.48'
+                        ),
+
+                        SizedBox(height: 16),
+                        _buildWatchlistItem(
+                          image: 'search',
+                          ticker: 'GOOG',
+                          change: '2.48'
+                        ),
+
+                        SizedBox(height: 16),
+                        _buildWatchlistItem(
+                          image: 'facebook',
+                          ticker: 'FB',
+                          change: '2.48'
+                        ),
                       ],
                     )
                   ),
@@ -132,12 +181,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildPortfolioValueChange() {
     return Container(
-      padding: EdgeInsets.all(18),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Color(0xffffffff),
-        borderRadius: BorderRadius.all(
-          Radius.circular(8)
-        )
+        borderRadius: BorderRadius.all(Radius.circular(8))
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -156,7 +203,7 @@ class _HomeScreenState extends State<HomeScreen> {
           SizedBox(height: 4,),
 
           Text(
-            'USD +583 (+5.98%)',
+            '+583 (+5.98%)',
             style: TextStyle(
               fontSize: 24.0,
               height: 1.5,
@@ -172,54 +219,36 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildGainersAndLosers() {
     return Container(
-      padding: EdgeInsets.all(18),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Color(0xffffffff),
-        borderRadius: BorderRadius.all(
-          Radius.circular(8)
-        )
+        borderRadius: BorderRadius.all(Radius.circular(8))
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Container(
-            height: 60.0,
-            width: 60.0,
+            height: 54.0,
+            width: 54.0,
             decoration: BoxDecoration(
-
               border: Border.all(
                 width: 3.0,
                 color: Colors.grey.shade200
               ),
-              borderRadius: BorderRadius.all(
-                  Radius.circular(50) //                 <--- border radius here
-              ),
+              borderRadius: BorderRadius.all(Radius.circular(50)),
             ),
 
-            child: Padding(padding: 
-              EdgeInsets.all(10),
+            child: Padding(
+              padding: EdgeInsets.all(10),
               child: Image(image: AssetImage('assets/apple.png')),
             )
-            
           ),
 
-          SizedBox(height: 4,),
+          SizedBox(height: 8),
 
           Text(
             'Apple',
-            style: TextStyle(
-              fontSize: 24.0,
-              height: 1.5,
-              letterSpacing: -1,
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(height: 4,),
-
-          Text(
-            '\$148.09',
             style: TextStyle(
               fontSize: 20.0,
               height: 1.5,
@@ -228,11 +257,21 @@ class _HomeScreenState extends State<HomeScreen> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 18,),
+
+          Text(
+            '\$148.09',
+            style: TextStyle(
+              fontSize: 18.0,
+              height: 1.5,
+              letterSpacing: -1,
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 8,),
 
           Container(
             padding: EdgeInsets.all(0),
-            width: double.infinity,
             decoration: BoxDecoration(
               color: Color(0xffdaf4e3),
               borderRadius: BorderRadius.all(
@@ -241,9 +280,9 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
 
             child: Padding(
-              padding: EdgeInsets.all(8),
+              padding: EdgeInsets.symmetric(horizontal: 14, vertical: 4),
               child: Text(
-                '  + 15.18',
+                '+ 15.18 ',
                 style: TextStyle(
                   fontSize: 18.0,
                   height: 1.5,
@@ -259,21 +298,97 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Widget _buildWatchlistItem({String image, String ticker, String change}) {
+    return Container(
+      padding: EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: Color(0xffffffff),
+        borderRadius: BorderRadius.all(
+          Radius.circular(8)
+        )
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
 
-        //   Row(
-        //   children: [
+              FaIcon(
+                FontAwesomeIcons.solidStar,
+                color: Colors.orange,
+                size: 24,
+              ),
+              SizedBox(width: 16,),
+
             
-          
-        //     Text(
-        //       '',
-        //       style: TextStyle(
-        //         fontSize: 24.0,
-        //         height: 1.5,
-        //         letterSpacing: -1,
-        //         color: Colors.green,
-        //         fontWeight: FontWeight.bold,
-        //       ),
-        //     ),
-        //   ],
-        // )
+              Container(
+                height: 48.0,
+                width: 48.0,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    width: 3.0,
+                    color: Colors.grey.shade200
+                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(50)),
+                ),
+    
+                child: Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Image(image: AssetImage('assets/$image.png')),
+                )
+              ),
+
+              SizedBox(width: 16,),
+
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    ticker.toUpperCase(),
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      height: 1.5,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+
+                  Text(
+                    '+$change%',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      height: 1.5,
+                      color: Colors.green,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              
+              SizedBox(width: 80,),
+
+              Text(
+                '\$328',
+                style: TextStyle(
+                  fontSize: 18.0,
+                  height: 1.5,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+
+              SizedBox(width: 16,),
+              FaIcon(
+                FontAwesomeIcons.ellipsisV,
+                color: Colors.black,
+                size: 24,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 }

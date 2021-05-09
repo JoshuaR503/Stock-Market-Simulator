@@ -59,10 +59,7 @@ flutter:
   uses-material-design: true
 
   assets:
-   - assets/search.png
-   - assets/apple.png
-   - assets/facebook.png
-   - assets/user.png
+   - assets/
 
   fonts:
     - family: OpenSans
