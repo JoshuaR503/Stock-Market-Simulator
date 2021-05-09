@@ -54,20 +54,18 @@ class _HomeScreenState extends State<HomeScreen> {
                           color: Colors.green
                         ),
                         SizedBox(height: 24,),
-
                         this._buildPortfolioSubtitle(title: 'Lista de seguimiento'),
 
-                        SizedBox(height: 16),
-                        _buildWatchlistItem( image: 'netflix', ticker: 'NFLX', change: '2.48'),
+                        SizedBox(height: 12),
+                        _buildWatchlistItem( image: 'netflix', ticker: 'NFLX', change: '4.29', price: '503.84'),
 
-                        SizedBox(height: 16),
-                        _buildWatchlistItem( image: 'search', ticker: 'GOOG', change: '2.48'),
+                        SizedBox(height: 12),
+                        _buildWatchlistItem( image: 'facebook', ticker: 'FB', change: '0.94', price: '319.08'),
 
-                        SizedBox(height: 16),
-                        _buildWatchlistItem( image: 'facebook', ticker: 'FB', change: '2.48'),
-                        
+                        SizedBox(height: 12),
+                        _buildWatchlistItem( image: 'search', ticker: 'GOOG', change: '17.34', price: '2,398.69'),
+
                         SizedBox(height: 24),
-
                         this._buildPortfolioSubtitle(title: 'Ganadores y Perdedores'),
 
                         SizedBox(height: 16),
@@ -82,11 +80,12 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),),
                             SizedBox(width: 24),
                             Expanded(child: this._buildGainersAndLosers(
-                              name: 'Facebook',
-                              image: 'facebook2',
-                              change: -2.32,
-                              price: '\$254.74'
+                              name: 'Starbucks',
+                              image: 'sbux',
+                              change: -0.46,
+                              price: '\$114.28'
                             ),),
+                            
                           ],
                         ),
                         
@@ -109,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Color color = Colors.black,
   }) {
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: Color(0xffffffff),
         borderRadius: BorderRadius.all(
@@ -135,7 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
               FaIcon(
                 FontAwesomeIcons.angleRight,
-                color: Colors.grey,
+                color: Colors.grey.shade300,
                 size: 24,
               ),
             ],
@@ -191,6 +190,13 @@ class _HomeScreenState extends State<HomeScreen> {
     double change,
     String price
   }) {
+
+    final isUp = change > 0;
+
+    final lightColor =  isUp ? Color(0xffdaf4e3) : Colors.red.shade100;
+    final deepColor = isUp ? Color(0xff51cd7b) : Colors.red;
+    final icon = isUp ? FontAwesomeIcons.caretUp : FontAwesomeIcons.caretDown;
+
     return Container(
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -201,25 +207,36 @@ class _HomeScreenState extends State<HomeScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Container(
-            height: 54.0,
-            width: 54.0,
-            decoration: BoxDecoration(
-              border: Border.all(
-                width: 3.0,
-                color: Colors.grey.shade200
-              ),
-              borderRadius: BorderRadius.all(Radius.circular(50)),
-            ),
 
-            child: Padding(
-              padding: EdgeInsets.all(10),
-              child: Image(image: AssetImage('assets/$image.png')),
-            )
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                height: 54.0,
+                width: 54.0,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    width: 3.0,
+                    color: Colors.grey.shade200
+                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(50)),
+                ),
+
+                child: Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Image(image: AssetImage('assets/$image.png')),
+                )
+              ),
+
+              FaIcon(
+                icon,
+                color: deepColor,
+                size: 24,
+              ),
+            ],
           ),
 
-          SizedBox(height: 8),
-
+          SizedBox(height: 16),
           Text(
             name,
             style: TextStyle(
@@ -235,28 +252,29 @@ class _HomeScreenState extends State<HomeScreen> {
             style: TextStyle(
               fontSize: 17.5,
               height: 1.5,
-              color: Colors.black,
+              letterSpacing: .5,
+              color: Colors.grey.shade800,
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 16),
+          SizedBox(height: 24),
 
           Container(
             padding: EdgeInsets.all(0),
             decoration: BoxDecoration(
-              color:  change > 0 ? Color(0xffdaf4e3) : Colors.red.shade100,
+              color: lightColor,
               borderRadius: BorderRadius.all(Radius.circular(4)),
             ),
 
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
               child: Text(
                 change > 0 ? '+ ' + change.toString() : '- ${change.toString().replaceFirst(RegExp('-'), '')}',
                 style: TextStyle(
                   fontSize: 16.0,
                   height: 1.5,
                   letterSpacing: -1,
-                  color: change > 0 ? Color(0xff51cd7b) : Colors.red,
+                  color: deepColor,
                   fontWeight: FontWeight.bold,
                 ),
               )
@@ -267,9 +285,9 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildWatchlistItem({String image, String ticker, String change}) {
+  Widget _buildWatchlistItem({String image, String ticker, String change, String price}) {
     return Container(
-      padding: EdgeInsets.all(18),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Color(0xffffffff),
         borderRadius: BorderRadius.all(
@@ -277,11 +295,11 @@ class _HomeScreenState extends State<HomeScreen> {
         )
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
 
               FaIcon(
@@ -289,7 +307,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 color: Colors.orange,
                 size: 24,
               ),
-              SizedBox(width: 16,),
+              SizedBox(width: 12),
 
             
               Container(
@@ -309,8 +327,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 )
               ),
 
-              SizedBox(width: 16,),
-
+              SizedBox(width: 12),
+              
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -336,22 +354,28 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
               
-              SizedBox(width: MediaQuery.of(context).size.width / 2 * .4),
+              SizedBox(width: MediaQuery.of(context).size.width / 4 * .2),
 
-              Text(
-                '\$328',
-                style: TextStyle(
-                  fontSize: 18.0,
-                  height: 1.5,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
+              
+              Expanded(
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    '\$$price',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      height: 1.5,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ),
 
               SizedBox(width: 16,),
               FaIcon(
-                FontAwesomeIcons.ellipsisV,
-                color: Colors.black,
+                FontAwesomeIcons.angleRight,
+                color: Colors.grey.shade300,
                 size: 24,
               ),
             ],
