@@ -30,7 +30,7 @@ class AltLoginButton extends StatelessWidget {
           final user = await loginMethod();
           
           if (user != null) {
-            Navigator.pushReplacementNamed(context, '/profile');
+            Navigator.pushReplacementNamed(context, '/home');
           }
         },
         child: Row(

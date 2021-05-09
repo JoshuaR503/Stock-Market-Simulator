@@ -25,7 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
     auth.getUser;
 
     if (auth.getUser != null) {
-      Navigator.pushReplacementNamed(context, '/profile');
+      Navigator.pushReplacementNamed(context, '/home');
     }
   }
 
@@ -50,7 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: double.infinity,
                   child: SingleChildScrollView(
                     physics: AlwaysScrollableScrollPhysics(),
-                    padding: EdgeInsets.symmetric(horizontal: 40.0,vertical: 60.0),
+                    padding: EdgeInsets.symmetric(horizontal: 40.0,vertical: 50.0),
                     child: this._buildBody()
                   ),
                 )
@@ -70,9 +70,9 @@ class _LoginScreenState extends State<LoginScreen> {
           'Simulador de Bolsa: Iniciar Sesión',
           style: TextStyle(
             color: Colors.black,
-            fontFamily: 'OpenSans',
-            fontSize: 32.0,
+            fontSize: 34.0,
             height: 1.5,
+            letterSpacing: -1,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -119,7 +119,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
 
         SizedBox(height: 15),
-        AltLoginButton(imageUrl: "assets/user.png",text: "Continuar como invitado", loginMethod: auth.annLogin),
+        AltLoginButton(imageUrl: "assets/user.png",text: "Continuar como Invitado", loginMethod: auth.annLogin),
       ],
     );
   }
