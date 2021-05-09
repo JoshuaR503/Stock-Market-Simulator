@@ -39,9 +39,16 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         SizedBox(height: 16,),
-                        this._buildPortfolioValue(),
+                        this._buildPortfolioCard(
+                          title: "Valor de la cartera:",
+                          value: '\$5,439,00',
+                        ),
                         SizedBox(height: 14,),
-                        this._buildPortfolioValueChange(),
+                        this._buildPortfolioCard(
+                          title: "Cambio en la cartera:",
+                          value: '+583 (+5.98%)',
+                          color: Colors.green
+                        ),
                         SizedBox(height: 16),
 
                         Row(
@@ -107,8 +114,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
 
-                        
-
                         SizedBox(height: 16),
                         _buildWatchlistItem(
                           image: 'netflix',
@@ -141,7 +146,11 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildPortfolioValue() {
+  Widget _buildPortfolioCard({
+    String title,
+    String value,
+    Color color = Colors.black,
+  }) {
     return Container(
       padding: EdgeInsets.all(18),
       decoration: BoxDecoration(
@@ -155,7 +164,7 @@ class _HomeScreenState extends State<HomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            'Valor de la cartera:',
+            title,
             style: TextStyle(
               fontSize: 18.0,
               height: 1.5,
@@ -165,50 +174,12 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
 
           Text(
-            '\$5,439,00',
+            value,
             style: TextStyle(
               fontSize: 28.0,
               height: 1.5,
               letterSpacing: -1,
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPortfolioValueChange() {
-    return Container(
-      padding: EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Color(0xffffffff),
-        borderRadius: BorderRadius.all(Radius.circular(8))
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            'Cambio en la cartera:',
-            style: TextStyle(
-              fontSize: 18.0,
-              height: 1.5,
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-
-          SizedBox(height: 4,),
-
-          Text(
-            '+583 (+5.98%)',
-            style: TextStyle(
-              fontSize: 24.0,
-              height: 1.5,
-              letterSpacing: -1,
-              color: Colors.green,
+              color: color,
               fontWeight: FontWeight.bold,
             ),
           ),
