@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:simulador/shared/common/portfolioCard.dart';
+import 'package:simulador/shared/common/stockCard.dart';
 import 'package:simulador/shared/typography.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -30,11 +32,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     style: screenTitle
                   ),
                   
-                  SizedBox(height: 24,),
-                  this._buildPortfolioCard(
+                  SizedBox(height: 24),
+                  PortfolioCard(
                     title: "Valor de la cartera:",
                     value: '\$5,439,00',
-                    action: 'Ver posiciones',
+                    action: true,
                     actionCallback: () {
                       Navigator.pushNamed(context, '/holdings');
                     }
@@ -51,9 +53,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(height: 24,),
                   this._buildPortfolioSubtitle(title: 'Lista de seguimiento'),
                   SizedBox(height: 12),
-                  _buildWatchlistItem( image: 'microsoft', ticker: 'MSFT', companyName: 'Microsoft', change: '2.73', price: '252.46'),
+                  StockCard( image: 'microsoft', ticker: 'MSFT', companyName: 'Microsoft', change: '2.73', price: '252.46'),
                   SizedBox(height: 12),
-                  _buildWatchlistItem( image: 'mcdonalds', ticker: 'MCD', companyName: "McDonald's", change: '-0.02', price: '234.84'),
+                  StockCard( image: 'mcdonalds', ticker: 'MCD', companyName: "McDonald's", change: '-0.02', price: '234.84'),
                   SizedBox(height: 24),
                   this._buildPortfolioSubtitle(title: 'Ganadores y Perdedores'),
                   SizedBox(height: 16),
@@ -79,64 +81,6 @@ class _HomeScreenState extends State<HomeScreen> {
               )
             ),
           )
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPortfolioCard({
-    String title,
-    String value,
-    String action,
-    Function actionCallback,
-    Color color = Colors.black,
-  }) {
-    return GestureDetector(
-      onTap: actionCallback,
-      child:  Container(
-        padding: EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: Color(0xffffffff),
-          borderRadius: BorderRadius.all(
-            Radius.circular(8)
-          )
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 16.5,
-                    height: 1.5,
-                    color: Colors.grey.shade600,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-
-                FaIcon(
-                  FontAwesomeIcons.angleRight,
-                  color: Colors.grey.shade300,
-                  size: 24,
-                ),
-              ],
-            ),
-
-            Text(
-              value,
-              style: TextStyle(
-                fontSize: 28.0,
-                height: 1.5,
-                letterSpacing: -1,
-                color: color,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
         ),
       ),
     );
@@ -356,127 +300,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildWatchlistItem({
-    String image, 
-    String ticker,
-    String companyName,
-    String change, 
-    String price
-  }) {
-
-    final isUp = double.parse(change)  > 0;
-    final deepColor = isUp ? Color(0xff51cd7b) : Colors.red;
-
-    return Container(
-      padding: EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Color(0xffffffff),
-        borderRadius: BorderRadius.all(
-          Radius.circular(8)
-        )
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [            
-              Row(
-                children: [
-                  Container(
-                    height: 54.0,
-                    width: 54.0,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        width: 3.0,
-                        color: Colors.grey.shade200
-                      ),
-                      borderRadius: BorderRadius.all(Radius.circular(4)),
-                    ),
-        
-                    child: Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Image(image: AssetImage('assets/$image.png')),
-                    )
-                  ),
-
-                  SizedBox(width: 14),
-                  
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        companyName,
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          height: 1.5,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-
-                      SizedBox(height: 2,),
-    
-                      Text(
-                        ticker,
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          height: 1.5,
-                          color: Colors.grey.shade500,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    '\$$price',
-                    style: TextStyle(
-                      fontSize: 18.0,
-                      height: 1.5,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-
-                  SizedBox(height: 4),
-
-                  Container(
-                    width: 70,
-                    padding: EdgeInsets.all(0),
-                    decoration: BoxDecoration(
-                      color: deepColor,
-                      borderRadius: BorderRadius.all(Radius.circular(2)),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                      child: Text(
-                        change,
-                        textAlign: TextAlign.end,
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          height: 1.5,
-                          letterSpacing: -1,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      )
-                    )
-                  ),
-                ],
-              ),
-              
-            ],
-          ),
-        ],
-      ),
-    );
-  }
+  
 
 }
