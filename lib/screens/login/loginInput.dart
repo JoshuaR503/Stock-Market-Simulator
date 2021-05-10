@@ -53,6 +53,7 @@ class LoginInput extends StatelessWidget {
             keyboardType: keyboardType,
             style: kHintTextStyle,
             decoration: InputDecoration(
+              
               border: InputBorder.none,
               contentPadding: EdgeInsets.only(top: 14.0),
               prefixIcon: Icon(

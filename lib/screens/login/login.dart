@@ -40,7 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Colors.white,
+        color: Color(0xfff2f1f6),
         child: SafeArea(
           child: GestureDetector(
             onTap: () => FocusScope.of(context).unfocus(),
@@ -64,10 +64,15 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildBody() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
-        Text(
-          'Simulador de Bolsa: Iniciar Sesión',
+                                SizedBox(height: 24,),
+
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+          'Iniciar Sesión',
           style: TextStyle(
             color: Colors.black,
             fontSize: 34.0,
@@ -75,8 +80,9 @@ class _LoginScreenState extends State<LoginScreen> {
             letterSpacing: -1,
             fontWeight: FontWeight.bold,
           ),
+          ),
         ),
-        SizedBox(height: 28),
+        SizedBox(height: 14),
         LoginInput(
           hintText: "Correo electrónico",
           icon: Icons.email,
@@ -131,7 +137,7 @@ class _LoginScreenState extends State<LoginScreen> {
       width: double.infinity,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-           elevation: 2,
+           elevation: 0,
           primary: Colors.white,
           padding: EdgeInsets.all(8),
         ),

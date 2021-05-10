@@ -51,16 +51,27 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
 
                         SizedBox(height: 24,),
+                        this._buildPortfolioSubtitle(title: 'Índices bursátiles'),
+
+                        SizedBox(height: 12),
+                        _buildMarketIndexItem( ticker: 'Dow Jones', change: '229.23', percentChange: '0.66%', price: '34,777.76'),
+
+                        SizedBox(height: 12),
+                        _buildMarketIndexItem( ticker: 'S&P 500', change: '30.98', percentChange: '0.74%', price: '4,232.60'),
+
+                        SizedBox(height: 12),
+                        _buildMarketIndexItem( ticker: 'Nasdaq', change: '119.39', percentChange: '0.88%', price: '13,752.24'),
+
+                        
+
+                        SizedBox(height: 24,),
                         this._buildPortfolioSubtitle(title: 'Lista de seguimiento'),
 
                         SizedBox(height: 12),
-                        _buildWatchlistItem( image: 'netflix', ticker: 'NFLX', change: '4.29', price: '503.84'),
+                        _buildWatchlistItem( image: 'microsoft', ticker: 'MSFT', companyName: 'Microsoft', change: '2.73', price: '252.46'),
 
                         SizedBox(height: 12),
-                        _buildWatchlistItem( image: 'facebook2', ticker: 'FB', change: '0.94', price: '319.08'),
-
-                        SizedBox(height: 12),
-                        _buildWatchlistItem( image: 'search', ticker: 'GOOG', change: '17.34', price: '2,398.69'),
+                        _buildWatchlistItem( image: 'mcdonalds', ticker: 'MCD', companyName: "McDonald's", change: '-0.02', price: '234.84'),
 
                         SizedBox(height: 24),
                         this._buildPortfolioSubtitle(title: 'Ganadores y Perdedores'),
@@ -81,7 +92,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               image: 'sbux',
                               change: -0.46,
                               price: '\$114.28'
-                            ))
+                            )),
+                            
                           ],
                         ),
                       ],
@@ -206,25 +218,20 @@ class _HomeScreenState extends State<HomeScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
+          
 
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                height: 54.0,
-                width: 54.0,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    width: 3.0,
-                    color: Colors.grey.shade200
-                  ),
-                  borderRadius: BorderRadius.all(Radius.circular(50)),
+              Text(
+                name,
+                style: TextStyle(
+                  fontSize: 20.0,
+                  height: 1.5,
+                  letterSpacing: -1,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
                 ),
-
-                child: Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Image(image: AssetImage('assets/$image.png')),
-                )
               ),
 
               FaIcon(
@@ -234,18 +241,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
           ),
-
-          SizedBox(height: 16),
-          Text(
-            name,
-            style: TextStyle(
-              fontSize: 20.0,
-              height: 1.5,
-              letterSpacing: -1,
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          
           Text(
             price,
             style: TextStyle(
@@ -256,7 +252,7 @@ class _HomeScreenState extends State<HomeScreen> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 24),
+          SizedBox(height: 14),
 
           Container(
             padding: EdgeInsets.all(0),
@@ -284,7 +280,11 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildWatchlistItem({String image, String ticker, String change, String price}) {
+  Widget _buildMarketIndexItem({ String ticker, String change, String percentChange, String price}) {
+
+    final isUp = double.parse(change)  > 0;
+    final deepColor = isUp ? Color(0xff51cd7b) : Colors.red;
+
     return Container(
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -297,41 +297,14 @@ class _HomeScreenState extends State<HomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-
-              FaIcon(
-                FontAwesomeIcons.solidStar,
-                color: Colors.orange,
-                size: 24,
-              ),
-              SizedBox(width: 12),
-
-              Container(
-                height: 48.0,
-                width: 48.0,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    width: 3.0,
-                    color: Colors.grey.shade200
-                  ),
-                  borderRadius: BorderRadius.all(Radius.circular(50)),
-                ),
-    
-                child: Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Image(image: AssetImage('assets/$image.png')),
-                )
-              ),
-
-              SizedBox(width: 12),
-              
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    ticker.toUpperCase(),
+                    ticker,
                     style: TextStyle(
                       fontSize: 16.0,
                       height: 1.5,
@@ -341,24 +314,152 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
 
                   Text(
-                    '+$change%',
+                    price,
                     style: TextStyle(
                       fontSize: 16.0,
                       height: 1.5,
-                      color: Colors.green,
+                      color: Colors.grey.shade500,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ],
               ),
               
-              SizedBox(width: MediaQuery.of(context).size.width / 4 * .2),
 
-              
-              Expanded(
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: Text(
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    change,
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      height: 1.5,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+
+                  SizedBox(height: 4),
+
+                  Container(
+                    width: 70,
+                    padding: EdgeInsets.all(0),
+                    decoration: BoxDecoration(
+                      color: deepColor,
+                      borderRadius: BorderRadius.all(Radius.circular(2)),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                      child: Text(
+                        percentChange,
+                        textAlign: TextAlign.end,
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          height: 1.5,
+                          letterSpacing: -1,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )
+                    )
+                  ),
+                ],
+              ),
+
+
+              // SizedBox(width: 16,),
+              // FaIcon(
+              //   FontAwesomeIcons.angleRight,
+              //   color: Colors.grey.shade300,
+              //   size: 24,
+              // ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildWatchlistItem({
+    String image, 
+    String ticker,
+    String companyName,
+    String change, 
+    String price
+  }) {
+
+    final isUp = double.parse(change)  > 0;
+    final deepColor = isUp ? Color(0xff51cd7b) : Colors.red;
+
+    return Container(
+      padding: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Color(0xffffffff),
+        borderRadius: BorderRadius.all(
+          Radius.circular(8)
+        )
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [            
+              Row(
+                children: [
+                  Container(
+                    height: 54.0,
+                    width: 54.0,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        width: 3.0,
+                        color: Colors.grey.shade200
+                      ),
+                      borderRadius: BorderRadius.all(Radius.circular(4)),
+                    ),
+        
+                    child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Image(image: AssetImage('assets/$image.png')),
+                    )
+                  ),
+
+                  SizedBox(width: 14),
+                  
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        companyName,
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          height: 1.5,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+
+                      SizedBox(height: 2,),
+    
+                      Text(
+                        ticker,
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          height: 1.5,
+                          color: Colors.grey.shade500,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
                     '\$$price',
                     style: TextStyle(
                       fontSize: 18.0,
@@ -367,19 +468,39 @@ class _HomeScreenState extends State<HomeScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                ),
-              ),
 
-              SizedBox(width: 16,),
-              FaIcon(
-                FontAwesomeIcons.angleRight,
-                color: Colors.grey.shade300,
-                size: 24,
+                  SizedBox(height: 4),
+
+                  Container(
+                    width: 70,
+                    padding: EdgeInsets.all(0),
+                    decoration: BoxDecoration(
+                      color: deepColor,
+                      borderRadius: BorderRadius.all(Radius.circular(2)),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                      child: Text(
+                        change,
+                        textAlign: TextAlign.end,
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          height: 1.5,
+                          letterSpacing: -1,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )
+                    )
+                  ),
+                ],
               ),
+              
             ],
           ),
         ],
       ),
     );
   }
+
 }

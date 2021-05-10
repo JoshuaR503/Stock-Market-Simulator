@@ -20,11 +20,13 @@ class AltLoginButton extends StatelessWidget {
     return Container(
       decoration: kBoxDecorationStyle,
       width: double.infinity,
+      
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          elevation: 2,
+          elevation: 1,
           primary: Colors.white,
           padding: EdgeInsets.all(16),
+          
         ),
         onPressed: () async {
           final user = await loginMethod();
@@ -44,6 +46,7 @@ class AltLoginButton extends StatelessWidget {
                   image: DecorationImage(
                     image: AssetImage(imageUrl)
                   ),
+                  
                 ),
               ),
             ),

@@ -39,6 +39,9 @@ class _HoldingsScreenState extends State<HoldingsScreen> {
                           ),
                         ),
 
+
+                        
+
                         
                         SizedBox(height: 16,),
                         this._buildPortfolioCard(
@@ -46,17 +49,33 @@ class _HoldingsScreenState extends State<HoldingsScreen> {
                           value: '\$5,439,00',
                           action: 'Ver posiciones'
                         ),
-
                         SizedBox(height: 14,),
-                        this._buildPortfolioCard(
-                          title: "Cambio en la cartera:",
-                          value: '+5.98%',
-                          action: '',
-                          color: Colors.green
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            
+
+                            Expanded(child: this._buildPortfolioCard(
+                              title: "Cambio en\ndólares USD:",
+                              value: '125.93',
+                              action: '',
+                              color: Colors.green
+                            ),),
+    
+                            SizedBox(width: 14,),
+
+                            Expanded(child: this._buildPortfolioCard(
+                              title: "Cambio en\nporcentaje:",
+                              value: '+5.98%',
+                              action: '',
+                              color: Colors.green
+                            ),),
+                          ],
                         ),
 
                         SizedBox(height: 24,),
-                        this._buildPortfolioSubtitle(title: 'Posiciones', ),
+                        this._buildPortfolioSubtitle(title: 'Cartera', ),
 
                         SizedBox(height: 12),
                         _buildWatchlistItem( image: 'netflix', ticker: 'NFLX', companyName: 'Netflix', change: '4.29', price: '503.84'),
@@ -106,7 +125,7 @@ class _HoldingsScreenState extends State<HoldingsScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
+              Expanded(child: Text(
                 title,
                 style: TextStyle(
                   fontSize: 16.5,
@@ -114,13 +133,9 @@ class _HoldingsScreenState extends State<HoldingsScreen> {
                   color: Colors.grey.shade600,
                   fontWeight: FontWeight.w500,
                 ),
-              ),
+              ),),
 
-              FaIcon(
-                FontAwesomeIcons.angleRight,
-                color: Colors.grey.shade300,
-                size: 24,
-              ),
+
             ],
           ),
           
@@ -148,6 +163,7 @@ class _HoldingsScreenState extends State<HoldingsScreen> {
       children: [
         Expanded(child: Text(
           title,
+          overflow: TextOverflow.visible,
           style: TextStyle(
             fontSize: 20.0,
             height: 1.5,
@@ -205,7 +221,7 @@ class _HoldingsScreenState extends State<HoldingsScreen> {
                         width: 3.0,
                         color: Colors.grey.shade200
                       ),
-                      borderRadius: BorderRadius.all(Radius.circular(50)),
+                      borderRadius: BorderRadius.all(Radius.circular(4)),
                     ),
         
                     child: Padding(
@@ -283,8 +299,8 @@ class _HoldingsScreenState extends State<HoldingsScreen> {
                     )
                   ),
                 ],
-
               ),
+
             ],
           ),
         ],
