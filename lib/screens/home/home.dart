@@ -67,8 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           itemBuilder: (context, idx) {
 
                             final MarketIndexModel index = snapshot.data[idx]; 
-                            print(index);
-
+                            
                             return Padding(
                               padding: EdgeInsets.symmetric(vertical: 8),
                               child: _buildMarketIndexItem(
@@ -119,12 +118,48 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   SizedBox(height: 24,),
                   this._buildPortfolioSubtitle(title: 'Precios de comodidades'),
-                  SizedBox(height: 12),
-                  CommodityCard( image: 'silver', ticker: 'Silver COMEX', companyName: "Plata", change: '-0.02', price: '234.84'),
-                  SizedBox(height: 12),
-                  CommodityCard( image: 'gold', ticker: 'Gold COMEX', companyName: "Oro", change: '-0.02', price: '234.84'),
-                  SizedBox(height: 12),
-                  CommodityCard( image: 'oil', ticker: 'WTI Crude', companyName: "Petróleo", change: '-0.02', price: '234.84', padding: 8,),
+                  SizedBox(height: 16),
+
+                  FutureBuilder(
+                    future: this._marketService.fetchCommodities(),
+                    builder: (context, snapshot) {
+
+                      if (snapshot.hasData) {
+
+                        final itemCount = snapshot.data.length;
+                        
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: itemCount,
+                          itemBuilder: (context, idx) {
+
+                            final MarketIndexModel index = snapshot.data[idx]; 
+
+                            return Padding(
+                              padding: EdgeInsets.symmetric(vertical: 8),
+                              child: CommodityCard( 
+                                ticker: index.symbol, 
+                                commodityName: index.name, 
+                                change: index.changesPercentage, 
+                                price: index.price,
+                              ),
+                            );
+                          },
+                          
+                        );
+                      } else {
+                        return CircularProgressIndicator();
+                      }
+                    }
+                  ),
+
+                  // SizedBox(height: 12),
+                  // CommodityCard( image: 'silver', ticker: 'Silver COMEX', companyName: "Plata", change: '-0.02', price: '234.84'),
+                  // SizedBox(height: 12),
+                  // CommodityCard( image: 'gold', ticker: 'Gold COMEX', companyName: "Oro", change: '-0.02', price: '234.84'),
+                  // SizedBox(height: 12),
+                  // CommodityCard( image: 'oil', ticker: 'WTI Crude', companyName: "Petróleo", change: '-0.02', price: '234.84', padding: 8,),
                 ],
               )
             ),
@@ -291,7 +326,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Text(change, style: kCardTitle),
                   SizedBox(height: 4),
                   Container(
-                    width: 80,
+                    width: 84,
                     padding: EdgeInsets.all(0),
                     decoration: BoxDecoration(
                       color: deepColor,

@@ -23,9 +23,7 @@ class StockCard extends StatelessWidget {
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Color(0xffffffff),
-        borderRadius: BorderRadius.all(
-          Radius.circular(8)
-        )
+        borderRadius: BorderRadius.all(Radius.circular(8))
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

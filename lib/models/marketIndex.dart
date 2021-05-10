@@ -3,12 +3,14 @@ class MarketIndexModel {
   final double change;
   final double price;
   final String name;
+  final String symbol;
 
   MarketIndexModel({
     this.changesPercentage, 
     this.change, 
     this.price, 
-    this.name
+    this.name,
+    this.symbol
   });
 
   static List<MarketIndexModel> toList(List<dynamic> items) {
@@ -26,6 +28,7 @@ class MarketIndexModel {
       change: json['change'],
       price: json['price'],
       name: customName,
+      symbol: json['symbol']
     );
   }
 }
