@@ -43,8 +43,9 @@ dev_dependencies:
   google_sign_in: ^5.0.2
   apple_sign_in: ^0.1.0
   flutter_facebook_auth: ^3.3.3+1
-
+  flutter_svg: ^0.22.0
   provider: ^5.0.0
+  dio: ^4.0.0
 
 
 # For information on the generic Dart part of this file, see the

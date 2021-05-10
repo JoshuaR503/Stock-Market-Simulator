@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:simulador/models/marketIndex.dart';
+import 'package:simulador/screens/home/commodity.dart';
+import 'package:simulador/services/indexes.dart';
 import 'package:simulador/shared/common/portfolioCard.dart';
 import 'package:simulador/shared/common/stockCard.dart';
 import 'package:simulador/shared/typography.dart';
+import 'package:intl/intl.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -11,8 +15,11 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
+  final MarketService _marketService = MarketService();
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: Container(
         color: Color(0xfff2f1f6),
@@ -44,11 +51,41 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(height: 24,),
                   this._buildPortfolioSubtitle(title: 'Índices bursátiles'),
                   SizedBox(height: 12),
-                  _buildMarketIndexItem( ticker: 'Dow Jones', change: '229.23', percentChange: '0.66%', price: '34,777.76'),
-                  SizedBox(height: 12),
-                  _buildMarketIndexItem( ticker: 'S&P 500', change: '30.98', percentChange: '0.74%', price: '4,232.60'),
-                  SizedBox(height: 12),
-                  _buildMarketIndexItem( ticker: 'Nasdaq', change: '119.39', percentChange: '0.88%', price: '13,752.24'),
+
+                  FutureBuilder(
+                    future: this._marketService.fetchIndexes(),
+                    builder: (context, snapshot) {
+
+                      if (snapshot.hasData) {
+
+                        final itemCount = snapshot.data.length;
+                        
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: itemCount,
+                          itemBuilder: (context, idx) {
+
+                            final MarketIndexModel index = snapshot.data[idx]; 
+                            print(index);
+
+                            return Padding(
+                              padding: EdgeInsets.symmetric(vertical: 8),
+                              child: _buildMarketIndexItem(
+                                ticker: index.name, 
+                                change: index.change.toString(), 
+                                percentChange: index.changesPercentage.toString(), 
+                                price: index.price
+                              ),
+                            );
+                          },
+                          
+                        );
+                      } else {
+                        return CircularProgressIndicator();
+                      }
+                    }
+                  ),
                   
                   SizedBox(height: 24,),
                   this._buildPortfolioSubtitle(title: 'Lista de seguimiento'),
@@ -57,8 +94,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(height: 12),
                   StockCard( image: 'mcdonalds', ticker: 'MCD', companyName: "McDonald's", change: '-0.02', price: '234.84'),
                   SizedBox(height: 24),
+
                   this._buildPortfolioSubtitle(title: 'Ganadores y Perdedores'),
                   SizedBox(height: 16),
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -77,6 +116,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       )),
                     ],
                   ),
+
+                  SizedBox(height: 24,),
+                  this._buildPortfolioSubtitle(title: 'Precios de comodidades'),
+                  SizedBox(height: 12),
+                  CommodityCard( image: 'silver', ticker: 'Silver COMEX', companyName: "Plata", change: '-0.02', price: '234.84'),
+                  SizedBox(height: 12),
+                  CommodityCard( image: 'gold', ticker: 'Gold COMEX', companyName: "Oro", change: '-0.02', price: '234.84'),
+                  SizedBox(height: 12),
+                  CommodityCard( image: 'oil', ticker: 'WTI Crude', companyName: "Petróleo", change: '-0.02', price: '234.84', padding: 8,),
                 ],
               )
             ),
@@ -86,9 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildPortfolioSubtitle({
-    String title
-  }) {
+  Widget _buildPortfolioSubtitle({ String title }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -124,9 +170,28 @@ class _HomeScreenState extends State<HomeScreen> {
 
     final isUp = change > 0;
 
-    final lightColor =  isUp ? Color(0xffdaf4e3) : Colors.red.shade100;
-    final deepColor = isUp ? Color(0xff51cd7b) : Colors.red;
-    final icon = isUp ? FontAwesomeIcons.caretUp : FontAwesomeIcons.caretDown;
+    final Color lightColor =  isUp ? Color(0xffdaf4e3) : Colors.red.shade100;
+    final Color deepColor = isUp ? Color(0xff51cd7b) : Colors.red;
+    final IconData icon = isUp ? FontAwesomeIcons.caretUp : FontAwesomeIcons.caretDown;
+
+    final String positivePirce = '+ ' + change.toString();
+    final String negativePrice = '- ${change.toString().replaceFirst(RegExp('-'), '')}';
+
+    final TextStyle companyName = TextStyle(
+      fontSize: 20.0,
+      height: 1.5,
+      letterSpacing: -1,
+      color: Colors.black,
+      fontWeight: FontWeight.bold,
+    );
+
+    final TextStyle companyPrice = TextStyle(
+      fontSize: 17.5,
+      height: 1.5,
+      letterSpacing: .5,
+      color: Colors.grey.shade800,
+      fontWeight: FontWeight.bold,
+    );
 
     return Container(
       padding: EdgeInsets.all(16),
@@ -134,44 +199,25 @@ class _HomeScreenState extends State<HomeScreen> {
         color: Color(0xffffffff),
         borderRadius: BorderRadius.all(Radius.circular(8))
       ),
+
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          
 
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                name,
-                style: TextStyle(
-                  fontSize: 20.0,
-                  height: 1.5,
-                  letterSpacing: -1,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-
-              FaIcon(
-                icon,
+              Text(name, style: companyName),
+              FaIcon(icon,
                 color: deepColor,
                 size: 24,
               ),
             ],
           ),
-          
-          Text(
-            price,
-            style: TextStyle(
-              fontSize: 17.5,
-              height: 1.5,
-              letterSpacing: .5,
-              color: Colors.grey.shade800,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+
+          SizedBox(height: 4),
+          Text(price, style: companyPrice),
           SizedBox(height: 14),
 
           Container(
@@ -184,7 +230,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
               child: Text(
-                change > 0 ? '+ ' + change.toString() : '- ${change.toString().replaceFirst(RegExp('-'), '')}',
+                change > 0 ? positivePirce : negativePrice,
                 style: TextStyle(
                   fontSize: 16.0,
                   height: 1.5,
@@ -204,7 +250,7 @@ class _HomeScreenState extends State<HomeScreen> {
     String ticker, 
     String change, 
     String percentChange, 
-    String price
+    double price
   }) {
 
     final isUp = double.parse(change)  > 0;
@@ -222,9 +268,7 @@ class _HomeScreenState extends State<HomeScreen> {
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Color(0xffffffff),
-        borderRadius: BorderRadius.all(
-          Radius.circular(8)
-        )
+        borderRadius: BorderRadius.all(Radius.circular(8))
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -237,7 +281,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(ticker, style: kCardTitle),
-                  Text(price, style: kCardsSubtitle),
+                  Text(NumberFormat().format(price), style: kCardsSubtitle),
                 ],
               ),
               
@@ -245,11 +289,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(change, style: kCardTitle),
-
                   SizedBox(height: 4),
-
                   Container(
-                    width: 70,
+                    width: 80,
                     padding: EdgeInsets.all(0),
                     decoration: BoxDecoration(
                       color: deepColor,
@@ -258,7 +300,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                       child: Text(
-                        percentChange,
+                        '$percentChange %',
                         textAlign: TextAlign.end,
                         style: changePercentStyle
                       )
@@ -273,6 +315,5 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  
 
 }
