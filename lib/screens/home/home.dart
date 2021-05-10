@@ -200,10 +200,23 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildMarketIndexItem({ String ticker, String change, String percentChange, String price}) {
+  Widget _buildMarketIndexItem({ 
+    String ticker, 
+    String change, 
+    String percentChange, 
+    String price
+  }) {
 
     final isUp = double.parse(change)  > 0;
     final deepColor = isUp ? Color(0xff51cd7b) : Colors.red;
+
+    final TextStyle changePercentStyle = TextStyle(
+      fontSize: 16.0,
+      height: 1.5,
+      letterSpacing: -1,
+      color: Colors.white,
+      fontWeight: FontWeight.bold,
+    );
 
     return Container(
       padding: EdgeInsets.all(16),
@@ -223,41 +236,15 @@ class _HomeScreenState extends State<HomeScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    ticker,
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      height: 1.5,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-
-                  Text(
-                    price,
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      height: 1.5,
-                      color: Colors.grey.shade500,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  Text(ticker, style: kCardTitle),
+                  Text(price, style: kCardsSubtitle),
                 ],
               ),
               
-
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(
-                    change,
-                    style: TextStyle(
-                      fontSize: 18.0,
-                      height: 1.5,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  Text(change, style: kCardTitle),
 
                   SizedBox(height: 4),
 
@@ -273,26 +260,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Text(
                         percentChange,
                         textAlign: TextAlign.end,
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          height: 1.5,
-                          letterSpacing: -1,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: changePercentStyle
                       )
                     )
                   ),
                 ],
               ),
-
-
-              // SizedBox(width: 16,),
-              // FaIcon(
-              //   FontAwesomeIcons.angleRight,
-              //   color: Colors.grey.shade300,
-              //   size: 24,
-              // ),
             ],
           ),
         ],

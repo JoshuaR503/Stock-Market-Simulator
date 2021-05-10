@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:simulador/shared/typography.dart';
 
 class StockCard extends StatelessWidget {
 
@@ -66,26 +67,12 @@ class StockCard extends StatelessWidget {
 
   Widget _buildCompanyInfo() {
 
-    final TextStyle companyNameStyle = TextStyle(
-      fontSize: 16.0,
-      height: 1.5,
-      color: Colors.black,
-      fontWeight: FontWeight.bold,
-    );
-
-    final TextStyle companyTickerStyle = TextStyle(
-      fontSize: 16.0,
-      height: 1.5,
-      color: Colors.grey.shade500,
-      fontWeight: FontWeight.bold,
-    );
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(companyName, style: companyNameStyle),
+        Text(companyName, style: kCardTitle),
         SizedBox(height: 2),
-        Text(ticker, style: companyTickerStyle),
+        Text(ticker, style: kCardsSubtitle),
       ],
     );
   }
@@ -94,14 +81,7 @@ class StockCard extends StatelessWidget {
 
     final isUp = double.parse(change)  > 0;
     final deepColor = isUp ? Color(0xff51cd7b) : Colors.red;
-
-    final TextStyle priceStyle = TextStyle(
-      fontSize: 18.0,
-      height: 1.5,
-      color: Colors.black,
-      fontWeight: FontWeight.bold,
-    );
-
+    
     final TextStyle priceChangeStyle = TextStyle(
       fontSize: 16.0,
       height: 1.5,
@@ -114,7 +94,7 @@ class StockCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
 
-        Text('\$$price', style: priceStyle ),
+        Text('\$$price', style: kCardTitle ),
 
         SizedBox(height: 4),
         Container(
