@@ -27,9 +27,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        
+                        SizedBox(height: 24,),
                         Text(
-                          'Simulador de Bolsa: Cartera',
+                          'Portafolio',
                           style: TextStyle(
                             fontSize: 34.0,
                             height: 1.5,
@@ -40,19 +40,16 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
 
                         
-                        SizedBox(height: 16,),
+                        SizedBox(height: 24,),
                         this._buildPortfolioCard(
                           title: "Valor de la cartera:",
                           value: '\$5,439,00',
-                          action: 'Ver posiciones'
+                          action: 'Ver posiciones',
+                          actionCallback: () {
+                            Navigator.pushNamed(context, '/holdings');
+                          }
                         ),
-                        SizedBox(height: 14,),
-                        this._buildPortfolioCard(
-                          title: "Cambio en la cartera:",
-                          value: '+5.98%',
-                          action: '',
-                          color: Colors.green
-                        ),
+
                         SizedBox(height: 24,),
                         this._buildPortfolioSubtitle(title: 'Lista de seguimiento'),
 
@@ -60,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         _buildWatchlistItem( image: 'netflix', ticker: 'NFLX', change: '4.29', price: '503.84'),
 
                         SizedBox(height: 12),
-                        _buildWatchlistItem( image: 'facebook', ticker: 'FB', change: '0.94', price: '319.08'),
+                        _buildWatchlistItem( image: 'facebook2', ticker: 'FB', change: '0.94', price: '319.08'),
 
                         SizedBox(height: 12),
                         _buildWatchlistItem( image: 'search', ticker: 'GOOG', change: '17.34', price: '2,398.69'),
@@ -84,11 +81,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               image: 'sbux',
                               change: -0.46,
                               price: '\$114.28'
-                            ),),
-                            
+                            ))
                           ],
                         ),
-                        
                       ],
                     )
                   ),
@@ -105,52 +100,56 @@ class _HomeScreenState extends State<HomeScreen> {
     String title,
     String value,
     String action,
+    Function actionCallback,
     Color color = Colors.black,
   }) {
-    return Container(
-      padding: EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Color(0xffffffff),
-        borderRadius: BorderRadius.all(
-          Radius.circular(8)
-        )
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 16.5,
-                  height: 1.5,
-                  color: Colors.grey.shade600,
-                  fontWeight: FontWeight.w500,
+    return GestureDetector(
+      onTap: actionCallback,
+      child:  Container(
+        padding: EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: Color(0xffffffff),
+          borderRadius: BorderRadius.all(
+            Radius.circular(8)
+          )
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 16.5,
+                    height: 1.5,
+                    color: Colors.grey.shade600,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              ),
 
-              FaIcon(
-                FontAwesomeIcons.angleRight,
-                color: Colors.grey.shade300,
-                size: 24,
-              ),
-            ],
-          ),
-          
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 28.0,
-              height: 1.5,
-              letterSpacing: -1,
-              color: color,
-              fontWeight: FontWeight.bold,
+                FaIcon(
+                  FontAwesomeIcons.angleRight,
+                  color: Colors.grey.shade300,
+                  size: 24,
+                ),
+              ],
             ),
-          ),
-        ],
+
+            Text(
+              value,
+              style: TextStyle(
+                fontSize: 28.0,
+                height: 1.5,
+                letterSpacing: -1,
+                color: color,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -309,7 +308,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               SizedBox(width: 12),
 
-            
               Container(
                 height: 48.0,
                 width: 48.0,

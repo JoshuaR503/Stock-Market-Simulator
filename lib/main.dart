@@ -5,6 +5,7 @@ import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:simulador/screens/holdings/holdings.dart';
 import 'package:simulador/screens/home/home.dart';
 import 'package:simulador/screens/login/login.dart';
 import 'package:simulador/screens/login/profile.dart';
@@ -44,6 +45,7 @@ class MyApp extends StatelessWidget {
         routes: {
           '/': (context) => LoginScreen(),
           '/home': (context) => HomeScreen(),
+          '/holdings': (context) => HoldingsScreen(),
 
           // '/profile': (context) => ProfileScreen(),
           // '/about': (context) => AboutScreen(),
