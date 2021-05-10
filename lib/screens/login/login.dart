@@ -4,6 +4,7 @@ import 'package:simulador/screens/login/loginInput.dart';
 import 'package:simulador/screens/login/styles.dart';
 import 'package:simulador/screens/login/widgets.dart';
 import 'package:simulador/services/auth.dart';
+import 'package:simulador/shared/typography.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -73,13 +74,7 @@ class _LoginScreenState extends State<LoginScreen> {
           alignment: Alignment.centerLeft,
           child: Text(
           'Iniciar Sesión',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 34.0,
-            height: 1.5,
-            letterSpacing: -1,
-            fontWeight: FontWeight.bold,
-          ),
+          style: screenTitle
           ),
         ),
         SizedBox(height: 14),

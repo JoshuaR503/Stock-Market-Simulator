@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:simulador/shared/typography.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -14,95 +15,70 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Container(
         color: Color(0xfff2f1f6),
         child: SafeArea(
-          child: GestureDetector(
-            onTap: () => FocusScope.of(context).unfocus(),
-            child: Stack(
-              children: <Widget>[
-                Container(
-                  height: double.infinity,
-                  width: double.infinity,
-                  child: SingleChildScrollView(
-                    physics: AlwaysScrollableScrollPhysics(),
-                    padding: EdgeInsets.symmetric(horizontal: 24.0,vertical: 40.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        SizedBox(height: 24,),
-                        Text(
-                          'Portafolio',
-                          style: TextStyle(
-                            fontSize: 34.0,
-                            height: 1.5,
-                            letterSpacing: -1,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-
-                        
-                        SizedBox(height: 24,),
-                        this._buildPortfolioCard(
-                          title: "Valor de la cartera:",
-                          value: '\$5,439,00',
-                          action: 'Ver posiciones',
-                          actionCallback: () {
-                            Navigator.pushNamed(context, '/holdings');
-                          }
-                        ),
-
-                        SizedBox(height: 24,),
-                        this._buildPortfolioSubtitle(title: 'Índices bursátiles'),
-
-                        SizedBox(height: 12),
-                        _buildMarketIndexItem( ticker: 'Dow Jones', change: '229.23', percentChange: '0.66%', price: '34,777.76'),
-
-                        SizedBox(height: 12),
-                        _buildMarketIndexItem( ticker: 'S&P 500', change: '30.98', percentChange: '0.74%', price: '4,232.60'),
-
-                        SizedBox(height: 12),
-                        _buildMarketIndexItem( ticker: 'Nasdaq', change: '119.39', percentChange: '0.88%', price: '13,752.24'),
-
-                        
-
-                        SizedBox(height: 24,),
-                        this._buildPortfolioSubtitle(title: 'Lista de seguimiento'),
-
-                        SizedBox(height: 12),
-                        _buildWatchlistItem( image: 'microsoft', ticker: 'MSFT', companyName: 'Microsoft', change: '2.73', price: '252.46'),
-
-                        SizedBox(height: 12),
-                        _buildWatchlistItem( image: 'mcdonalds', ticker: 'MCD', companyName: "McDonald's", change: '-0.02', price: '234.84'),
-
-                        SizedBox(height: 24),
-                        this._buildPortfolioSubtitle(title: 'Ganadores y Perdedores'),
-
-                        SizedBox(height: 16),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(child: this._buildGainersAndLosers(
-                              name: 'Apple',
-                              image: 'apple',
-                              change: 6.32,
-                              price: '\$324.34'
-                            ),),
-                            SizedBox(width: 24),
-                            Expanded(child: this._buildGainersAndLosers(
-                              name: 'Starbucks',
-                              image: 'sbux',
-                              change: -0.46,
-                              price: '\$114.28'
-                            )),
-                            
-                          ],
-                        ),
-                      ],
-                    )
+          child: Container(
+            height: double.infinity,
+            width: double.infinity,
+            child: SingleChildScrollView(
+              physics: AlwaysScrollableScrollPhysics(),
+              padding: EdgeInsets.symmetric(horizontal: 24.0,vertical: 40.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  SizedBox(height: 24,),
+                  Text(
+                    'Portafolio',
+                    style: screenTitle
                   ),
-                )
-              ],
+                  
+                  SizedBox(height: 24,),
+                  this._buildPortfolioCard(
+                    title: "Valor de la cartera:",
+                    value: '\$5,439,00',
+                    action: 'Ver posiciones',
+                    actionCallback: () {
+                      Navigator.pushNamed(context, '/holdings');
+                    }
+                  ),
+                  SizedBox(height: 24,),
+                  this._buildPortfolioSubtitle(title: 'Índices bursátiles'),
+                  SizedBox(height: 12),
+                  _buildMarketIndexItem( ticker: 'Dow Jones', change: '229.23', percentChange: '0.66%', price: '34,777.76'),
+                  SizedBox(height: 12),
+                  _buildMarketIndexItem( ticker: 'S&P 500', change: '30.98', percentChange: '0.74%', price: '4,232.60'),
+                  SizedBox(height: 12),
+                  _buildMarketIndexItem( ticker: 'Nasdaq', change: '119.39', percentChange: '0.88%', price: '13,752.24'),
+                  
+                  SizedBox(height: 24,),
+                  this._buildPortfolioSubtitle(title: 'Lista de seguimiento'),
+                  SizedBox(height: 12),
+                  _buildWatchlistItem( image: 'microsoft', ticker: 'MSFT', companyName: 'Microsoft', change: '2.73', price: '252.46'),
+                  SizedBox(height: 12),
+                  _buildWatchlistItem( image: 'mcdonalds', ticker: 'MCD', companyName: "McDonald's", change: '-0.02', price: '234.84'),
+                  SizedBox(height: 24),
+                  this._buildPortfolioSubtitle(title: 'Ganadores y Perdedores'),
+                  SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(child: this._buildGainersAndLosers(
+                        name: 'Apple',
+                        image: 'apple',
+                        change: 6.32,
+                        price: '\$324.34'
+                      ),),
+                      SizedBox(width: 24),
+                      Expanded(child: this._buildGainersAndLosers(
+                        name: 'Starbucks',
+                        image: 'sbux',
+                        change: -0.46,
+                        price: '\$114.28'
+                      )),
+                    ],
+                  ),
+                ],
+              )
             ),
-          ),
+          )
         ),
       ),
     );
