@@ -98,15 +98,18 @@ class _HoldingsScreenState extends State<HoldingsScreen> {
           ),
         )),
 
-        Text(
-          'Trading Center',
-          style: TextStyle(
-            fontSize: 18.0,
-            height: 1.5,
-            color: Colors.blueAccent,
-            fontWeight: FontWeight.bold,
+        GestureDetector(
+          onTap: () => Navigator.pushNamed(context, '/trading'),
+          child: Text(
+            'Trading Center',
+            style: TextStyle(
+              fontSize: 18.0,
+              height: 1.5,
+              color: Colors.blueAccent,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
+        )
       ],
     );
   }

@@ -81,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           
                         );
                       } else {
-                        return CircularProgressIndicator();
+                        return Container();
                       }
                     }
                   ),
@@ -149,17 +149,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           
                         );
                       } else {
-                        return CircularProgressIndicator();
+                        return Container();
                       }
                     }
                   ),
-
-                  // SizedBox(height: 12),
-                  // CommodityCard( image: 'silver', ticker: 'Silver COMEX', companyName: "Plata", change: '-0.02', price: '234.84'),
-                  // SizedBox(height: 12),
-                  // CommodityCard( image: 'gold', ticker: 'Gold COMEX', companyName: "Oro", change: '-0.02', price: '234.84'),
-                  // SizedBox(height: 12),
-                  // CommodityCard( image: 'oil', ticker: 'WTI Crude', companyName: "Petróleo", change: '-0.02', price: '234.84', padding: 8,),
                 ],
               )
             ),
