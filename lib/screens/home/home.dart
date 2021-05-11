@@ -118,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   SizedBox(height: 24,),
                   this._buildPortfolioSubtitle(title: 'Precios de comodidades'),
-                  SizedBox(height: 16),
+                  SizedBox(height: 8),
 
                   FutureBuilder(
                     future: this._marketService.fetchCommodities(),
@@ -153,6 +153,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       }
                     }
                   ),
+
                 ],
               )
             ),
