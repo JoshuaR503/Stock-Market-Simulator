@@ -44,9 +44,6 @@ class _TradingScreenState extends State<TradingScreen> {
                   ),
                   SizedBox(height: 24),
                   
-                  this._buildPortfolioSubtitle(title: 'Detalles de la orden', ),
-                  SizedBox(height: 16),
-
                   _buildAviabaleBalance(),
                   SizedBox(height: 16),
 
@@ -79,7 +76,7 @@ class _TradingScreenState extends State<TradingScreen> {
         padding: EdgeInsets.all(14),
         decoration: BoxDecoration(
           color: Color(0xffffffff),
-          borderRadius: BorderRadius.all(Radius.circular(8))
+          borderRadius: BorderRadius.all(Radius.circular(4))
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -89,7 +86,7 @@ class _TradingScreenState extends State<TradingScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Dinero\ndisponible', style: kTitleStyle),
-                Text('\$180.27', style: kValueStyle),
+                Text('\$4,892.27', style: kValueStyle),
               ],
             ),
           ],
@@ -99,13 +96,19 @@ class _TradingScreenState extends State<TradingScreen> {
   }
   
   Widget _buildOrderType( ) {
+
+    final ButtonStyle style = ButtonStyle(
+      backgroundColor: MaterialStateProperty.all<Color>(Colors.blue.shade50),
+      foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+    );
+
     return GestureDetector(
       onTap: () {},
       child:  Container(
         padding: EdgeInsets.all(14),
         decoration: BoxDecoration(
           color: Color(0xffffffff),
-          borderRadius: BorderRadius.all(Radius.circular(8))
+          borderRadius: BorderRadius.all(Radius.circular(4))
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -114,28 +117,12 @@ class _TradingScreenState extends State<TradingScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Tipo de Orden', style: kTitleStyle),
+                Text('Tipo de\nOrden', style: kTitleStyle),
                 Row(
                   children: [
-                    TextButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(Colors.blue.shade50),
-                        foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-                      ),
-                      onPressed: () { },
-                      child: Text('Comprar'),
-                    ),
-
-                    SizedBox(width: 14,),
-
-                    TextButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(Colors.blue.shade50),
-                        foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-                      ),
-                      onPressed: () { },
-                      child: Text('Vender'),
-                    )
+                    TextButton(style: style, child: Text('Comprar'), onPressed: () { }),
+                    SizedBox(width: 14),
+                    TextButton(style: style, child: Text('Vender'), onPressed: () { })
                   ],
                 ),
               ],
@@ -168,7 +155,7 @@ class _TradingScreenState extends State<TradingScreen> {
                   child: Container(
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.blue, width: 1),
-                      borderRadius: BorderRadius.all(Radius.circular(8)),
+                      borderRadius: BorderRadius.all(Radius.circular(4)),
                     ),
                     child: TextField(
                       style: TextStyle(color: Colors.blue),
@@ -191,25 +178,6 @@ class _TradingScreenState extends State<TradingScreen> {
     );
   }
 
-  Widget _buildPortfolioSubtitle({String title}) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        Expanded(child: Text(
-          title,
-          overflow: TextOverflow.visible,
-          style: TextStyle(
-            fontSize: 18.0,
-            height: 1.5,
-            color: Colors.grey.shade800,
-            fontWeight: FontWeight.w700,
-          ),
-        )),
-      ],
-    );
-  }
-
   Widget _buildCostEstimate( ) {
     return GestureDetector(
       onTap: () {},
@@ -217,7 +185,7 @@ class _TradingScreenState extends State<TradingScreen> {
         padding: EdgeInsets.all(14),
         decoration: BoxDecoration(
           color: Color(0xffffffff),
-          borderRadius: BorderRadius.all(Radius.circular(8))
+          borderRadius: BorderRadius.all(Radius.circular(4))
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
