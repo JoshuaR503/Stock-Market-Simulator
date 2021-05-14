@@ -8,13 +8,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:simulador/screens/holdings/holdings.dart';
 import 'package:simulador/screens/home/home.dart';
 import 'package:simulador/screens/login/login.dart';
-import 'package:simulador/screens/login/profile.dart';
 import 'package:simulador/screens/trading/trading.dart';
 
 import 'package:simulador/services/auth.dart';
-import 'package:simulador/services/database.dart';
-
-import 'screens/screens.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
 
@@ -55,7 +51,9 @@ class MyApp extends StatelessWidget {
         },
 
         theme: ThemeData(
-          brightness: Brightness.dark,
+          brightness: Brightness.light,
+          canvasColor: Colors.transparent,
+
         ),
       )
     );

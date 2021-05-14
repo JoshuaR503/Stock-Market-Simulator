@@ -146,6 +146,7 @@ class AuthService {
     if (isNew) {
       /// User is new
       data['cash'] = 100000;
+      data['orders'] = [];
       print('User is new');
     }
 

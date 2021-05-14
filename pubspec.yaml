@@ -47,6 +47,7 @@ dev_dependencies:
   provider: ^5.0.0
   dio: ^4.0.0
 
+  enum_to_string: ^2.0.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

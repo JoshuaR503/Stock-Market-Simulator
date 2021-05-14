@@ -1,8 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:simulador/helpers/http.dart';
+import 'package:simulador/models/orderData.dart';
+import 'package:simulador/models/orderType.dart';
 import 'package:simulador/models/tradingStockQuote.dart';
+import 'package:simulador/services/database.dart';
 import 'package:simulador/shared/typography.dart';
 import 'package:dio/dio.dart';
+import 'package:intl/intl.dart';
+import 'package:enum_to_string/enum_to_string.dart';
+
+final TextStyle kTitleStyle = TextStyle(
+  fontSize: 16.5,
+  height: 1.5,
+  color: Colors.grey.shade600,
+  fontWeight: FontWeight.w500,
+);
+
+final TextStyle kValueStyle = TextStyle(
+  fontSize: 16.5,
+  height: 1.5,
+  color: Colors.black,
+  fontWeight: FontWeight.w500,
+);
+
+
 
 class TradingScreen extends StatefulWidget {
   @override
@@ -11,24 +32,13 @@ class TradingScreen extends StatefulWidget {
 
 class _TradingScreenState extends State<TradingScreen> {
 
+  OrderType orderType = OrderType.unselected;
+  double orderCost;
+
   TradingStockQuote tradingStockQuote;
 
   final _stockAmountController = TextEditingController();
   final _stockSymbolController = TextEditingController();
-
-  final TextStyle kTitleStyle = TextStyle(
-    fontSize: 16.5,
-    height: 1.5,
-    color: Colors.grey.shade600,
-    fontWeight: FontWeight.w500,
-  );
-
-  final TextStyle kValueStyle = TextStyle(
-    fontSize: 16.5,
-    height: 1.5,
-    color: Colors.black,
-    fontWeight: FontWeight.w500,
-  );
 
   Future<void> _getStockPrice() async {
     final HttpLibrary _httpLibrary = HttpLibrary();
@@ -37,8 +47,14 @@ class _TradingScreenState extends State<TradingScreen> {
       final Response<dynamic> response = await _httpLibrary.iexRequest('/v1/stock/AAPL/quote'); 
       final TradingStockQuote tradingStockQuote = TradingStockQuote.fromJson(response.data);
 
+      final orderCost = tradingStockQuote != null 
+        ? double.parse(tradingStockQuote.latestPrice.toString()) * 
+          double.parse(_stockAmountController.text.isEmpty ? 1.0 : _stockAmountController.text.toString())
+        : 'N/A';
+
       setState(() {
         this.tradingStockQuote = tradingStockQuote;
+        this.orderCost = orderCost;
       });
     } catch (e) {
       print(e);
@@ -50,6 +66,79 @@ class _TradingScreenState extends State<TradingScreen> {
     _stockAmountController.dispose();
     _stockSymbolController.dispose();
     super.dispose();
+  }
+
+  void displayBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (ctx) {
+        return Container(
+          height: MediaQuery.of(context).size.height  * 0.5,
+          color: Colors.transparent,
+          child: Container(
+            child: Container(
+              padding: EdgeInsets.all(30),
+              decoration: new BoxDecoration(
+                color: Colors.white,
+                borderRadius: new BorderRadius.only(
+                  topLeft: const Radius.circular(20.0),
+                  topRight: const Radius.circular(20.0)
+                )
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: 20,),
+                  Image(image: AssetImage('assets/checked.png',), height: 100, width: 100, ),
+                  SizedBox(height: 20),
+                  Text("Su orden se ha\nrealizado con éxito ",
+                    textAlign: TextAlign.center,
+                   style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w500,
+                    height: 1.5
+                  ),),
+                  SizedBox(height: 30),
+
+                  TextButton(
+                    onPressed: () {},
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(Color(0xfff3db39e)),
+                    foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                  ),
+                  child: Container(
+                    height: 40,
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text('Realizar otra orden', style: TextStyle(fontSize: 16)),
+                    )
+                  ),
+                ),
+                  SizedBox(height: 16),
+
+                TextButton(
+                    onPressed: () {},
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(Color(0xfff3db39e)),
+                    foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                  ),
+                  child: Container(
+                    height: 40,
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text('Ver posiciones', style: TextStyle(fontSize: 16)),
+                    )
+                  ),
+                ),
+
+                ],
+
+              )
+            ),
+          ),
+        );
+      }
+    );
   }
 
   @override
@@ -127,7 +216,17 @@ class _TradingScreenState extends State<TradingScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Dinero\ndisponible', style: kTitleStyle),
-                Text('\$4,892.27', style: kValueStyle),
+
+                StreamBuilder(
+                  stream: Database().cashBalance,
+                  builder: (ctx, snapshot) {
+                    if (snapshot.hasData) {
+                      return Text('\$${NumberFormat().format(snapshot.data['cash'])}', style: kValueStyle);
+                    } else {
+                      return Text('cargando...', style: kValueStyle);
+                    }
+                  }
+                )
               ],
             ),
           ],
@@ -138,38 +237,52 @@ class _TradingScreenState extends State<TradingScreen> {
   
   Widget _buildOrderType( ) {
 
-    final ButtonStyle style = ButtonStyle(
+    final ButtonStyle defaultStyle = ButtonStyle(
       backgroundColor: MaterialStateProperty.all<Color>(Colors.blue.shade50),
       foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
     );
 
-    return GestureDetector(
-      onTap: () {},
-      child:  Container(
-        padding: EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: Color(0xffffffff),
-          borderRadius: BorderRadius.all(Radius.circular(4))
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Tipo de\nOrden', style: kTitleStyle),
-                Row(
-                  children: [
-                    TextButton(style: style, child: Text('Comprar'), onPressed: () { }),
-                    SizedBox(width: 14),
-                    TextButton(style: style, child: Text('Vender'), onPressed: () { })
-                  ],
-                ),
-              ],
-            ),
-          ],
-        ),
+    final ButtonStyle selectedStyle = ButtonStyle(
+      backgroundColor: MaterialStateProperty.all<Color>(Colors.blue.shade600),
+      foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+    );
+
+    final buyButtonStyle = this.orderType == OrderType.buy ? selectedStyle : defaultStyle; 
+    final buyButton = TextButton(
+      style: buyButtonStyle, 
+      child: Text('Comprar'), 
+      onPressed: () => setState(() => this.orderType = OrderType.buy)
+    );
+
+    final sellButtonStyle = this.orderType == OrderType.sell ?  selectedStyle : defaultStyle;
+    final sellButton = TextButton(
+      style: sellButtonStyle, 
+      child: Text('Vender'), 
+      onPressed: () => setState(() => this.orderType = OrderType.sell)
+    );
+
+    return Container(
+      padding: EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Color(0xffffffff),
+        borderRadius: BorderRadius.all(Radius.circular(4))
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Tipo de\nOrden', style: kTitleStyle),
+              Row(children: [
+                buyButton, 
+                SizedBox(width: 14), 
+                sellButton
+              ]),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -208,11 +321,9 @@ class _TradingScreenState extends State<TradingScreen> {
                       keyboardType: keyboardType,
                       controller: controller,
                       onSubmitted: (value) {
-
                         if (action != null) {
                           action();
                         }
-
                       },
                       style: TextStyle(color: Colors.blue),
                       decoration: InputDecoration(
@@ -236,33 +347,28 @@ class _TradingScreenState extends State<TradingScreen> {
 
   Widget _buildCostEstimate( ) {
 
-    print(_stockAmountController.text.isEmpty);
-    final cost = tradingStockQuote != null 
-      ? double.parse(tradingStockQuote.latestPrice.toString()) * 
-        double.parse(_stockAmountController.text.isEmpty ? 1.0 : _stockAmountController.text.toString())
+    final orderTotal = orderCost != null 
+      ? '\$${NumberFormat().format(orderCost)}' 
       : 'N/A';
 
-    return GestureDetector(
-      onTap: () {},
-      child:  Container(
-        padding: EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: Color(0xffffffff),
-          borderRadius: BorderRadius.all(Radius.circular(4))
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Costo estimado\nde la orden', style: kTitleStyle),
-                Text(cost.toString(), style: kValueStyle),
-              ],
-            ),
-          ],
-        ),
+    return Container(
+      padding: EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Color(0xffffffff),
+        borderRadius: BorderRadius.all(Radius.circular(4))
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Costo estimado\nde la orden', style: kTitleStyle),
+              Text(orderTotal, style: kValueStyle),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -273,14 +379,30 @@ class _TradingScreenState extends State<TradingScreen> {
         backgroundColor: MaterialStateProperty.all<Color>(Colors.blueAccent),
         foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
       ),
-      onPressed: () { },
+      onPressed: () async {
+
+        await Database().changeCashbalance(
+          orderValue: orderCost, 
+          orderType: this.orderType
+        );
+
+        await Database().updateOrderHistory(
+          orderData: OrderData(
+            ticker: _stockSymbolController.text,
+            quanity: _stockAmountController.text,
+            timestamp: DateTime.now().toString(),
+            orderType: EnumToString.convertToString(orderType)
+          )
+        );
+
+        displayBottomSheet(context);
+
+      },
       child: Container(
         height: 40,
         child: Align(
           alignment: Alignment.center,
-          child: Text('Realizar orden', style: TextStyle(
-            fontSize: 16
-          ),),
+          child: Text('Realizar orden', style: TextStyle(fontSize: 16)),
         )
       ),
     );
