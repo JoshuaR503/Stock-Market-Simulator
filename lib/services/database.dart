@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:simulador/models/holdingData.dart';
 import 'package:simulador/models/orderData.dart';
 import 'package:simulador/models/orderType.dart';
 import 'package:simulador/services/auth.dart';
@@ -37,6 +38,7 @@ class Database {
 
   Future<void> updateOrderHistory({
     OrderData orderData,
+    HoldingData holdingData,
   }) async {
 
     final currentOrderHistory = await _database
@@ -49,11 +51,18 @@ class Database {
     
     currentOrders.add(orderData.toJson());
 
-     await _database
+    await _database
     .collection("users")
     .doc(_auth.getUser.uid)
     .set({ "orders": FieldValue.arrayUnion(currentOrders)},  SetOptions(merge: true));
 
+    final List currentHoldings = currentOrderHistory['holdings'];
+    currentHoldings.add(holdingData.toJson());
+
+    await _database
+    .collection("users")
+    .doc(_auth.getUser.uid)
+    .set({ "holdings": FieldValue.arrayUnion(currentHoldings)},  SetOptions(merge: true));
   
     return null;
   }

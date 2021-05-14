@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:simulador/helpers/http.dart';
+import 'package:simulador/models/holdingData.dart';
 import 'package:simulador/models/orderData.dart';
 import 'package:simulador/models/orderType.dart';
 import 'package:simulador/models/tradingStockQuote.dart';
@@ -103,7 +104,7 @@ class _TradingScreenState extends State<TradingScreen> {
                   TextButton(
                     onPressed: () {},
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(Color(0xfff3db39e)),
+                    backgroundColor: MaterialStateProperty.all<Color>(Color(0xff2bc5aa)),
                     foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
                   ),
                   child: Container(
@@ -117,9 +118,11 @@ class _TradingScreenState extends State<TradingScreen> {
                   SizedBox(height: 16),
 
                 TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                       Navigator.pushNamed(context, '/holdings');
+                    },
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(Color(0xfff3db39e)),
+                    backgroundColor: MaterialStateProperty.all<Color>(Color(0xff2bc5aa)),
                     foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
                   ),
                   child: Container(
@@ -391,9 +394,31 @@ class _TradingScreenState extends State<TradingScreen> {
             ticker: _stockSymbolController.text,
             quanity: _stockAmountController.text,
             timestamp: DateTime.now().toString(),
-            orderType: EnumToString.convertToString(orderType)
+            orderType: EnumToString.convertToString(orderType),
+            baseCost: double.parse(tradingStockQuote.latestPrice.toString()),
+            totalCost: orderCost
+          ),
+          holdingData: HoldingData(
+            ticker: _stockSymbolController.text,
+            quanity: _stockAmountController.text,
+            orderType: EnumToString.convertToString(orderType),
+            baseCost: double.parse(tradingStockQuote.latestPrice.toString()),
+            totalCost: orderCost
           )
         );
+
+        // await Database().(
+        //   orderData: OrderData(
+        //     ticker: _stockSymbolController.text,
+        //     quanity: _stockAmountController.text,
+        //     timestamp: DateTime.now().toString(),
+        //     orderType: EnumToString.convertToString(orderType),
+        //     baseCost: double.parse(tradingStockQuote.latestPrice.toString()),
+        //     totalCost: orderCost
+        //   ),
+        // );
+
+        
 
         displayBottomSheet(context);
 

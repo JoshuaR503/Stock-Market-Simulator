@@ -1,16 +1,14 @@
-class OrderData {
+class HoldingData {
   final String ticker;
   final String quanity;
   final String orderType;
-  final String timestamp;
   final double baseCost;
   final double totalCost;
 
-  OrderData({
+  HoldingData({
     this.ticker,
     this.quanity,
     this.orderType,
-    this.timestamp,
     this.baseCost,
     this.totalCost
   });
@@ -20,7 +18,6 @@ class OrderData {
     'ticker': ticker,
     'quanity': quanity,
     'orderType': orderType,
-    'timestamp': timestamp,
     'baseCost': baseCost,
     'totalCost': totalCost,
   };
