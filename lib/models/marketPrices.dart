@@ -22,7 +22,11 @@ class MarketPricesModel {
   factory MarketPricesModel.fromJson(Map<String, dynamic> json) {
 
     final String companyName = json['name'];
-    final String formattedCompanyName = companyName.replaceAll('Corporation', ' ');
+    final String formattedCompanyName = companyName
+      .replaceAll('Corporation', '')
+      .replaceAll('Inc', '')
+      .replaceAll(',', '')
+      .replaceAll('.', '');
 
     return MarketPricesModel(
       changesPercentage: json['changesPercentage'],

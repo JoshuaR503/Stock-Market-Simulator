@@ -10,18 +10,13 @@ class HoldingsService {
   Future<List<MarketPricesModel>> fetchHoldings() async {
     final tickersFromDB = await Database().holdings;
 
-    print(tickersFromDB);
-
     if (tickersFromDB.isNotEmpty) {
       final tickers = tickersFromDB.join(',');
       final Response<dynamic> response = await _httpLibrary.financialModelRequest("/api/v3/quote/$tickers"); 
-
+      
       return MarketPricesModel.toList(response.data);
     } else {
-      return null;
+      return [];
     }
   }
-
-
-
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:simulador/models/marketPrices.dart';
+import 'package:simulador/screens/holdings/empty.dart';
 import 'package:simulador/screens/trading/trading.dart';
 import 'package:simulador/services/database.dart';
 import 'package:simulador/services/holdings.dart';
@@ -7,6 +8,7 @@ import 'package:simulador/shared/common/portfolioBalance.dart';
 
 import 'package:simulador/shared/common/stockCard.dart';
 import 'package:simulador/shared/typography.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HoldingsScreen extends StatefulWidget {
   @override
@@ -30,12 +32,25 @@ class _HoldingsScreenState extends State<HoldingsScreen> {
               physics: AlwaysScrollableScrollPhysics(),
               padding: EdgeInsets.symmetric(horizontal: 24.0,vertical: 40.0),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Text('<',
+                  // style: screenTitle,
+                  // textAlign: TextAlign.justify,
+                  // ),
+
+                  GestureDetector(
+                    onTap: () => Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false),
+                    child: FaIcon(FontAwesomeIcons.chevronLeft,
+                      color: Colors.grey,
+                      size: 24,
+                    ),
+                  ),
+
                   SizedBox(height: 24,),
-                  Text(
-                    'Posiciones',
-                    style: screenTitle
+                  Text('Posiciones',
+                  style: screenTitle,
+                  textAlign: TextAlign.justify,
                   ),
                   SizedBox(height: 16,),
                   
@@ -47,11 +62,10 @@ class _HoldingsScreenState extends State<HoldingsScreen> {
                   FutureBuilder(
                     future: _holdingsService.fetchHoldings(),
                     builder: (context, snapshot) {
-
-                      print(snapshot);
-
                       if (snapshot.hasData) {
                         final itemCount = snapshot.data.length;
+
+                        if (itemCount > 0) {
 
                         return ListView.builder(
                           shrinkWrap: true,
@@ -72,45 +86,13 @@ class _HoldingsScreenState extends State<HoldingsScreen> {
                             );
                           },
                         );
+                        } else {
+                        return HoldingsEmpty();
+                       }
                       } else {
-                        return Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                                                      SizedBox(height: 20,),
-
-                            Divider(),
-                            SizedBox(height: 80,),
-                            Text('Aún no tienes ninguna posición en la bolsa', style: TextStyle(
-                              fontSize: 30.0,
-                              height: 1.75,
-                              letterSpacing: -.5,
-                              color: Colors.grey.shade500,
-                              fontWeight: FontWeight.bold,
-                            ), textAlign: TextAlign.center,),
-
-                            SizedBox(height: 24,),
-
-                            
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 34),
-                              child: TextButton(
-                              style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all<Color>(Colors.blueAccent),
-                                foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                              ),
-                              onPressed: () async { },
-                              child: Container(
-                                height: 40,
-                                child: Align(
-                                  alignment: Alignment.center,
-                                  child: Text('Abrir una nueva posición', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                                )
-                              ),
-                            ),
-                            ),
-
-                          ],
+                        return Padding(
+                          padding: EdgeInsets.symmetric(vertical: 80),
+                          child: CircularProgressIndicator(),
                         );
                       }
                     }

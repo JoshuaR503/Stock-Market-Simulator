@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+
 import 'package:simulador/helpers/http.dart';
 import 'package:simulador/models/holdingData.dart';
 import 'package:simulador/models/orderData.dart';
 import 'package:simulador/models/orderType.dart';
 import 'package:simulador/models/tradingStockQuote.dart';
+
 import 'package:simulador/screens/trading/bottomSheet.dart';
 import 'package:simulador/services/database.dart';
 import 'package:simulador/shared/typography.dart';
+
 import 'package:dio/dio.dart';
 import 'package:intl/intl.dart';
 import 'package:enum_to_string/enum_to_string.dart';
@@ -67,8 +70,6 @@ class _TradingScreenState extends State<TradingScreen> {
     _stockSymbolController.dispose();
     super.dispose();
   }
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -310,32 +311,30 @@ class _TradingScreenState extends State<TradingScreen> {
       ),
       onPressed: () async {
 
-        // await Database().changeCashbalance(
-        //   orderValue: orderCost, 
-        //   orderType: this.orderType
-        // );
+        await Database().changeCashbalance(
+          orderValue: orderCost, 
+          orderType: this.orderType
+        );
 
-        // await Database().updateOrderHistory(
-        //   orderData: OrderData(
-        //     ticker: _stockSymbolController.text,
-        //     quanity: _stockAmountController.text,
-        //     timestamp: DateTime.now().toString(),
-        //     orderType: EnumToString.convertToString(orderType),
-        //     baseCost: double.parse(tradingStockQuote.latestPrice.toString()),
-        //     totalCost: orderCost
-        //   ),
-        //   holdingData: HoldingData(
-        //     ticker: _stockSymbolController.text,
-        //     quanity: _stockAmountController.text,
-        //     orderType: EnumToString.convertToString(orderType),
-        //     baseCost: double.parse(tradingStockQuote.latestPrice.toString()),
-        //     totalCost: orderCost
-        //   )
-        // );
-
+        await Database().updateOrderHistory(
+          orderData: OrderData(
+            ticker: _stockSymbolController.text,
+            quanity: _stockAmountController.text,
+            timestamp: DateTime.now().toString(),
+            orderType: EnumToString.convertToString(orderType),
+            baseCost: double.parse(tradingStockQuote.latestPrice.toString()),
+            totalCost: orderCost
+          ),
+          holdingData: HoldingData(
+            ticker: _stockSymbolController.text,
+            quanity: _stockAmountController.text,
+            orderType: EnumToString.convertToString(orderType),
+            baseCost: double.parse(tradingStockQuote.latestPrice.toString()),
+            totalCost: orderCost
+          )
+        );
 
         displayBottomSheet(context);
-
       },
       child: Container(
         height: 40,

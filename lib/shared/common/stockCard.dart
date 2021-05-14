@@ -106,7 +106,7 @@ class StockCard extends StatelessWidget {
 
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-            child: Text( '${NumberFormat().format(change)} %' , textAlign: TextAlign.end, style: priceChangeStyle)
+            child: Text( '${NumberFormat().format(change)}' , textAlign: TextAlign.end, style: priceChangeStyle)
           )
         ),
       ],

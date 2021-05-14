@@ -64,7 +64,7 @@ void displayBottomSheet(BuildContext context) {
                 SizedBox(height: height * 0.05),
                 buttonBuilder( title: 'Realizar otra orden', callback: ( ) => Navigator.pop(context)),
                 SizedBox(height: height * 0.03),
-                buttonBuilder( title: 'Ver posiciones', callback: ( ) => Navigator.pushNamed(context, '/holdings')),
+                buttonBuilder( title: 'Ver posiciones', callback: ( ) => Navigator.pushNamedAndRemoveUntil(context, '/holdings', (route) => false)),
               ],
             )
           ),

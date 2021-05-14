@@ -26,7 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
     auth.getUser;
 
     if (auth.getUser != null) {
-      Navigator.pushReplacementNamed(context, '/home');
+      Navigator.popAndPushNamed(context, '/home');
     }
   }
 
