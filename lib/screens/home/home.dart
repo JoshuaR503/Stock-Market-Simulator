@@ -82,13 +82,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     }
                   ),
                   
-                  SizedBox(height: 24,),
-                  this._buildPortfolioSubtitle(title: 'Lista de seguimiento'),
-                  SizedBox(height: 12),
-                  StockCard( image: 'microsoft', ticker: 'MSFT', companyName: 'Microsoft', change: '2.73', price: '252.46'),
-                  SizedBox(height: 12),
-                  StockCard( image: 'mcdonalds', ticker: 'MCD', companyName: "McDonald's", change: '-0.02', price: '234.84'),
-                  SizedBox(height: 24),
+                  // SizedBox(height: 24,),
+                  // this._buildPortfolioSubtitle(title: 'Lista de seguimiento'),
+                  // SizedBox(height: 12),
+                  // StockCard( image: 'microsoft', ticker: 'MSFT', companyName: 'Microsoft', change: '2.73', price: '252.46'),
+                  // SizedBox(height: 12),
+                  // StockCard( image: 'mcdonalds', ticker: 'MCD', companyName: "McDonald's", change: '-0.02', price: '234.84'),
+                  // SizedBox(height: 24),
 
                   this._buildPortfolioSubtitle(title: 'Ganadores y Perdedores'),
                   SizedBox(height: 16),

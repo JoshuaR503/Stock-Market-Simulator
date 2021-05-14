@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:simulador/shared/typography.dart';
+import 'package:intl/intl.dart';
 
 class StockCard extends StatelessWidget {
 
   final String image; 
   final String ticker;
   final String companyName;
-  final String change; 
-  final String price;
+  final double change; 
+  final double price;
 
   const StockCard({
     @required this.image,
@@ -57,8 +58,8 @@ class StockCard extends StatelessWidget {
         borderRadius: BorderRadius.all(Radius.circular(4)),
       ),
       child: Padding(
-        padding: EdgeInsets.all(10),
-        child: Image(image: AssetImage('assets/$image.png')),
+        padding: EdgeInsets.all(5),
+        child: Image.network('https://storage.googleapis.com/iex/api/logos/$ticker.png'),
       )
     );
   }
@@ -68,7 +69,7 @@ class StockCard extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(companyName, style: kCardTitle),
+        Text(companyName, style: kCardTitle, overflow: TextOverflow.fade,),
         SizedBox(height: 2),
         Text(ticker, style: kCardsSubtitle),
       ],
@@ -77,7 +78,7 @@ class StockCard extends StatelessWidget {
 
   Widget _buildPriceInfo() {
 
-    final isUp = double.parse(change)  > 0;
+    final isUp = change  > 0;
     final deepColor = isUp ? Color(0xff51cd7b) : Colors.red;
     
     final TextStyle priceChangeStyle = TextStyle(
@@ -92,18 +93,18 @@ class StockCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
 
-        Text('\$$price', style: kCardTitle ),
+        Text('\$${NumberFormat().format(price)}', style: kCardTitle ),
 
         SizedBox(height: 4),
         Container(
-          width: 70,
+          width: 80,
           padding: EdgeInsets.all(0),
           decoration: BoxDecoration(color: deepColor, borderRadius: BorderRadius.all(Radius.circular(2)),
           ),
 
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-            child: Text(change, textAlign: TextAlign.end, style: priceChangeStyle)
+            child: Text( '${NumberFormat().format(change)} %' , textAlign: TextAlign.end, style: priceChangeStyle)
           )
         ),
       ],

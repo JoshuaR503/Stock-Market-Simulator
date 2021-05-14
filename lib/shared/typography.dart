@@ -15,6 +15,7 @@ final TextStyle kCardTitle = TextStyle(
   height: 1.5,
   color: Colors.black,
   fontWeight: FontWeight.bold,
+  
 );
 
 final TextStyle kCardsSubtitle = TextStyle(

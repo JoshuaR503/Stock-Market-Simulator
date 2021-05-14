@@ -10,9 +10,16 @@ class Database {
 
   Stream<DocumentSnapshot> get cashBalance {
     return _database
-      .collection("users")
-      .doc(_auth.getUser.uid)
-      .snapshots();
+    .collection("users")
+    .doc(_auth.getUser.uid)
+    .snapshots();
+  }
+
+  Stream<DocumentSnapshot> get holdings {
+    return _database
+    .collection("users")
+    .doc(_auth.getUser.uid)
+    .snapshots();
   }
 
   Future<void> changeCashbalance({
