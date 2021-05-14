@@ -1,9 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:simulador/models/marketPrices.dart';
+import 'package:simulador/screens/trading/trading.dart';
 import 'package:simulador/services/database.dart';
 import 'package:simulador/services/holdings.dart';
-import 'package:simulador/services/indexes.dart';
 import 'package:simulador/shared/common/portfolioBalance.dart';
 
 import 'package:simulador/shared/common/stockCard.dart';
@@ -17,7 +16,6 @@ class HoldingsScreen extends StatefulWidget {
 class _HoldingsScreenState extends State<HoldingsScreen> {
 
   final HoldingsService _holdingsService = HoldingsService();
-  final Database _database = Database();
 
   @override
   Widget build(BuildContext context) {
@@ -47,8 +45,11 @@ class _HoldingsScreenState extends State<HoldingsScreen> {
                   SizedBox(height: 4),
 
                   FutureBuilder(
-                    future: _holdingsService.fetchHoldings(tickers: 'AAPL,MSFT,FB,O,STOR,LMT'),
+                    future: _holdingsService.fetchHoldings(),
                     builder: (context, snapshot) {
+
+                      print(snapshot);
+
                       if (snapshot.hasData) {
                         final itemCount = snapshot.data.length;
 
@@ -63,7 +64,6 @@ class _HoldingsScreenState extends State<HoldingsScreen> {
                             return Padding(
                               padding: EdgeInsets.symmetric(vertical: 8),
                               child: StockCard( 
-                                image: 'netflix', 
                                 ticker: price.symbol, 
                                 companyName: price.name, 
                                 change: price.change,
@@ -73,52 +73,48 @@ class _HoldingsScreenState extends State<HoldingsScreen> {
                           },
                         );
                       } else {
-                        return Container();
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                                                      SizedBox(height: 20,),
+
+                            Divider(),
+                            SizedBox(height: 80,),
+                            Text('Aún no tienes ninguna posición en la bolsa', style: TextStyle(
+                              fontSize: 30.0,
+                              height: 1.75,
+                              letterSpacing: -.5,
+                              color: Colors.grey.shade500,
+                              fontWeight: FontWeight.bold,
+                            ), textAlign: TextAlign.center,),
+
+                            SizedBox(height: 24,),
+
+                            
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 34),
+                              child: TextButton(
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all<Color>(Colors.blueAccent),
+                                foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                              ),
+                              onPressed: () async { },
+                              child: Container(
+                                height: 40,
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: Text('Abrir una nueva posición', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                                )
+                              ),
+                            ),
+                            ),
+
+                          ],
+                        );
                       }
                     }
-
                   )
-                  
-
-                  // StreamBuilder(
-
-                  //   stream: Database().holdings,
-                  //   builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-
-                  //     if (snapshot.hasData) {
-
-                  //       final List holdings = snapshot.data['holdings'];
-                        
-                  //       return ListView.builder(
-                  //         physics: NeverScrollableScrollPhysics(),
-                  //         shrinkWrap: true,
-                  //         itemBuilder: (context, idx) {
-                  //           return Padding(
-                  //             padding: EdgeInsets.symmetric(vertical: 8),
-                  //             child: StockCard( image: 'netflix', ticker: 'NFLX', companyName: 'Netflix', change: '4.29', price: '503.84'),
-                  //           );
-                  //         }, 
-                  //         itemCount: holdings.length
-                  //       );
-                        
-                  //     } else {
-                  //       return Container();
-                  //     }
-
-                  //   }
-
-                  // ),
-
-                  // SizedBox(height: 12),
-                  // StockCard( image: 'netflix', ticker: 'NFLX', companyName: 'Netflix', change: '4.29', price: '503.84'),
-                  // SizedBox(height: 12),
-                  // StockCard( image: 'facebook2', ticker: 'FB', companyName: 'Facebook', change: '0.94', price: '319.08'),
-                  // SizedBox(height: 12),
-                  // StockCard( image: 'apple', ticker: 'AAPL', companyName: 'Apple', change: '17.34', price: '130.21'),
-                  // SizedBox(height: 12),
-                  // StockCard( image: 'search', ticker: 'GOOG', companyName: 'Google', change: '17.34', price: '2,398.69'),
-                  // SizedBox(height: 12),
-                  // StockCard( image: 'sbux', ticker: 'SBUX', companyName: 'Starbucks', change: '-0.46', price: '114.28'),
                 ],
               )
             ),

@@ -4,14 +4,12 @@ import 'package:intl/intl.dart';
 
 class StockCard extends StatelessWidget {
 
-  final String image; 
   final String ticker;
   final String companyName;
   final double change; 
   final double price;
 
   const StockCard({
-    @required this.image,
     @required this.ticker,
     @required this.companyName,
     @required this.change,
@@ -59,7 +57,11 @@ class StockCard extends StatelessWidget {
       ),
       child: Padding(
         padding: EdgeInsets.all(5),
-        child: Image.network('https://storage.googleapis.com/iex/api/logos/$ticker.png'),
+        // child: Image.network('https://storage.googleapis.com/iex/api/logos/$ticker.png'),
+        child: FadeInImage.assetNetwork(
+          placeholder: 'assets/warning.png',
+          image: 'https://storage.googleapis.com/iex/api/logos/$ticker.png'
+        )
       )
     );
   }
