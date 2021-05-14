@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:simulador/shared/common/portfolioCard.dart';
+import 'package:simulador/shared/common/portfolioBalance.dart';
+
 import 'package:simulador/shared/common/stockCard.dart';
 import 'package:simulador/shared/typography.dart';
 
@@ -31,34 +32,8 @@ class _HoldingsScreenState extends State<HoldingsScreen> {
                     style: screenTitle
                   ),
                   SizedBox(height: 16,),
-                  PortfolioCard(
-                    title: "Valor de la cartera:",
-                    value: '\$5,439,00',
-                    action: false,
-                    actionCallback: () {}
-                  ),
-                  SizedBox(height: 14,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(child: PortfolioCard(
-                        title: "Cambio en\ndólares USD:",
-                        value: '125.93',
-                        action: false,
-                        color: Colors.green,
-                        actionCallback: () {},
-                      ),),
-                      SizedBox(width: 14,),
-                      Expanded(child: PortfolioCard(
-                        title: "Cambio en\nporcentaje:",
-                        value: '+5.98%',
-                        action: false,
-                        color: Colors.green,
-                        actionCallback: () {},
-
-                      ),),
-                    ],
-                  ),
+                  
+                  PortfolioBalance(actionEnabled: false),
                   SizedBox(height: 24,),
                   this._buildPortfolioSubtitle(title: 'Cartera', ),
                   SizedBox(height: 12),

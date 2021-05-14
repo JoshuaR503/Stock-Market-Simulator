@@ -5,15 +5,15 @@ class PortfolioCard extends StatelessWidget {
 
   final String title;
   final String value;
-  final bool action;
-  final Function actionCallback;
+  final Function action;
+  final bool actionEnabled;
   final Color color;
 
   const PortfolioCard({
     @required this.title,
     @required this.value,
     @required this.action,
-    @required this.actionCallback,
+    @required this.actionEnabled,
     this.color = Colors.black,
   });
 
@@ -37,9 +37,7 @@ class PortfolioCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        if (action) {
-          actionCallback();
-        }
+        if (actionEnabled) { action(); }
       },
       child:  Container(
         padding: EdgeInsets.all(14),
@@ -56,7 +54,7 @@ class PortfolioCard extends StatelessWidget {
               children: [
                 Text(title, style: kTitleStyle),
 
-                if (action) FaIcon(
+                if (actionEnabled) FaIcon(
                   FontAwesomeIcons.angleRight,
                   color: Colors.grey.shade300,
                   size: 24,

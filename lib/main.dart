@@ -12,6 +12,7 @@ import 'package:simulador/screens/login/profile.dart';
 import 'package:simulador/screens/trading/trading.dart';
 
 import 'package:simulador/services/auth.dart';
+import 'package:simulador/services/database.dart';
 
 import 'screens/screens.dart';
 import 'package:provider/provider.dart';
@@ -34,7 +35,7 @@ class MyApp extends StatelessWidget {
         StreamProvider<User>.value(
           value: AuthService().user, 
           initialData: null
-        )
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

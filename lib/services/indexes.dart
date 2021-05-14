@@ -1,28 +1,18 @@
-import 'package:dio/dio.dart';
+import 'package:simulador/helpers/http.dart';
 import 'package:simulador/models/marketIndex.dart';
+import 'package:dio/dio.dart';
 
 class MarketService {  
 
-  Future<Response> fetchData({Uri uri}) async {
-    return await Dio().getUri(uri);
-  }
-
-  // Makes an HTTP request to any endpoint from Financial Modeling Prep API.
-  Future<Response> financialModelRequest(String endpoint ) async {
-    final Uri uri = Uri.https('financialmodelingprep.com', endpoint, {
-      'apikey': '0849e57c93849847c2aa34f38e03d28c'
-    });
-    
-    return await Dio().getUri(uri);
-  }
+  final HttpLibrary _httpLibrary = HttpLibrary();
 
   Future<List<MarketIndexModel>> fetchIndexes() async {
-    final Response<dynamic> response = await this.financialModelRequest('/api/v3/quote/^DJI,^GSPC,^IXIC');    
+    final Response<dynamic> response = await _httpLibrary.financialModelRequest('/api/v3/quote/^DJI,^GSPC,^IXIC');    
     return MarketIndexModel.toList(response.data);
   }
 
   Future<List<MarketIndexModel>> fetchCommodities() async {
-    final Response<dynamic> response = await this.financialModelRequest('/api/v3/quote/GCUSD,SIUSD,CLUSD');    
+    final Response<dynamic> response = await _httpLibrary.financialModelRequest('/api/v3/quote/GCUSD,SIUSD,CLUSD');    
     return MarketIndexModel.toList(response.data);
   }
 

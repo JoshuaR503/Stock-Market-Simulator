@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import 'package:simulador/models/marketIndex.dart';
 import 'package:simulador/screens/home/commodity.dart';
+
 import 'package:simulador/services/indexes.dart';
-import 'package:simulador/shared/common/portfolioCard.dart';
+import 'package:simulador/shared/common/portfolioBalance.dart';
+
 import 'package:simulador/shared/common/stockCard.dart';
 import 'package:simulador/shared/typography.dart';
 import 'package:intl/intl.dart';
@@ -16,7 +19,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
 
   final MarketService _marketService = MarketService();
-
+  
   @override
   Widget build(BuildContext context) {
 
@@ -40,14 +43,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   
                   SizedBox(height: 24),
-                  PortfolioCard(
-                    title: "Valor de la cartera:",
-                    value: '\$5,439,00',
-                    action: true,
-                    actionCallback: () {
-                      Navigator.pushNamed(context, '/holdings');
-                    }
-                  ),
+
+                  PortfolioBalance(actionEnabled: true),                  
                   SizedBox(height: 24,),
                   this._buildPortfolioSubtitle(title: 'Índices bursátiles'),
                   SizedBox(height: 12),
@@ -78,7 +75,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             );
                           },
-                          
                         );
                       } else {
                         return Container();

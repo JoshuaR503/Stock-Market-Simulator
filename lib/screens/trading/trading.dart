@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:simulador/helpers/http.dart';
+import 'package:simulador/models/tradingStockQuote.dart';
 import 'package:simulador/shared/typography.dart';
+import 'package:dio/dio.dart';
 
 class TradingScreen extends StatefulWidget {
   @override
@@ -7,6 +10,11 @@ class TradingScreen extends StatefulWidget {
 }
 
 class _TradingScreenState extends State<TradingScreen> {
+
+  TradingStockQuote tradingStockQuote;
+
+  final _stockAmountController = TextEditingController();
+  final _stockSymbolController = TextEditingController();
 
   final TextStyle kTitleStyle = TextStyle(
     fontSize: 16.5,
@@ -21,6 +29,28 @@ class _TradingScreenState extends State<TradingScreen> {
     color: Colors.black,
     fontWeight: FontWeight.w500,
   );
+
+  Future<void> _getStockPrice() async {
+    final HttpLibrary _httpLibrary = HttpLibrary();
+    
+    try {
+      final Response<dynamic> response = await _httpLibrary.iexRequest('/v1/stock/AAPL/quote'); 
+      final TradingStockQuote tradingStockQuote = TradingStockQuote.fromJson(response.data);
+
+      setState(() {
+        this.tradingStockQuote = tradingStockQuote;
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  @override
+  void dispose() {
+    _stockAmountController.dispose();
+    _stockSymbolController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,10 +80,21 @@ class _TradingScreenState extends State<TradingScreen> {
                   _buildOrderType(),
                   SizedBox(height: 16),
 
-                  _buildInputBox(inputLabel: "Cantidad de Acciones", inputHintText: "Acciones"),
+                  _buildInputBox(
+                    inputLabel: "Cantidad de Acciones", 
+                    inputHintText: "Acciones", 
+                    keyboardType: TextInputType.number,
+                    controller: _stockAmountController,
+                  ),
                   SizedBox(height: 16),
 
-                  _buildInputBox(inputLabel: "Símbolo de la Bolsa", inputHintText: "Símbolo"),
+                  _buildInputBox(
+                    inputLabel: "Símbolo de la Bolsa", 
+                    inputHintText: "Símbolo", 
+                    keyboardType: TextInputType.text,
+                    controller: _stockSymbolController,
+                    action: () async => await this._getStockPrice()
+                  ),
                   SizedBox(height: 16),
 
                   _buildCostEstimate(),
@@ -133,7 +174,13 @@ class _TradingScreenState extends State<TradingScreen> {
     );
   }
 
-  Widget _buildInputBox({String inputLabel, String inputHintText}) {
+  Widget _buildInputBox({
+    String inputLabel, 
+    String inputHintText, 
+    TextInputType keyboardType,
+    TextEditingController controller,
+    Function action,
+  }) {
     return GestureDetector(
       onTap: () {},
       child:  Container(
@@ -158,6 +205,15 @@ class _TradingScreenState extends State<TradingScreen> {
                       borderRadius: BorderRadius.all(Radius.circular(4)),
                     ),
                     child: TextField(
+                      keyboardType: keyboardType,
+                      controller: controller,
+                      onSubmitted: (value) {
+
+                        if (action != null) {
+                          action();
+                        }
+
+                      },
                       style: TextStyle(color: Colors.blue),
                       decoration: InputDecoration(
                         fillColor: Colors.blue,
@@ -179,6 +235,13 @@ class _TradingScreenState extends State<TradingScreen> {
   }
 
   Widget _buildCostEstimate( ) {
+
+    print(_stockAmountController.text.isEmpty);
+    final cost = tradingStockQuote != null 
+      ? double.parse(tradingStockQuote.latestPrice.toString()) * 
+        double.parse(_stockAmountController.text.isEmpty ? 1.0 : _stockAmountController.text.toString())
+      : 'N/A';
+
     return GestureDetector(
       onTap: () {},
       child:  Container(
@@ -195,7 +258,7 @@ class _TradingScreenState extends State<TradingScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Costo estimado\nde la orden', style: kTitleStyle),
-                Text('\$180.27', style: kValueStyle),
+                Text(cost.toString(), style: kValueStyle),
               ],
             ),
           ],
@@ -222,4 +285,5 @@ class _TradingScreenState extends State<TradingScreen> {
       ),
     );
   }
+
 }
