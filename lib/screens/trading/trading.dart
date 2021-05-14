@@ -4,6 +4,7 @@ import 'package:simulador/models/holdingData.dart';
 import 'package:simulador/models/orderData.dart';
 import 'package:simulador/models/orderType.dart';
 import 'package:simulador/models/tradingStockQuote.dart';
+import 'package:simulador/screens/trading/bottomSheet.dart';
 import 'package:simulador/services/database.dart';
 import 'package:simulador/shared/typography.dart';
 import 'package:dio/dio.dart';
@@ -23,8 +24,6 @@ final TextStyle kValueStyle = TextStyle(
   color: Colors.black,
   fontWeight: FontWeight.w500,
 );
-
-
 
 class TradingScreen extends StatefulWidget {
   @override
@@ -69,80 +68,7 @@ class _TradingScreenState extends State<TradingScreen> {
     super.dispose();
   }
 
-  void displayBottomSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (ctx) {
-        return Container(
-          height: MediaQuery.of(context).size.height  * 0.5,
-          color: Colors.transparent,
-          child: Container(
-            child: Container(
-              padding: EdgeInsets.all(30),
-              decoration: new BoxDecoration(
-                color: Colors.white,
-                borderRadius: new BorderRadius.only(
-                  topLeft: const Radius.circular(20.0),
-                  topRight: const Radius.circular(20.0)
-                )
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(height: 20,),
-                  Image(image: AssetImage('assets/checked.png',), height: 100, width: 100, ),
-                  SizedBox(height: 20),
-                  Text("Su orden se ha\nrealizado con éxito ",
-                    textAlign: TextAlign.center,
-                   style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w500,
-                    height: 1.5
-                  ),),
-                  SizedBox(height: 30),
-
-                  TextButton(
-                    onPressed: () {},
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(Color(0xff2bc5aa)),
-                    foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                  ),
-                  child: Container(
-                    height: 40,
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Text('Realizar otra orden', style: TextStyle(fontSize: 16)),
-                    )
-                  ),
-                ),
-                  SizedBox(height: 16),
-
-                TextButton(
-                    onPressed: () {
-                       Navigator.pushNamed(context, '/holdings');
-                    },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(Color(0xff2bc5aa)),
-                    foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                  ),
-                  child: Container(
-                    height: 40,
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Text('Ver posiciones', style: TextStyle(fontSize: 16)),
-                    )
-                  ),
-                ),
-
-                ],
-
-              )
-            ),
-          ),
-        );
-      }
-    );
-  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -384,30 +310,12 @@ class _TradingScreenState extends State<TradingScreen> {
       ),
       onPressed: () async {
 
-        await Database().changeCashbalance(
-          orderValue: orderCost, 
-          orderType: this.orderType
-        );
+        // await Database().changeCashbalance(
+        //   orderValue: orderCost, 
+        //   orderType: this.orderType
+        // );
 
-        await Database().updateOrderHistory(
-          orderData: OrderData(
-            ticker: _stockSymbolController.text,
-            quanity: _stockAmountController.text,
-            timestamp: DateTime.now().toString(),
-            orderType: EnumToString.convertToString(orderType),
-            baseCost: double.parse(tradingStockQuote.latestPrice.toString()),
-            totalCost: orderCost
-          ),
-          holdingData: HoldingData(
-            ticker: _stockSymbolController.text,
-            quanity: _stockAmountController.text,
-            orderType: EnumToString.convertToString(orderType),
-            baseCost: double.parse(tradingStockQuote.latestPrice.toString()),
-            totalCost: orderCost
-          )
-        );
-
-        // await Database().(
+        // await Database().updateOrderHistory(
         //   orderData: OrderData(
         //     ticker: _stockSymbolController.text,
         //     quanity: _stockAmountController.text,
@@ -416,9 +324,15 @@ class _TradingScreenState extends State<TradingScreen> {
         //     baseCost: double.parse(tradingStockQuote.latestPrice.toString()),
         //     totalCost: orderCost
         //   ),
+        //   holdingData: HoldingData(
+        //     ticker: _stockSymbolController.text,
+        //     quanity: _stockAmountController.text,
+        //     orderType: EnumToString.convertToString(orderType),
+        //     baseCost: double.parse(tradingStockQuote.latestPrice.toString()),
+        //     totalCost: orderCost
+        //   )
         // );
 
-        
 
         displayBottomSheet(context);
 
