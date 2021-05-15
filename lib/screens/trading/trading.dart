@@ -47,13 +47,16 @@ class _TradingScreenState extends State<TradingScreen> {
     final HttpLibrary _httpLibrary = HttpLibrary();
     
     try {
-      final Response<dynamic> response = await _httpLibrary.iexRequest('/v1/stock/AAPL/quote'); 
+      final Response<dynamic> response = await _httpLibrary.iexRequest('/v1/stock/${_stockSymbolController.text.trim().toUpperCase()}/quote'); 
       final TradingStockQuote tradingStockQuote = TradingStockQuote.fromJson(response.data);
 
       final orderCost = tradingStockQuote != null 
         ? double.parse(tradingStockQuote.latestPrice.toString()) * 
           double.parse(_stockAmountController.text.isEmpty ? 1.0 : _stockAmountController.text.toString())
         : 'N/A';
+
+      
+      print(orderCost);
 
       setState(() {
         this.tradingStockQuote = tradingStockQuote;
@@ -148,7 +151,7 @@ class _TradingScreenState extends State<TradingScreen> {
                 Text('Dinero\ndisponible', style: kTitleStyle),
 
                 StreamBuilder(
-                  stream: Database().cashBalance,
+                  stream: Database().database,
                   builder: (ctx, snapshot) {
                     if (snapshot.hasData) {
                       return Text('\$${NumberFormat().format(snapshot.data['cash'])}', style: kValueStyle);

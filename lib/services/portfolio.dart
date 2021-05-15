@@ -7,8 +7,8 @@ class PortfolioService {
 
   final HttpLibrary _httpLibrary = HttpLibrary();
 
-  Future<List<MarketIndexModel>> fetchIndexes() async {
-    final Response<dynamic> response = await _httpLibrary.financialModelRequest('/api/v3/quote/^DJI,^GSPC,^IXIC');    
+  Future<List<MarketIndexModel>> fetchIndexes({String indexes = '^DJI,^GSPC,^IXIC'}) async {
+    final Response<dynamic> response = await _httpLibrary.financialModelRequest('/api/v3/quote/$indexes');    
     return MarketIndexModel.toList(response.data);
   }
 

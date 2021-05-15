@@ -79,21 +79,23 @@ class _PortfolioScreenState extends State<PortfolioScreen>  {
         Expanded(child: Text(
           title,
           style: TextStyle(
-            fontSize: 20.0,
+            fontSize: 18.0,
             height: 1.5,
             color: Colors.black,
             fontWeight: FontWeight.w700,
           ),
         )),
-        Text(
-          'Ver todos',
-          style: TextStyle(
-            fontSize: 16.0,
-            height: 1.5,
-            color: Colors.blueAccent,
-            fontWeight: FontWeight.bold,
+        GestureDetector(
+          child: Text('Ver todos',
+            style: TextStyle(
+              fontSize: 16.0,
+              height: 1.5,
+              color: Colors.blueAccent,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
+          onTap: () => Navigator.pushNamed(context, '/indexes'),
+        )
       ],
     );
   }

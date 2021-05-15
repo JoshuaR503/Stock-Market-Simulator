@@ -34,7 +34,7 @@ class _HoldingsScreenState extends State<HoldingsScreen>  {
               physics: AlwaysScrollableScrollPhysics(),
               padding: EdgeInsets.symmetric(horizontal: 24.0,vertical: 40.0),
               child: FadeIn(
-                duration: Duration(milliseconds: 300, ),
+                duration: Duration(milliseconds: 800, ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -92,25 +92,20 @@ class _HoldingsScreenState extends State<HoldingsScreen>  {
 
   Widget _buildStreambuilder() {
     return StreamBuilder(
-      stream: Database().holdings,
+      stream: Database().database,
       builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         if (snapshot.hasData) {
+
           final dbtickers = snapshot.data['holdings'];
-          List<String> list = [];
+          final List<String> list = [];
 
           dbtickers.forEach((hodl) =>  list.add(hodl['ticker']));
 
-          print(list);
-          print(snapshot.data['holdings']);
           if (list.isNotEmpty) {
-            final tickers = list.join(',');
-
-            return _buildFuturebuilder(tickers);
-
+            return _buildFuturebuilder(list.join(','));
           } else {
             return HoldingsEmpty();
           }
-          
         } else {
           return Padding(
             padding: EdgeInsets.symmetric(vertical: 100),
@@ -143,13 +138,15 @@ class _HoldingsScreenState extends State<HoldingsScreen>  {
             
               final MarketPricesModel price = snapshot.data[idx]; 
 
-              return Padding(
-                padding: EdgeInsets.symmetric(vertical: 8),
-                child: StockCard( 
-                  ticker: price.symbol, 
-                  companyName: price.name, 
-                  change: price.change,
-                  price: price.price
+              return FadeIn(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8),
+                  child: StockCard( 
+                    ticker: price.symbol, 
+                    companyName: price.name, 
+                    change: price.change,
+                    price: price.price
+                  ),
                 ),
               );
             },

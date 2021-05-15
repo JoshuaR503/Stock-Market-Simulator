@@ -19,7 +19,7 @@ class PortfolioBalance extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: Database().cashBalance,
+      stream: Database().database,
       builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         if (snapshot.hasData) {
 

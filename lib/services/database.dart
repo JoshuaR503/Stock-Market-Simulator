@@ -8,36 +8,12 @@ class Database {
   final FirebaseFirestore _database = FirebaseFirestore.instance;
   final AuthService _auth = AuthService();
 
-  Stream<DocumentSnapshot> get cashBalance {
+  Stream<DocumentSnapshot> get database {
     return _database
     .collection("users")
     .doc(_auth.getUser.uid)
     .snapshots();
   }
-
-
-  Stream<DocumentSnapshot> get holdings {
-    return _database
-    .collection("users")
-    .doc(_auth.getUser.uid)
-    .snapshots();
-  }
-
-  // Future<List<String>> get holdings async {
-  //   final doc = await _database
-  //   .collection("users")
-  //   .doc(_auth.getUser.uid)
-  //   .get();
-  //   final List hodls = doc.data()['holdings'];
-
-  //   List<String> list = [];
-
-  //   hodls.forEach((hodl) {
-  //     list.add(hodl['ticker']);
-  //   });
-
-  //   return list;
-  // }
 
   Future<void> changeCashbalance({
     double orderValue,
