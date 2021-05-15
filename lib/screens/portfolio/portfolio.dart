@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_fadein/flutter_fadein.dart';
+
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:simulador/models/marketIndex.dart';
 import 'package:simulador/models/movers.dart';
-import 'package:simulador/screens/home/commodity.dart';
+import 'package:simulador/screens/portfolio/commodity.dart';
+import 'package:simulador/screens/portfolio/indexCard.dart';
 
 import 'package:simulador/services/portfolio.dart';
 
 import 'package:simulador/shared/common/portfolioBalance.dart';
 import 'package:simulador/shared/typography.dart';
-
-import 'package:intl/intl.dart';
-import 'package:flutter_fadein/flutter_fadein.dart';
 
 
 class PortfolioScreen extends StatefulWidget {
@@ -54,40 +54,7 @@ class _PortfolioScreenState extends State<PortfolioScreen>  {
                   SizedBox(height: 12),
                   this._buildPortfolioSubtitle(title: 'Ganadores y Perdedores'),
                   SizedBox(height: 16),
-                  
-                  FutureBuilder(
-                    future: this._marketService.fetchWinnersAndLosers(),
-                    builder: (context, snapshot) {
-
-                      if (snapshot.hasData) {
-                        final List<MarketMover> mover = snapshot.data; 
-
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(child: FadeIn(duration: Duration(milliseconds: 700), child: this._buildGainersAndLosers(
-                              name: mover[0].companyName,
-                              ticker: mover[0].ticker,
-                              changePercentage: mover[0].changesPercentage,
-                              isUp: true
-                            ),),),
-                            SizedBox(width: 24),
-                            Expanded(child: FadeIn(duration: Duration(milliseconds: 700), child: this._buildGainersAndLosers(
-                              name: mover[1].companyName,
-                              ticker: mover[1].ticker,
-                              changePercentage: mover[1].changesPercentage,
-                              isUp: false
-                            ),)),
-                          ],
-                        );
-                      } else {
-                        return Container(height: 100,);
-                      }
-
-                    },
-
-                  ),
-
+                  this._buildWinnersAndLosers(),
                   SizedBox(height: 24,),
                   this._buildPortfolioSubtitle(title: 'Precios de comodidades'),
                   SizedBox(height: 8),
@@ -140,17 +107,17 @@ class _PortfolioScreenState extends State<PortfolioScreen>  {
             itemCount: snapshot.data.length,
             itemBuilder: (context, idx) {
 
-              final MarketIndexModel index = snapshot.data[idx]; 
+              final MarketIndexModel marketIndex = snapshot.data[idx]; 
               
               return Padding(
                 padding: EdgeInsets.symmetric(vertical: 8),
                 child: FadeIn(
                   duration: Duration(milliseconds: 750),
-                  child: _buildMarketIndexItem(
-                    ticker: index.name, 
-                    change: index.change.toString(), 
-                    percentChange: index.changesPercentage.toString(), 
-                    price: index.price
+                  child: MarketIndexCard(
+                    ticker: marketIndex.name, 
+                    change: marketIndex.change.toString(), 
+                    percentChange: marketIndex.changesPercentage.toString(), 
+                    price: marketIndex.price
                   ),
                 )
               );
@@ -165,46 +132,75 @@ class _PortfolioScreenState extends State<PortfolioScreen>  {
     );
   }
 
+  Widget _buildWinnersAndLosers() {
+    return FutureBuilder(
+      future: this._marketService.fetchWinnersAndLosers(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final List<MarketMover> mover = snapshot.data; 
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _buildWinnerAndLoserCard(mover[0], true),
+              SizedBox(width: 24),
+              _buildWinnerAndLoserCard(mover[1], false)
+            ],
+          );
+        } else {
+          return Container(height: 100,);
+        }
+      },
+    );
+  }
+
+  Widget _buildWinnerAndLoserCard(mover, isUp) {
+    return Expanded(
+      child: FadeIn(
+        duration: Duration(milliseconds: 700), 
+        child: this._buildGainersAndLosers(
+          name: mover.companyName,
+          ticker: mover.ticker,
+          changePercentage: mover.changesPercentage,
+          isUp: isUp
+        ),
+      )
+    );
+  }
+
   Widget _buildCommodities() {
     return FutureBuilder(
       future: this._marketService.fetchCommodities(),
       builder: (context, snapshot) {
+
         if (snapshot.hasData) {
-          final itemCount = snapshot.data.length;
-          
           return ListView.builder(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
-            itemCount: itemCount,
+            itemCount:  snapshot.data.length,
             itemBuilder: (context, idx) {
-              final MarketIndexModel index = snapshot.data[idx]; 
+
+              final MarketIndexModel marketIndex = snapshot.data[idx]; 
+
               return Padding(
                 padding: EdgeInsets.symmetric(vertical: 8),
                 child: CommodityCard( 
-                  ticker: index.symbol, 
-                  commodityName: index.name, 
-                  change: index.changesPercentage, 
-                  price: index.price,
+                  ticker: marketIndex.symbol, 
+                  commodityName: marketIndex.name, 
+                  change: marketIndex.changesPercentage, 
+                  price: marketIndex.price,
                 ),
               );
             },
-            
           );
         } else {
           return Container();
         }
+
       }
     );
   }
   
-  Widget _buildGainersAndLosers({
-    String name,
-    String ticker,
-    String changePercentage,
-    bool isUp,
-  }) {
-
-
+  Widget _buildGainersAndLosers({String name, String ticker, String changePercentage, bool isUp}) {
     final Color lightColor =  isUp ? Color(0xffdaf4e3) : Colors.red.shade100;
     final Color deepColor = isUp ? Color(0xff51cd7b) : Colors.red;
     final IconData icon = isUp ? FontAwesomeIcons.caretUp : FontAwesomeIcons.caretDown;
@@ -283,72 +279,4 @@ class _PortfolioScreenState extends State<PortfolioScreen>  {
     );
   }
 
-  Widget _buildMarketIndexItem({ 
-    String ticker, 
-    String change, 
-    String percentChange, 
-    double price
-  }) {
-
-    final isUp = double.parse(change)  > 0;
-    final deepColor = isUp ? Color(0xff51cd7b) : Colors.red;
-
-    final TextStyle changePercentStyle = TextStyle(
-      fontSize: 16.0,
-      height: 1.5,
-      letterSpacing: -1,
-      color: Colors.white,
-      fontWeight: FontWeight.bold,
-    );
-
-    return Container(
-      padding: EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Color(0xffffffff),
-        borderRadius: BorderRadius.all(Radius.circular(8))
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(ticker, style: kCardTitle),
-                  Text(NumberFormat().format(price), style: kCardsSubtitle),
-                ],
-              ),
-              
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(change, style: kCardTitle),
-                  SizedBox(height: 4),
-                  Container(
-                    width: 84,
-                    padding: EdgeInsets.all(0),
-                    decoration: BoxDecoration(
-                      color: deepColor,
-                      borderRadius: BorderRadius.all(Radius.circular(2)),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                      child: Text(
-                        '$percentChange %',
-                        textAlign: TextAlign.end,
-                        style: changePercentStyle
-                      )
-                    )
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
 }
