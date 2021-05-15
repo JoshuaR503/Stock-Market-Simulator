@@ -35,20 +35,13 @@ class IndexesScreen extends StatelessWidget {
                     SizedBox(height: 24,),
                     this._buildPortfolioSubtitle(title: 'Americas'),
                     SizedBox(height: 12),
-                    this._buildIndexes(),
+                    this._buildIndexes(indexes: '^DJI,^GSPC,^IXIC,^RUT,TX60.TS'),
                     SizedBox(height: 12),
                     this._buildPortfolioSubtitle(title: 'Europa'),
-                    _buildIndexes2(),
+                    this._buildIndexes(indexes: '^FTSE,^IBEX,^GDAXI,^GSPTSE'),
                     SizedBox(height: 12),
                     this._buildPortfolioSubtitle(title: 'Asia'),
-                    _buildIndexes3()
-                    // this._buildPortfolioSubtitle(title: 'Ganadores y Perdedores'),
-                    // SizedBox(height: 16),
-                    // this._buildWinnersAndLosers(),
-                    // SizedBox(height: 24,),
-                    // this._buildPortfolioSubtitle(title: 'Precios de comodidades'),
-                    // SizedBox(height: 8),
-                    // this._buildCommodities()
+                    this._buildIndexes(indexes: '^N225,^JKSE')
                   ],
                 ),
               )
@@ -77,9 +70,9 @@ class IndexesScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildIndexes() {
+  Widget _buildIndexes({String indexes}) {
     return FutureBuilder(
-      future: this._marketService.fetchIndexes(indexes: '^DJI,^GSPC,^IXIC,^RUT,TX60.TS'),
+      future: this._marketService.fetchIndexes(indexes: indexes),
       builder: (context, snapshot) {
         if (snapshot.hasData) {  
 
@@ -114,77 +107,4 @@ class IndexesScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildIndexes2() {
-    return FutureBuilder(
-      future: this._marketService.fetchIndexes(indexes: '^FTSE,^IBEX,^GDAXI,^GSPTSE'),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {  
-
-          return ListView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: snapshot.data.length,
-            itemBuilder: (context, idx) {
-
-              final MarketIndexModel marketIndex = snapshot.data[idx]; 
-              
-              return Padding(
-                padding: EdgeInsets.symmetric(vertical: 8),
-                child: FadeIn(
-                  duration: Duration(milliseconds: 500),
-                  child: MarketIndexCard(
-                    ticker: marketIndex.name, 
-                    change: marketIndex.change.toString(), 
-                    percentChange: marketIndex.changesPercentage.toString(), 
-                    price: marketIndex.price
-                  ),
-                )
-              );
-            },
-          );
-        } else {
-          return Container(
-            height: 312, 
-          );
-        }
-      }
-    );
-  }
-  
-  Widget _buildIndexes3() {
-    return FutureBuilder(
-      future: this._marketService.fetchIndexes(indexes: '^N225,^JKSE'),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {  
-
-          return ListView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: snapshot.data.length,
-            itemBuilder: (context, idx) {
-
-              final MarketIndexModel marketIndex = snapshot.data[idx]; 
-              
-              return Padding(
-                padding: EdgeInsets.symmetric(vertical: 8),
-                child: FadeIn(
-                  duration: Duration(milliseconds: 500),
-                  child: MarketIndexCard(
-                    ticker: marketIndex.name, 
-                    change: marketIndex.change.toString(), 
-                    percentChange: marketIndex.changesPercentage.toString(), 
-                    price: marketIndex.price
-                  ),
-                )
-              );
-            },
-          );
-        } else {
-          return Container(
-            height: 312, 
-          );
-        }
-      }
-    );
-  }
 }
