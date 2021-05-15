@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_fadein/flutter_fadein.dart';
+
 import 'package:simulador/models/marketPrices.dart';
 import 'package:simulador/screens/holdings/empty.dart';
 import 'package:simulador/screens/trading/trading.dart';
@@ -32,21 +34,16 @@ class _HoldingsScreenState extends State<HoldingsScreen>  with AutomaticKeepAliv
             child: SingleChildScrollView(
               physics: AlwaysScrollableScrollPhysics(),
               padding: EdgeInsets.symmetric(horizontal: 24.0,vertical: 40.0),
-              child: Column(
+              child: FadeIn(
+                duration: Duration(milliseconds: 300, ),
+                child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Text('<',
-                  // style: screenTitle,
-                  // textAlign: TextAlign.justify,
-                  // ),
-
-
                   SizedBox(height: 24,),
                   Text('Posiciones',
-                  style: screenTitle,
-                  textAlign: TextAlign.justify,
+                    style: screenTitle,
                   ),
-                  SizedBox(height: 16,),
+                  SizedBox(height: 24),
                   
                   PortfolioBalance(actionEnabled: false),
                   SizedBox(height: 24,),
@@ -92,6 +89,7 @@ class _HoldingsScreenState extends State<HoldingsScreen>  with AutomaticKeepAliv
                     }
                   )
                 ],
+              )
               )
             ),
           )

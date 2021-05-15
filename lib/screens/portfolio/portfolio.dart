@@ -36,30 +36,33 @@ class _PortfolioScreenState extends State<PortfolioScreen>  {
             child: SingleChildScrollView(
               physics: AlwaysScrollableScrollPhysics(),
               padding: EdgeInsets.symmetric(horizontal: 24.0,vertical: 40.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  SizedBox(height: 24,),
-                  Text(
-                    'Portafolio',
-                    style: screenTitle
-                  ),
-                  
-                  SizedBox(height: 24),
-                  PortfolioBalance(actionEnabled: false),                  
-                  SizedBox(height: 24,),
-                  this._buildPortfolioSubtitle(title: 'Índices bursátiles'),
-                  SizedBox(height: 12),
-                  this._buildIndexes(),
-                  SizedBox(height: 12),
-                  this._buildPortfolioSubtitle(title: 'Ganadores y Perdedores'),
-                  SizedBox(height: 16),
-                  this._buildWinnersAndLosers(),
-                  SizedBox(height: 24,),
-                  this._buildPortfolioSubtitle(title: 'Precios de comodidades'),
-                  SizedBox(height: 8),
-                  this._buildCommodities()
-                ],
+              child: FadeIn(
+                duration: Duration(milliseconds: 300, ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    SizedBox(height: 24,),
+                    Text(
+                      'Portafolio',
+                      style: screenTitle
+                    ),
+
+                    SizedBox(height: 24),
+                    PortfolioBalance(actionEnabled: false),                  
+                    SizedBox(height: 24,),
+                    this._buildPortfolioSubtitle(title: 'Índices bursátiles'),
+                    SizedBox(height: 12),
+                    this._buildIndexes(),
+                    SizedBox(height: 12),
+                    this._buildPortfolioSubtitle(title: 'Ganadores y Perdedores'),
+                    SizedBox(height: 16),
+                    this._buildWinnersAndLosers(),
+                    SizedBox(height: 24,),
+                    this._buildPortfolioSubtitle(title: 'Precios de comodidades'),
+                    SizedBox(height: 8),
+                    this._buildCommodities()
+                  ],
+                ),
               )
             ),
           )
@@ -112,7 +115,7 @@ class _PortfolioScreenState extends State<PortfolioScreen>  {
               return Padding(
                 padding: EdgeInsets.symmetric(vertical: 8),
                 child: FadeIn(
-                  duration: Duration(milliseconds: 750),
+                  duration: Duration(milliseconds: 600),
                   child: MarketIndexCard(
                     ticker: marketIndex.name, 
                     change: marketIndex.change.toString(), 
@@ -156,7 +159,7 @@ class _PortfolioScreenState extends State<PortfolioScreen>  {
   Widget _buildWinnerAndLoserCard(mover, isUp) {
     return Expanded(
       child: FadeIn(
-        duration: Duration(milliseconds: 700), 
+        duration: Duration(milliseconds: 500), 
         child: this._buildGainersAndLosers(
           name: mover.companyName,
           ticker: mover.ticker,
