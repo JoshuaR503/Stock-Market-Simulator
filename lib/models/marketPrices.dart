@@ -25,6 +25,7 @@ class MarketPricesModel {
     final String formattedCompanyName = companyName
       .replaceAll('Corporation', '')
       .replaceAll('Inc', '')
+      .replaceAll('com', '')
       .replaceAll(',', '')
       .replaceAll('.', '');
 

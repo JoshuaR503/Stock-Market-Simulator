@@ -115,7 +115,7 @@ class _PortfolioScreenState extends State<PortfolioScreen>  {
               return Padding(
                 padding: EdgeInsets.symmetric(vertical: 8),
                 child: FadeIn(
-                  duration: Duration(milliseconds: 600),
+                  duration: Duration(milliseconds: 500),
                   child: MarketIndexCard(
                     ticker: marketIndex.name, 
                     change: marketIndex.change.toString(), 

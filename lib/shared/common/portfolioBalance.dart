@@ -22,6 +22,9 @@ class PortfolioBalance extends StatelessWidget {
       stream: Database().cashBalance,
       builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         if (snapshot.hasData) {
+
+          // print(snapshot.data.get(field) ['cash']);
+
           return FadeIn(
             curve: Curves.linear,
             duration: Duration(milliseconds: 900, ),

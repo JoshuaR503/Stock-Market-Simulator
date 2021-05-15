@@ -7,21 +7,20 @@ import 'package:simulador/screens/trading/trading.dart';
 import 'package:simulador/services/database.dart';
 import 'package:simulador/services/holdings.dart';
 import 'package:simulador/shared/common/portfolioBalance.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:simulador/shared/common/stockCard.dart';
 import 'package:simulador/shared/typography.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HoldingsScreen extends StatefulWidget {
   @override
   _HoldingsScreenState createState() => _HoldingsScreenState();
 }
 
-class _HoldingsScreenState extends State<HoldingsScreen>  with AutomaticKeepAliveClientMixin  {
+class _HoldingsScreenState extends State<HoldingsScreen>  {
 
   final HoldingsService _holdingsService = HoldingsService();
-  @override
-  bool get wantKeepAlive => true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,44 +49,80 @@ class _HoldingsScreenState extends State<HoldingsScreen>  with AutomaticKeepAliv
                   this._buildPortfolioSubtitle(title: 'Cartera', ),
                   SizedBox(height: 4),
 
-                  FutureBuilder(
-                    future: _holdingsService.fetchHoldings(),
-                    builder: (context, snapshot) {
+                  StreamBuilder(
+                    stream: Database().holdings,
+                    builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+
                       if (snapshot.hasData) {
-                        final itemCount = snapshot.data.length;
+                        final dbtickers = snapshot.data['holdings'];
+                        List<String> list = [];
+                        dbtickers.forEach((hodl) {
+                          list.add(hodl['ticker']);
+                        });
 
-                        if (itemCount > 0) {
+                        print(list);
 
-                        return ListView.builder(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: itemCount,
-                          itemBuilder: (context, idx) {
+                        print(snapshot.data['holdings']);
 
-                            final MarketPricesModel price = snapshot.data[idx]; 
-                            
-                            return Padding(
-                              padding: EdgeInsets.symmetric(vertical: 8),
-                              child: StockCard( 
-                                ticker: price.symbol, 
-                                companyName: price.name, 
-                                change: price.change,
-                                 price: price.price
-                                ),
-                            );
-                          },
-                        );
+                        if (list.isNotEmpty) {
+                          final tickers = list.join(',');
+
+                          print(tickers);
+
+                          return FutureBuilder(
+                          future: _holdingsService.fetchHoldings(tickers),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              final itemCount = snapshot.data.length;                              
+                              return ListView.builder(
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemCount: itemCount,
+                                itemBuilder: (context, idx) {
+                                
+                                  final MarketPricesModel price = snapshot.data[idx]; 
+
+                                  return Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 8),
+                                    child: StockCard( 
+                                      ticker: price.symbol, 
+                                      companyName: price.name, 
+                                      change: price.change,
+                                       price: price.price
+                                      ),
+                                  );
+                                },
+                              );
+                            } else {
+                              return Padding(
+                                padding: EdgeInsets.symmetric(vertical: 100),
+                                child: Center(
+                                  child: CircularProgressIndicator(),
+                                )
+                              );
+                            }
+                          }
+                          );
                         } else {
-                        return HoldingsEmpty();
-                       }
+                          return HoldingsEmpty();
+                        }
+
+
                       } else {
                         return Padding(
-                          padding: EdgeInsets.symmetric(vertical: 80),
-                          child: CircularProgressIndicator(),
+                          padding: EdgeInsets.symmetric(vertical: 100),
+                          child: Center(
+                            child: CircularProgressIndicator(),
+                          )
                         );
                       }
+
                     }
-                  )
+                  ),
+
+                  
+
+
                 ],
               )
               )
@@ -98,9 +133,7 @@ class _HoldingsScreenState extends State<HoldingsScreen>  with AutomaticKeepAliv
     );
   }
 
-  Widget _buildPortfolioSubtitle({
-    String title
-  }) {
+  Widget _buildPortfolioSubtitle({ String title }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       crossAxisAlignment: CrossAxisAlignment.end,

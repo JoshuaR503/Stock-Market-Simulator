@@ -15,22 +15,29 @@ class Database {
     .snapshots();
   }
 
-  Future<List<String>> get holdings async {
-    final doc = await _database
+
+  Stream<DocumentSnapshot> get holdings {
+    return _database
     .collection("users")
     .doc(_auth.getUser.uid)
-    .get();
-
-    final List hodls = doc.data()['holdings'];
-
-    List<String> list = [];
-
-    hodls.forEach((hodl) {
-      list.add(hodl['ticker']);
-    });
-
-    return list;
+    .snapshots();
   }
+
+  // Future<List<String>> get holdings async {
+  //   final doc = await _database
+  //   .collection("users")
+  //   .doc(_auth.getUser.uid)
+  //   .get();
+  //   final List hodls = doc.data()['holdings'];
+
+  //   List<String> list = [];
+
+  //   hodls.forEach((hodl) {
+  //     list.add(hodl['ticker']);
+  //   });
+
+  //   return list;
+  // }
 
   Future<void> changeCashbalance({
     double orderValue,
