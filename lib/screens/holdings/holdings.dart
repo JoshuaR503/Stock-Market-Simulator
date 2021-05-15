@@ -15,10 +15,11 @@ class HoldingsScreen extends StatefulWidget {
   _HoldingsScreenState createState() => _HoldingsScreenState();
 }
 
-class _HoldingsScreenState extends State<HoldingsScreen> {
+class _HoldingsScreenState extends State<HoldingsScreen>  with AutomaticKeepAliveClientMixin  {
 
   final HoldingsService _holdingsService = HoldingsService();
-
+  @override
+  bool get wantKeepAlive => true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,13 +40,6 @@ class _HoldingsScreenState extends State<HoldingsScreen> {
                   // textAlign: TextAlign.justify,
                   // ),
 
-                  GestureDetector(
-                    onTap: () => Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false),
-                    child: FaIcon(FontAwesomeIcons.chevronLeft,
-                      color: Colors.grey,
-                      size: 24,
-                    ),
-                  ),
 
                   SizedBox(height: 24,),
                   Text('Posiciones',

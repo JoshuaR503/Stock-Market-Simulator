@@ -48,6 +48,9 @@ dev_dependencies:
   dio: ^4.0.0
 
   enum_to_string: ^2.0.1
+  google_nav_bar: ^5.0.5
+  salomon_bottom_bar: ^3.0.0
+  flutter_fadein: ^2.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
