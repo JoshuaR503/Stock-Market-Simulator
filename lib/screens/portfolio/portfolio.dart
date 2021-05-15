@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:simulador/models/marketIndex.dart';
+import 'package:simulador/models/movers.dart';
 import 'package:simulador/screens/home/commodity.dart';
 
-import 'package:simulador/services/indexes.dart';
+import 'package:simulador/services/portfolio.dart';
 
 import 'package:simulador/shared/common/portfolioBalance.dart';
 import 'package:simulador/shared/typography.dart';
@@ -20,7 +21,7 @@ class PortfolioScreen extends StatefulWidget {
 
 class _PortfolioScreenState extends State<PortfolioScreen>  {
 
-  final MarketService _marketService = MarketService();
+  final PortfolioService _marketService = PortfolioService();
 
   @override
   Widget build(BuildContext context) {
@@ -54,23 +55,38 @@ class _PortfolioScreenState extends State<PortfolioScreen>  {
                   this._buildPortfolioSubtitle(title: 'Ganadores y Perdedores'),
                   SizedBox(height: 16),
                   
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(child: this._buildGainersAndLosers(
-                        name: 'Apple',
-                        image: 'apple',
-                        change: 6.32,
-                        price: '\$324.34'
-                      ),),
-                      SizedBox(width: 24),
-                      Expanded(child: this._buildGainersAndLosers(
-                        name: 'Starbucks',
-                        image: 'sbux',
-                        change: -0.46,
-                        price: '\$114.28'
-                      )),
-                    ],
+                  FutureBuilder(
+
+                    future: this._marketService.fetchWinnersAndLosers(),
+                    builder: (context, snapshot) {
+
+                      if (snapshot.hasData) {
+                        final List<MarketMover> mover = snapshot.data; 
+
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(child: this._buildGainersAndLosers(
+                              name: mover[0].companyName,
+                              ticker: mover[0].ticker,
+                              changePercentage: mover[0].changesPercentage,
+                              isUp: true
+                            ),),
+                            SizedBox(width: 24),
+                            Expanded(child: this._buildGainersAndLosers(
+                              name: mover[1].companyName,
+                              ticker: mover[1].ticker,
+                              changePercentage: mover[1].changesPercentage,
+                              isUp: false
+                            )),
+                          ],
+                        );
+                      } else {
+                        return Container();
+                      }
+
+                    },
+
                   ),
 
                   SizedBox(height: 24,),
@@ -144,10 +160,6 @@ class _PortfolioScreenState extends State<PortfolioScreen>  {
         } else {
           return Container(
             height: 312, 
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 90, vertical: 65 ), 
-              child: CircularProgressIndicator(), 
-            ) 
           );
         }
       }
@@ -187,20 +199,16 @@ class _PortfolioScreenState extends State<PortfolioScreen>  {
   }
   
   Widget _buildGainersAndLosers({
-    String image,
     String name,
-    double change,
-    String price
+    String ticker,
+    String changePercentage,
+    bool isUp,
   }) {
 
-    final isUp = change > 0;
 
     final Color lightColor =  isUp ? Color(0xffdaf4e3) : Colors.red.shade100;
     final Color deepColor = isUp ? Color(0xff51cd7b) : Colors.red;
     final IconData icon = isUp ? FontAwesomeIcons.caretUp : FontAwesomeIcons.caretDown;
-
-    final String positivePirce = '+ ' + change.toString();
-    final String negativePrice = '- ${change.toString().replaceFirst(RegExp('-'), '')}';
 
     final TextStyle companyName = TextStyle(
       fontSize: 20.0,
@@ -211,7 +219,7 @@ class _PortfolioScreenState extends State<PortfolioScreen>  {
     );
 
     final TextStyle companyPrice = TextStyle(
-      fontSize: 17.5,
+      fontSize: 16,
       height: 1.5,
       letterSpacing: .5,
       color: Colors.grey.shade800,
@@ -233,7 +241,7 @@ class _PortfolioScreenState extends State<PortfolioScreen>  {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(name, style: companyName),
+              Flexible(child: Text(name, style: companyName, maxLines: 1, overflow: TextOverflow.ellipsis,),),
               FaIcon(icon,
                 color: deepColor,
                 size: 24,
@@ -242,30 +250,35 @@ class _PortfolioScreenState extends State<PortfolioScreen>  {
           ),
 
           SizedBox(height: 4),
-          Text(price, style: companyPrice),
+          Text(ticker, style: companyPrice),
           SizedBox(height: 14),
 
-          Container(
-            padding: EdgeInsets.all(0),
-            decoration: BoxDecoration(
-              color: lightColor,
-              borderRadius: BorderRadius.all(Radius.circular(4)),
-            ),
-
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-              child: Text(
-                change > 0 ? positivePirce : negativePrice,
-                style: TextStyle(
-                  fontSize: 16.0,
-                  height: 1.5,
-                  letterSpacing: -1,
-                  color: deepColor,
-                  fontWeight: FontWeight.bold,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                padding: EdgeInsets.all(0),
+                decoration: BoxDecoration(
+                  color: lightColor,
+                  borderRadius: BorderRadius.all(Radius.circular(4)),
                 ),
-              )
-            )
-          ),
+
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  child: Text(
+                    changePercentage,
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      height: 1.5,
+                      letterSpacing: -1,
+                      color: deepColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  )
+                )
+              ),
+            ],
+          )
         ],
       ),
     );
