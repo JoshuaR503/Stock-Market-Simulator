@@ -56,7 +56,6 @@ class _PortfolioScreenState extends State<PortfolioScreen>  {
                   SizedBox(height: 16),
                   
                   FutureBuilder(
-
                     future: this._marketService.fetchWinnersAndLosers(),
                     builder: (context, snapshot) {
 
@@ -66,23 +65,23 @@ class _PortfolioScreenState extends State<PortfolioScreen>  {
                         return Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Expanded(child: this._buildGainersAndLosers(
+                            Expanded(child: FadeIn(duration: Duration(milliseconds: 700), child: this._buildGainersAndLosers(
                               name: mover[0].companyName,
                               ticker: mover[0].ticker,
                               changePercentage: mover[0].changesPercentage,
                               isUp: true
-                            ),),
+                            ),),),
                             SizedBox(width: 24),
-                            Expanded(child: this._buildGainersAndLosers(
+                            Expanded(child: FadeIn(duration: Duration(milliseconds: 700), child: this._buildGainersAndLosers(
                               name: mover[1].companyName,
                               ticker: mover[1].ticker,
                               changePercentage: mover[1].changesPercentage,
                               isUp: false
-                            )),
+                            ),)),
                           ],
                         );
                       } else {
-                        return Container();
+                        return Container(height: 100,);
                       }
 
                     },
