@@ -32,13 +32,6 @@ class CommoditiesScreen extends StatelessWidget {
                       'Comodidades',
                       style: screenTitle
                     ),
-
-                    SizedBox(height: 12,),
-                    this._buildPortfolioSubtitle(title: 'Granos'),
-
-                    SizedBox(height: 12),
-                    this._buildCommodities('CCUSD,CUSX,SBUSX,RRUSD'),
-
                     SizedBox(height: 12),
                     this._buildPortfolioSubtitle(title: 'Metales Preciosos'),
 
@@ -56,6 +49,12 @@ class CommoditiesScreen extends StatelessWidget {
 
                     SizedBox(height: 12),
                     this._buildCommodities('FCUSX,LHUSX'),
+
+                    SizedBox(height: 12,),
+                    this._buildPortfolioSubtitle(title: 'Granos'),
+
+                    SizedBox(height: 12),
+                    this._buildCommodities('CCUSD,CUSX,SBUSX,RRUSD'),
                   ],
                 ),
               )

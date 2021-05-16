@@ -3,6 +3,7 @@ import 'package:flutter_fadein/flutter_fadein.dart';
 
 import 'package:simulador/models/marketPrices.dart';
 import 'package:simulador/screens/holdings/empty.dart';
+import 'package:simulador/screens/stock/stock.dart';
 
 import 'package:simulador/services/database.dart';
 import 'package:simulador/services/holdings.dart';
@@ -44,8 +45,7 @@ class _HoldingsScreenState extends State<HoldingsScreen>  {
                     ),
                     SizedBox(height: 24),
                     PortfolioBalance(actionEnabled: false),
-                    SizedBox(height: 24,),
-                    this._buildPortfolioSubtitle(title: 'Cartera', ),
+                    
                     SizedBox(height: 4),
                     this._buildStreambuilder()
                   ],
@@ -102,7 +102,13 @@ class _HoldingsScreenState extends State<HoldingsScreen>  {
           dbtickers.forEach((hodl) =>  list.add(hodl['ticker']));
 
           if (list.isNotEmpty) {
-            return _buildFuturebuilder(list.join(','));
+            return Column(
+              children: [
+                SizedBox(height: 24,),
+                this._buildPortfolioSubtitle(title: 'Cartera', ),
+                this._buildFuturebuilder(list.join(',')),
+              ],
+            );
           } else {
             return HoldingsEmpty();
           }
@@ -141,12 +147,19 @@ class _HoldingsScreenState extends State<HoldingsScreen>  {
               return FadeIn(
                 child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 8),
-                  child: StockCard( 
-                    ticker: price.symbol, 
-                    companyName: price.name, 
-                    change: price.change,
-                    price: price.price
-                  ),
+                  child: GestureDetector(
+                    onTap: () {
+
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => StockScreen()));
+
+                    },
+                    child: StockCard( 
+                      ticker: price.symbol, 
+                      companyName: price.name, 
+                      change: price.change,
+                      price: price.price
+                    ),
+                  )
                 ),
               );
             },

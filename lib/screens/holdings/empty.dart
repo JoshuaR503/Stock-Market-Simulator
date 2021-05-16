@@ -7,7 +7,7 @@ class HoldingsEmpty extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        SizedBox(height: 120),
+        SizedBox(height: MediaQuery.of(context).size.height * 0.18),
         Text('Aún no tienes ninguna\nposición en la bolsa', 
           style: TextStyle(
             fontSize: 26.0,
