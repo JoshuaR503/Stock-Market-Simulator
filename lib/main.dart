@@ -8,6 +8,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:simulador/screens/holdings/holdings.dart';
 import 'package:simulador/screens/home/home.dart';
 import 'package:simulador/screens/login/login.dart';
+import 'package:simulador/screens/portfolio/commodities/commoditiesScreen.dart';
 import 'package:simulador/screens/portfolio/indexes/indexesScreen.dart';
 import 'package:simulador/screens/trading/trading.dart';
 
@@ -47,6 +48,7 @@ class MyApp extends StatelessWidget {
           '/holdings': (context) => HoldingsScreen(),
           '/trading': (context) => TradingScreen(),
           '/indexes': (context) => IndexesScreen(),
+          '/commodities': (context) => CommoditiesScreen(),
 
           // '/profile': (context) => ProfileScreen(),
           // '/about': (context) => AboutScreen(),

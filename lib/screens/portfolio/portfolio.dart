@@ -50,15 +50,15 @@ class _PortfolioScreenState extends State<PortfolioScreen>  {
                     SizedBox(height: 24),
                     PortfolioBalance(actionEnabled: false),                  
                     SizedBox(height: 24,),
-                    this._buildPortfolioSubtitle(title: 'Índices bursátiles'),
+                    this._buildPortfolioSubtitle(title: 'Índices bursátiles', action: () => Navigator.pushNamed(context, '/indexes')),
                     SizedBox(height: 12),
                     this._buildIndexes(),
                     SizedBox(height: 12),
-                    this._buildPortfolioSubtitle(title: 'Ganadores y Perdedores'),
+                    this._buildPortfolioSubtitle(title: 'Ganadores y Perdedores', action: () {}),
                     SizedBox(height: 16),
                     this._buildWinnersAndLosers(),
                     SizedBox(height: 24,),
-                    this._buildPortfolioSubtitle(title: 'Precios de comodidades'),
+                    this._buildPortfolioSubtitle(title: 'Precios de comodidades', action: () =>  Navigator.pushNamed(context, '/commodities')),
                     SizedBox(height: 8),
                     this._buildCommodities()
                   ],
@@ -71,7 +71,7 @@ class _PortfolioScreenState extends State<PortfolioScreen>  {
     );
   }
 
-  Widget _buildPortfolioSubtitle({ String title }) {
+  Widget _buildPortfolioSubtitle({ String title, Function action }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -94,7 +94,7 @@ class _PortfolioScreenState extends State<PortfolioScreen>  {
               fontWeight: FontWeight.bold,
             ),
           ),
-          onTap: () => Navigator.pushNamed(context, '/indexes'),
+          onTap: action,
         )
       ],
     );

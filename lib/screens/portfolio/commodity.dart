@@ -57,15 +57,52 @@ class CommodityCard extends StatelessWidget {
 
     final bool isSilver = commodityName.contains(new RegExp(r'Silver', caseSensitive: false));
     final bool isGold = commodityName.contains(new RegExp(r'Gold', caseSensitive: false));
+    final bool isCopper = commodityName.contains(new RegExp(r'Copper', caseSensitive: false));
+    final bool isPlatinum = commodityName.contains(new RegExp(r'Platinum', caseSensitive: false));
+    final bool isCattle = commodityName.contains(new RegExp(r'Cattle', caseSensitive: false));
+    final bool isHogs = commodityName.contains(new RegExp(r'Hogs', caseSensitive: false));
+    final bool isCocoa = commodityName.contains(new RegExp(r'Cocoa', caseSensitive: false));
+    final bool isSoybean = commodityName.contains(new RegExp(r'Soybean', caseSensitive: false));
+    final bool isCotton = commodityName.contains(new RegExp(r'Cotton', caseSensitive: false));
+    final bool isCorn = commodityName.contains(new RegExp(r'Corn', caseSensitive: false));
+    final bool isOats = commodityName.contains(new RegExp(r'Oats', caseSensitive: false));
+    final bool isLumber = commodityName.contains(new RegExp(r'Lumber', caseSensitive: false));
+    final bool isSugar = commodityName.contains(new RegExp(r'Sugar', caseSensitive: false));
+    final bool isRice = commodityName.contains(new RegExp(r'Rice', caseSensitive: false));
+    final bool isOrange = commodityName.contains(new RegExp(r'Orange', caseSensitive: false));
 
     if (commodityName == 'Crude Oil') {
       pic = 'oil';
       padding = 8;
     } else if (isGold) {
       pic = 'gold';
-    } else if (isSilver) {
+    } else if (isSilver || isPlatinum) {
       pic = 'silver';
-    }
+    } else if (isCopper) {
+      pic = 'copper';
+    } else if (isCattle) {
+      pic = 'cow';
+    } else if (isHogs) {
+      pic = 'pig';
+    } else if (isCocoa) {
+      pic = 'cocoa';
+    } else if (isSoybean) {
+      pic = 'soybean';
+    } else if (isCotton) {
+      pic = 'cotton';
+    } else if (isCorn) {
+      pic = 'corn';
+    } else if (isOats) {
+      pic = 'wheat';
+    } else if (isLumber) {
+      pic = 'lumber';
+    } else if (isSugar) {
+      pic = 'sugar';
+    } else if (isRice) {
+      pic = 'rice';
+    } else if (isOrange) {
+      pic = 'orange';
+    } 
 
     return Container(
       height: 60.0,

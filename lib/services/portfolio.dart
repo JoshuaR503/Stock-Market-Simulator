@@ -12,8 +12,8 @@ class PortfolioService {
     return MarketIndexModel.toList(response.data);
   }
 
-  Future<List<MarketIndexModel>> fetchCommodities() async {
-    final Response<dynamic> response = await _httpLibrary.financialModelRequest('/api/v3/quote/GCUSD,SIUSD,CLUSD');    
+  Future<List<MarketIndexModel>> fetchCommodities({String commodities = 'GCUSD,SIUSD,CLUSD'}) async {
+    final Response<dynamic> response = await _httpLibrary.financialModelRequest('/api/v3/quote/$commodities');    
     return MarketIndexModel.toList(response.data);
   }
 
