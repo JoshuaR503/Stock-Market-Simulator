@@ -65,8 +65,6 @@ class StockScreen extends StatelessWidget {
   }
 
   Widget buildStockInfo(StockQuote quote, StockStats stats, StockHolding stockHolding) {
-    
-    print(stockHolding.ticker);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -153,6 +151,88 @@ class StockScreen extends StatelessWidget {
         // Divider(thickness: .75,),
         // SizedBox(height:14,),
 
+
+
+        Text(
+          'Tu posición',
+          style: TextStyle(
+            fontSize: 24.0,
+            height: 1.5,
+            color: Colors.grey.shade800,
+            fontWeight: FontWeight.bold
+          )
+        ),
+        SizedBox(height:14,),
+
+        Row(
+          children: <Widget>[
+            Expanded(
+              child: 
+              Column(
+                children: [
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: Text('Cantidad de acciones', style: subtitleStyle),
+                    trailing: Text(stockHolding.quanity)
+                  ),
+                  Divider(thickness: .75,),
+
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: Text('Coste\npromedio', style: subtitleStyle),
+                    trailing: Text(NumberFormat().format(stockHolding.baseCost))
+                  ),
+                  Divider(thickness: .75,),
+
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: Text('Rendimiento', style: subtitleStyle),
+                    trailing: Text( 
+                      "${(quote.latestPrice * int.parse(stockHolding.quanity) - stockHolding.totalCost).toStringAsFixed(2)}  "
+                    )
+                  ),
+                ]
+              )
+            ),
+            SizedBox(width: 40),
+
+            Expanded(
+              child: Column(
+                children: [
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: Text('Valor actual', style: subtitleStyle),
+                    trailing: Text( NumberFormat().format(quote.latestPrice * int.parse(stockHolding.quanity)))
+                  ),
+                  Divider(thickness: .75,),
+
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: Text('Precio de compra', style: subtitleStyle),
+                    trailing: Text( NumberFormat().format(stockHolding.totalCost))
+                  ),
+                  Divider(thickness: .75,),
+
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: Text('Rendimiento', style: subtitleStyle),
+                    trailing: Text( 
+                      "${(quote.latestPrice * int.parse(stockHolding.quanity) - stockHolding.totalCost).toStringAsFixed(2)}  "
+                    )
+                  ),
+                ]
+              )
+            ),
+
+            
+          ],
+        ),
+        
+        
+        
+
+        Divider(thickness: .75,),
+        SizedBox(height:14,),
         Text(
           'Estadísticas',
           style: TextStyle(
@@ -172,43 +252,6 @@ class StockScreen extends StatelessWidget {
           ],
         ),
 
-        SizedBox(height:14,),
-        Divider(thickness: .75,),
-        SizedBox(height:14,),
-
-        Text(
-          'Tu posición',
-          style: TextStyle(
-            fontSize: 24.0,
-            height: 1.5,
-            color: Colors.grey.shade800,
-            fontWeight: FontWeight.bold
-          )
-        ),
-        SizedBox(height:14,),
-
-        Row(
-          children: <Widget>[
-            Expanded(child: Column(children: [
-
-              ListTile(
-        contentPadding: EdgeInsets.zero,
-        title: Text('Acciones', style: subtitleStyle),
-        trailing: Text(stockHolding.quanity)
-      ),
-      
-            ])),
-            SizedBox(width: 40),
-Expanded(child: Column(children: [
-
-              ListTile(
-        contentPadding: EdgeInsets.zero,
-        title: Text('Coste de base', style: subtitleStyle),
-        trailing: Text( NumberFormat().format(stockHolding.baseCost) )
-      ),
-      
-            ])),          ],
-        ),
         
       ]
     );
@@ -221,32 +264,38 @@ Expanded(child: Column(children: [
         title: Text('Apertura', style: subtitleStyle),
         trailing: Text(quote.open.toString())
       ),
+      Divider(thickness: .75,),
       ListTile(
         contentPadding: EdgeInsets.zero,
         title: Text('Último cierre', style: subtitleStyle),
         trailing: Text(quote.previousClose.toString())
       ),
+      Divider(thickness: .75,),
       ListTile(
         contentPadding: EdgeInsets.zero,
         title: Text('Máx. intradía', style: subtitleStyle),
         trailing: Text(quote.high.toString())
       ),
+      Divider(thickness: .75,),
       ListTile(
         contentPadding: EdgeInsets.zero,
         title: Text('Min. intradía', style: subtitleStyle),
         trailing: Text(quote.low.toString())
       ),
+      Divider(thickness: .75,),
       ListTile(
         contentPadding: EdgeInsets.zero,
         title: Text('Alta 52-sem.', style: subtitleStyle),
         trailing: Text(stats.week52high.toString())
       ),
+      Divider(thickness: .75,),
 
       ListTile(
         contentPadding: EdgeInsets.zero,
         title: Text('Baja 52-sem', style: subtitleStyle),
         trailing: Text(stats.week52low.toString())
       ),
+      Divider(thickness: .75,),
     ];
   }
 
@@ -257,31 +306,37 @@ Expanded(child: Column(children: [
         title: Text('Acciones en circulación', style: subtitleStyle),
         trailing: Text(NumberFormat.compact().format(stats.sharesOutstanding))
       ),
+      Divider(thickness: .75,),
       ListTile(
         contentPadding: EdgeInsets.zero,
         title: Text('10D Vol. promedio', style: subtitleStyle),
         trailing: Text(NumberFormat.compact().format( stats.avg10Volume))
       ),
+      Divider(thickness: .75,),
       ListTile(
         contentPadding: EdgeInsets.zero,
         title: Text('30D Vol. promedio', style: subtitleStyle),
         trailing: Text(NumberFormat.compact().format( stats.avg30Volume))
       ),
+      Divider(thickness: .75,),
       ListTile(
         contentPadding: EdgeInsets.zero,
         title: Text('Cap. mercado', style: subtitleStyle),
         trailing: Text(NumberFormat.compact().format(stats.marketcap))
       ),
+      Divider(thickness: .75,),
       ListTile(
         contentPadding: EdgeInsets.zero,
         title: Text('PER', style: subtitleStyle),
         trailing: Text(stats.peRatio.toStringAsFixed(2))
       ),
+      Divider(thickness: .75,),
       ListTile(
         contentPadding: EdgeInsets.zero,
         title: Text('BPA', style: subtitleStyle),
         trailing: Text(stats.ttmEPS.toStringAsFixed(2))
       ),
+      Divider(thickness: .75,),
     ];
   }
 
