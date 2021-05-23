@@ -150,7 +150,7 @@ class _HoldingsScreenState extends State<HoldingsScreen>  {
                   child: GestureDetector(
                     onTap: () {
 
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => StockScreen()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => StockScreen(ticker: price.symbol)));
 
                     },
                     child: StockCard( 

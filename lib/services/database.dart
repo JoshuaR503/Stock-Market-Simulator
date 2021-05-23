@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:simulador/models/holdingData.dart';
 import 'package:simulador/models/orderData.dart';
 import 'package:simulador/models/orderType.dart';
+import 'package:simulador/models/stockHolding.dart';
 import 'package:simulador/services/auth.dart';
 
 class Database {
@@ -13,6 +14,19 @@ class Database {
     .collection("users")
     .doc(_auth.getUser.uid)
     .snapshots();
+  }
+
+  Future<StockHolding> stockHolding(String ticker) async{
+    final docRef = await _database
+      .collection("users")
+      .doc(_auth.getUser.uid)
+      .get();
+
+    final StockHolding holding = StockHolding
+      .toList(docRef['holdings'])
+      .firstWhere((holding) => holding.ticker == ticker);
+
+    return holding;
   }
 
   Future<void> changeCashbalance({

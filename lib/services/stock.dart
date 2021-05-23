@@ -7,13 +7,13 @@ class StockService {
 
   final HttpLibrary _httpLibrary = HttpLibrary();
 
-  Future<StockStats> fetchStockStats() async {
-    final Response<dynamic> response = await _httpLibrary.iexRequest('/v1/stock/COST/stats');
+  Future<StockStats> fetchStockStats(String ticker) async {
+    final Response<dynamic> response = await _httpLibrary.iexRequest('/v1/stock/$ticker/stats');
     return StockStats.fromJson(response.data);
   }
 
-  Future<StockQuote> fetchStockQuote() async {
-    final Response<dynamic> response = await _httpLibrary.iexRequest('/v1/stock/COST/quote');
+  Future<StockQuote> fetchStockQuote(String ticker) async {
+    final Response<dynamic> response = await _httpLibrary.iexRequest('/v1/stock/$ticker/quote');
     return StockQuote.fromJson(response.data);
   }
 }

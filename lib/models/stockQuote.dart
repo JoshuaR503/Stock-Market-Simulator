@@ -33,11 +33,13 @@ class StockQuote {
 
 
   factory StockQuote.fromJson(Map<String, dynamic> json) {
+    print('OPEN');
+    print(json['open']);
 
     return StockQuote(
       symbol: json['symbol'],
       companyName: json['companyName'],
-      open: double.tryParse(json['open'].toString()),
+      open: double.tryParse(json['iexOpen'].toString()),
       high: double.tryParse(json['high'].toString()),
       low: double.tryParse(json['low'].toString()),
 

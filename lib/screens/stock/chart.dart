@@ -112,6 +112,9 @@ class _LineChartSample2State extends State<LineChartSample2> {
           spots: [
             FlSpot(0, 3),
             FlSpot(2.1, 2),
+                        FlSpot(3, 4),
+                        FlSpot(3.9, 5),
+
             FlSpot(4.79, 5),
             FlSpot(6.8, 3.1),
             FlSpot(8, 4),
@@ -124,7 +127,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
           isCurved: true,
           colors: gradientColors,
           barWidth: 5,
-          isStrokeCapRound: true,
+          isStrokeCapRound: false,
           dotData: FlDotData(
             show: false,
           ),

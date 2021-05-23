@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fadein/flutter_fadein.dart';
+import 'package:simulador/models/stockHolding.dart';
 import 'package:simulador/models/stockQuote.dart';
 import 'package:simulador/models/stockStats.dart';
 import 'package:simulador/screens/stock/chart.dart';
+import 'package:simulador/services/database.dart';
 import 'package:simulador/services/stock.dart';
 import 'package:simulador/shared/typography.dart';
 import 'package:intl/intl.dart';
@@ -14,6 +16,12 @@ const subtitleStyle = const TextStyle(
 );
 
 class StockScreen extends StatelessWidget {
+
+  final String ticker;
+
+  const StockScreen({
+    @required this.ticker
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -32,12 +40,17 @@ class StockScreen extends StatelessWidget {
                 child: FutureBuilder(
                   
                   future: Future.wait([
-                    StockService().fetchStockQuote(), 
-                    StockService().fetchStockStats()
+                    StockService().fetchStockQuote(this.ticker), 
+                    StockService().fetchStockStats(this.ticker),
+                    Database().stockHolding(this.ticker)
                   ]),
                   builder: (ctx, AsyncSnapshot<List<dynamic>> snapshot) {
                     if (snapshot.hasData) {
-                      return this.buildStockInfo(snapshot.data[0], snapshot.data[1]);
+                      return this.buildStockInfo(
+                        snapshot.data[0], 
+                        snapshot.data[1], 
+                        snapshot.data[2]
+                      );
                     } else {
                       return Container();
                     }
@@ -51,16 +64,9 @@ class StockScreen extends StatelessWidget {
     );
   }
 
-  Widget buildStockInfo(StockQuote quote, StockStats stats) {
-
-    // final StockStats stockStats = StockStats(stockInfo['stats']);
-    print(quote.previousClose);
-    print(stats.avg30Volume);
-
-    // print(stockInfo.entries.first.toString() );
-    // print(stockInfo['stats']);
-
-    // print(stockInfo.);
+  Widget buildStockInfo(StockQuote quote, StockStats stats, StockHolding stockHolding) {
+    
+    print(stockHolding.ticker);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -126,6 +132,27 @@ class StockScreen extends StatelessWidget {
         LineChartSample2(),
         Divider(thickness: .75,),
         SizedBox(height:14,),
+
+
+
+        // TextButton(
+        //   style: ButtonStyle(
+        //     backgroundColor: MaterialStateProperty.all<Color>(Color(0xffee394a)),
+        //     foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+        //   ),
+        //   onPressed: () async {},
+        //   child: Container(
+        //     height: 40,
+        //     child: Align(
+        //       alignment: Alignment.center,
+        //       child: Text('Realizar orden', style: TextStyle(fontSize: 16)),
+        //     )
+        //   ),
+        // ),
+        // SizedBox(height:14,),
+        // Divider(thickness: .75,),
+        // SizedBox(height:14,),
+
         Text(
           'Estadísticas',
           style: TextStyle(
@@ -135,7 +162,7 @@ class StockScreen extends StatelessWidget {
             fontWeight: FontWeight.bold
           )
         ),
-              SizedBox(height:14,),
+        SizedBox(height:14,),
 
         Row(
           children: <Widget>[
@@ -144,12 +171,50 @@ class StockScreen extends StatelessWidget {
             Expanded(child: Column(children: _rightColumn(quote, stats)))
           ],
         ),
+
+        SizedBox(height:14,),
+        Divider(thickness: .75,),
+        SizedBox(height:14,),
+
+        Text(
+          'Tu posición',
+          style: TextStyle(
+            fontSize: 24.0,
+            height: 1.5,
+            color: Colors.grey.shade800,
+            fontWeight: FontWeight.bold
+          )
+        ),
+        SizedBox(height:14,),
+
+        Row(
+          children: <Widget>[
+            Expanded(child: Column(children: [
+
+              ListTile(
+        contentPadding: EdgeInsets.zero,
+        title: Text('Acciones', style: subtitleStyle),
+        trailing: Text(stockHolding.quanity)
+      ),
+      
+            ])),
+            SizedBox(width: 40),
+Expanded(child: Column(children: [
+
+              ListTile(
+        contentPadding: EdgeInsets.zero,
+        title: Text('Coste de base', style: subtitleStyle),
+        trailing: Text( NumberFormat().format(stockHolding.baseCost) )
+      ),
+      
+            ])),          ],
+        ),
         
       ]
     );
   }
 
-  List<Widget> _leftColumn(StockQuote quote, StockStats stats) {
+  List<Widget> _leftColumn(StockQuote quote, StockStats stats) {    
     return [
       ListTile(
         contentPadding: EdgeInsets.zero,
@@ -233,7 +298,7 @@ class StockScreen extends StatelessWidget {
         // child: Image.network('https://storage.googleapis.com/iex/api/logos/$ticker.png'),
         child: FadeInImage.assetNetwork(
           placeholder: 'assets/warning.png',
-          image: 'https://storage.googleapis.com/iex/api/logos/COST.png'
+          image: 'https://storage.googleapis.com/iex/api/logos/$ticker.png'
         )
       )
     );
