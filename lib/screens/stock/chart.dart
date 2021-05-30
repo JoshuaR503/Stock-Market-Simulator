@@ -34,13 +34,13 @@ class LineChartSample2 extends StatelessWidget {
     final double chartEnd = chart[chart.length-1].close;
 
     final red  = [
-      const Color(0xffFF416C),
+      const Color(0xffff332e),
       const Color(0xffFF4B2B),
     ];
 
     final green  = [
-      const Color(0xff37c065),
-      const Color(0xff51cd7b),
+      const Color(0xff02da89),
+      const Color(0xff02da89),
     ];
 
     final color = chartStart > chartEnd ? red : green;
@@ -64,7 +64,7 @@ class LineChartSample2 extends StatelessWidget {
       children: <Widget>[
 
         AspectRatio(
-          aspectRatio: 1.9,
+          aspectRatio: 1.8,
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(8)),

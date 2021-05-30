@@ -38,7 +38,6 @@ class StockScreen extends StatelessWidget {
               child: FadeIn(
                 duration: Duration(milliseconds: 300, ),
                 child: FutureBuilder(
-                  
                   future: Future.wait([
                     StockService().fetchStockQuote(this.ticker), 
                     StockService().fetchStockStats(this.ticker),
@@ -68,68 +67,58 @@ class StockScreen extends StatelessWidget {
 
   Widget buildStockInfo(StockQuote quote, StockStats stats, StockHolding stockHolding, List<StockChart> chart) {
 
+    final quoteSymbol = TextStyle(
+      fontSize: 24.0,
+      height: 1.5,
+      color: Colors.grey.shade500,
+      fontWeight: FontWeight.bold,
+    );
+
+    final quoteCompanyName = TextStyle(
+      fontSize: 34.0,
+      height: 1.5,
+      color: Colors.black,
+      fontWeight: FontWeight.bold,
+    );
+
+    final quotePrice = TextStyle(
+      fontSize: 24.0,
+      height: 1.5,
+      color: Colors.black54,
+      fontWeight: FontWeight.bold,
+    );
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        SizedBox(height: 20,),
-        
-        Text(
-          quote.symbol,
-          style: TextStyle(
-            fontSize: 24.0,
-            height: 1.5,
-            color: Colors.grey.shade500,
-            fontWeight: FontWeight.bold,
-          )
-        ),
+        SizedBox(height: 16,),
+        Text(quote.symbol, style: quoteSymbol),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Flexible(child: Text(
-              quote.companyName,
-              maxLines: 2,
-              style: TextStyle(
-                fontSize: 34.0,
-                height: 1.5,
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              )
-            ),),
-            SizedBox(width: 60,),
+            Flexible(
+              child: Text(quote.companyName, maxLines: 3, style: quoteCompanyName),
+            ),
+            SizedBox(width: 100,),
             _buildImage(stats)
           ],
         ),
-        SizedBox(height: 8,),
+        SizedBox(height: 8),
+
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              '\$${quote.latestPrice.toString()}',
-              style: TextStyle(
-                fontSize: 24.0,
-                height: 1.5,
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              )
-            ),
-            SizedBox(width: 10,),
-            this._buildPriceInfo(quote.changePercent * 100),
+            Text('\$${quote.latestPrice.toString()}', style: quotePrice),
+            SizedBox(width: 16),
+            this._buildPriceInfo(quote.changePercent * 100, quote.change.toString()),
           ],
         ),
-        SizedBox(height: 4,),
-        Text(
-          '${quote.change.toString()}',
-          style: TextStyle(
-            fontSize: 18.0,
-            height: 1.5,
-            color: Colors.grey.shade500,
-            fontWeight: FontWeight.bold
-          )
-        ),
+        
+        SizedBox(height: 16,),
         SizedBox(height:28,),
+        
         LineChartSample2(
-
           stats: stats,
           quote: quote,
           chart: chart,
@@ -161,14 +150,14 @@ class StockScreen extends StatelessWidget {
 
                   ListTile(
                     contentPadding: EdgeInsets.zero,
-                    title: Text('Coste\npromedio', style: subtitleStyle),
+                    title: Text('Costo\npromedio', style: subtitleStyle),
                     trailing: Text(NumberFormat().format(stockHolding.baseCost))
                   ),
                   Divider(thickness: .75,),
 
                   ListTile(
                     contentPadding: EdgeInsets.zero,
-                    title: Text('Rendimiento', style: subtitleStyle),
+                    title: Text('Rendimiento\nporcentaje', style: subtitleStyle),
                     trailing: Text( 
                       "${(quote.latestPrice * int.parse(stockHolding.quanity) - stockHolding.totalCost).toStringAsFixed(2)}  "
                     )
@@ -205,12 +194,8 @@ class StockScreen extends StatelessWidget {
                 ]
               )
             ),
-
-            
           ],
         ),
-        
-        
         
 
         Divider(thickness: .75,),
@@ -323,9 +308,6 @@ class StockScreen extends StatelessWidget {
   }
 
   Widget _buildImage(StockStats stats) {
-
-    print(stats.ttmEPS);
-
     return Container(
       height: 64,
       width: 64,
@@ -334,8 +316,7 @@ class StockScreen extends StatelessWidget {
         borderRadius: BorderRadius.all(Radius.circular(4)),
       ),
       child: Padding(
-        padding: EdgeInsets.all(4),
-        // child: Image.network('https://storage.googleapis.com/iex/api/logos/$ticker.png'),
+        padding: EdgeInsets.all(2),
         child: stats.peRatio != 0.0 
         ? FadeInImage.assetNetwork(
           placeholder: 'assets/empty.png',
@@ -360,11 +341,25 @@ class StockScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPriceInfo(double change) {
+  Widget _buildPriceInfo(double changePercent, String change) {
 
-    final isUp = change  > 0;
-    final deepColor = isUp ? Color(0xff51cd7b) : Color(0xffee394a);
+    final colors = changePercent > 0 
+    ? [const Color(0xff02da89), const Color(0xff02c67d)] 
+    : [const Color(0xffff332e), const Color(0xffFF4B2B)];
 
+    print(changePercent);
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        this.gradientBox(change, colors),
+        SizedBox(width: 8),
+        this.gradientBox('(${changePercent.toStringAsFixed(2)}%)', colors)
+      ],
+    );
+  }
+
+  Widget gradientBox(String text, List<Color> colors) {
     final TextStyle priceChangeStyle = TextStyle(
       fontSize: 16.0,
       height: 1.5,
@@ -373,26 +368,20 @@ class StockScreen extends StatelessWidget {
       fontWeight: FontWeight.bold,
     );
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-
-        SizedBox(height: 4),
-        Container(
-          width: 90,
-          height: 30,
-          padding: EdgeInsets.all(0),
-          decoration: BoxDecoration(
-            color: deepColor, 
-            borderRadius: BorderRadius.all(Radius.circular(4)),
-          ),
-
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-            child: Text( '${change.toStringAsFixed(2)} %' , textAlign: TextAlign.center, style: priceChangeStyle)
-          )
-        ),
-      ],
+    return Container(
+      height: 30,
+      padding: EdgeInsets.all(0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(4)),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          colors: colors
+        )
+      ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+        child: Text(text, textAlign: TextAlign.center, style: priceChangeStyle)
+      )
     );
   }
 }
