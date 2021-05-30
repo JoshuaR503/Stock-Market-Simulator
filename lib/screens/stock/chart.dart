@@ -39,7 +39,7 @@ class LineChartSample2 extends StatelessWidget {
     ];
 
     final green  = [
-      const Color(0xff02da89),
+      const Color(0xff02da79),
       const Color(0xff02da89),
     ];
 
@@ -62,16 +62,16 @@ class LineChartSample2 extends StatelessWidget {
 
     return Stack(
       children: <Widget>[
-
+        
         AspectRatio(
+          
           aspectRatio: 1.8,
           child: Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(8)),
               color: Colors.white
             ),
             child: Padding(
-              padding: EdgeInsets.only(top: ls[0] > 200  ? 40 : 0,),
+              padding: EdgeInsets.only(top: ls[0] > 200  ? 40 : 10),
               child: LineChart(mainData(ls, spots, color)),
             ),
           ),
@@ -109,7 +109,7 @@ class LineChartSample2 extends StatelessWidget {
           ),
           belowBarData: BarAreaData(
             show: true,
-            colors: color.map((color) => color.withOpacity(0.5)).toList(),
+            colors: color.map((color) => color.withOpacity(.8)).toList(),
           ),
         ),
       ],

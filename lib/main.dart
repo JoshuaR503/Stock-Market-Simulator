@@ -1,10 +1,9 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+
 import 'package:simulador/screens/holdings/holdings.dart';
 import 'package:simulador/screens/home/home.dart';
 import 'package:simulador/screens/login/login.dart';
@@ -24,8 +23,6 @@ import 'dart:async';
 }
 
 class MyApp extends StatelessWidget {
-
-
   @override
   Widget build(BuildContext context) {
     return  MultiProvider(
@@ -57,7 +54,6 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           brightness: Brightness.light,
           canvasColor: Colors.transparent,
-
         ),
       )
     );

@@ -21,10 +21,6 @@ class _HomeScreenState extends State<HomeScreen> {
     FadeIn(duration: Duration(milliseconds: 700), child: HoldingsScreen()),
     FadeIn(duration: Duration(milliseconds: 700), child: PortfolioScreen()),
     FadeIn(duration: Duration(milliseconds: 700), child: PortfolioScreen()),
-
-    // HoldingsScreen(),
-    // PortfolioScreen(),
-    // PortfolioScreen(),
   ];
 
   @override
@@ -36,6 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20),
           child: SalomonBottomBar(
+            
             currentIndex: _selectedIndex,
             onTap: (i) => setState(() => _selectedIndex = i),
             items: [
@@ -43,28 +40,28 @@ class _HomeScreenState extends State<HomeScreen> {
               SalomonBottomBarItem(
                 icon: FaIcon(FontAwesomeIcons.globeAmericas),
                 title: Text("Portafolio"),
-                selectedColor: Colors.black87
+                selectedColor: Colors.black
               ),
 
               /// Likes
               SalomonBottomBarItem(
                 icon: Icon(FontAwesomeIcons.chartBar),
                 title: Text("Posiciones"),
-                selectedColor: Colors.black87
+                selectedColor: Colors.black
               ),
 
               /// Search
               SalomonBottomBarItem(
                 icon: Icon(FontAwesomeIcons.newspaper),
                 title: Text("Search"),
-                selectedColor: Colors.black87
+                selectedColor: Colors.black
               ),
 
               /// Profile
               SalomonBottomBarItem(
                 icon: Icon(Icons.person),
                 title: Text("Profile"),
-                selectedColor: Colors.black87
+                selectedColor: Colors.black
               ),
             ],
           )
