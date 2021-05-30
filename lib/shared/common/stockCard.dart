@@ -28,7 +28,7 @@ class StockCard extends StatelessWidget {
             children: [            
               Row(
                 children: [
-                  this._buildImage(),
+                  this._buildIcon(),
                   SizedBox(width: 14),
                   this._buildCompanyInfo(context)
                 ],
@@ -40,6 +40,14 @@ class StockCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget _buildIcon() {
+    if (this.marketQuote.eps != null) {
+      return this._buildImage();
+    } else {
+      return this._buildEmpty();
+    }
   }
 
   Widget _buildImage() {
@@ -60,6 +68,21 @@ class StockCard extends StatelessWidget {
             : 'https://storage.googleapis.com/iex/api/logos/${marketQuote.symbol}.png'
         )
       )
+    );
+  }
+
+  Widget _buildEmpty() {
+    return Container(
+      height: 54.0,
+      width: 54.0,
+      decoration: BoxDecoration(
+        border: Border.all(width: 2.0, color: Colors.grey.shade100),
+        borderRadius: BorderRadius.all(Radius.circular(4)),
+        color: Colors.grey
+      ),
+      child: Center(
+        child: Text(marketQuote.symbol, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
+      ),
     );
   }
 

@@ -97,7 +97,7 @@ class StockScreen extends StatelessWidget {
               )
             ),),
             SizedBox(width: 60,),
-            _buildImage()
+            _buildImage(stats)
           ],
         ),
         SizedBox(height: 8,),
@@ -322,7 +322,10 @@ class StockScreen extends StatelessWidget {
     ];
   }
 
-  Widget _buildImage() {
+  Widget _buildImage(StockStats stats) {
+
+    print(stats.ttmEPS);
+
     return Container(
       height: 64,
       width: 64,
@@ -333,11 +336,25 @@ class StockScreen extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.all(4),
         // child: Image.network('https://storage.googleapis.com/iex/api/logos/$ticker.png'),
-        child: FadeInImage.assetNetwork(
-          placeholder: 'assets/warning.png',
+        child: stats.peRatio != 0.0 
+        ? FadeInImage.assetNetwork(
+          placeholder: 'assets/empty.png',
           image: ticker == 'JPM' 
             ? 'https://play-lh.googleusercontent.com/nSkpJQa6V2cjC0JEgerrwner4IelIQzg06DZY8dtGwRsq6iXcrxCX2Iop_VI9pohvnI' 
             : 'https://storage.googleapis.com/iex/api/logos/$ticker.png'
+        )
+
+        : Container(
+          height: 54.0,
+          width: 54.0,
+          decoration: BoxDecoration(
+            border: Border.all(width: 2.0, color: Colors.grey.shade100),
+            borderRadius: BorderRadius.all(Radius.circular(4)),
+            color: Colors.grey
+          ),
+          child: Center(
+            child: Text(ticker, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
+          ),
         )
       )
     );

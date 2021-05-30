@@ -2,7 +2,7 @@ class MarketPricesModel {
   final double changesPercentage;
   final double change;
   final double price;
-  final dynamic pe;
+  final dynamic eps;
 
   final String name;
   final String symbol;
@@ -11,7 +11,7 @@ class MarketPricesModel {
     this.changesPercentage, 
     this.change, 
     this.price,
-    this.pe, 
+    this.eps, 
     this.name,
     this.symbol
   });
@@ -23,21 +23,12 @@ class MarketPricesModel {
   }
 
   factory MarketPricesModel.fromJson(Map<String, dynamic> json) {
-
-    final String companyName = json['name'];
-    final String formattedCompanyName = companyName
-      .replaceAll('Corporation', '')
-      .replaceAll('Inc', '')
-      .replaceAll('com', '')
-      .replaceAll(',', '')
-      .replaceAll('.', '');
-
     return MarketPricesModel(
       changesPercentage: json['changesPercentage'],
       change: json['change'],
       price: json['price'],
-      pe: json['pe'],
-      name: formattedCompanyName,
+      eps: json['eps'],
+      name: json['name'],
       symbol: json['symbol']
     );
   }
