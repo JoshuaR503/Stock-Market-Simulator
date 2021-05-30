@@ -33,9 +33,6 @@ class StockQuote {
 
 
   factory StockQuote.fromJson(Map<String, dynamic> json) {
-    print('OPEN');
-    print(json['open']);
-
     return StockQuote(
       symbol: json['symbol'],
       companyName: json['companyName'],

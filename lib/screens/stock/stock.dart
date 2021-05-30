@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fadein/flutter_fadein.dart';
+import 'package:simulador/models/stockChart.dart';
 import 'package:simulador/models/stockHolding.dart';
 import 'package:simulador/models/stockQuote.dart';
 import 'package:simulador/models/stockStats.dart';
@@ -42,14 +43,16 @@ class StockScreen extends StatelessWidget {
                   future: Future.wait([
                     StockService().fetchStockQuote(this.ticker), 
                     StockService().fetchStockStats(this.ticker),
-                    Database().stockHolding(this.ticker)
+                    Database().stockHolding(this.ticker),
+                    StockService().fetchStockChart(this.ticker),
                   ]),
                   builder: (ctx, AsyncSnapshot<List<dynamic>> snapshot) {
                     if (snapshot.hasData) {
                       return this.buildStockInfo(
                         snapshot.data[0], 
                         snapshot.data[1], 
-                        snapshot.data[2]
+                        snapshot.data[2],
+                        snapshot.data[3]
                       );
                     } else {
                       return Container();
@@ -64,7 +67,7 @@ class StockScreen extends StatelessWidget {
     );
   }
 
-  Widget buildStockInfo(StockQuote quote, StockStats stats, StockHolding stockHolding) {
+  Widget buildStockInfo(StockQuote quote, StockStats stats, StockHolding stockHolding, List<StockChart> chart) {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -127,7 +130,13 @@ class StockScreen extends StatelessWidget {
         ),
         SizedBox(height:28,),
         Divider(thickness: .75,),
-        LineChartSample2(),
+        SizedBox(height: 60,),
+        LineChartSample2(
+
+          stats: stats,
+          quote: quote,
+          chart: chart,
+        ),
         Divider(thickness: .75,),
         SizedBox(height:14,),
 

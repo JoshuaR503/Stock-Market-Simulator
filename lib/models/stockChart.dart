@@ -57,33 +57,42 @@ class StockChart {
 
   factory StockChart.fromJson(Map<String, dynamic> json) {
     return StockChart(
-      close: json['close'],
-      high: json['high'],
-      low: json['low'],
-      open: json['open'],
+      close: double.tryParse(json['close'].toString()),
+      high: double.tryParse(json['high'].toString()),
+      low: double.tryParse(json['low'].toString()),
+      open: double.tryParse(json['open'].toString()),
       symbol: json['symbol'],
-      volume: json['volume'],
+      volume: double.tryParse(json['volume'].toString()),
       id: json['id'],
       key: json['key'],
       subkey: json['subkey'],
       date: json['date'],
-      updated: json['updated'],
-      changeOverTime: json['changeOverTime'],
-      marketChangeOverTime: json['marketChangeOverTime'],
-      uOpen: json['uOpen'],
-      uClose: json['uClose'],
-      uHigh: json['uHigh'],
-      uLow: json['uLow'],
-      uVolume: json['uVolume'],
-      fOpen: json['fOpen'],
-      fClose: json['fClose'],
-      fHigh: json['fHigh'],
-      fLow: json['fLow'],
-      fVolume: json['fVolume'],
+
+      updated: double.tryParse(json['updated'].toString()),
+      changeOverTime: double.tryParse(json['changeOverTime'].toString()),
+      marketChangeOverTime: double.tryParse(json['marketChangeOverTime'].toString()),
+      uOpen: double.tryParse(json['uOpen'].toString()),
+      uClose: double.tryParse(json['uClose'].toString()),
+      uHigh: double.tryParse(json['uHigh'].toString()),
+      uLow: double.tryParse(json['uLow'].toString()),
+      uVolume: double.tryParse(json['uVolume'].toString()),
+      fOpen: double.tryParse(json['fOpen'].toString()),
+      fClose: double.tryParse(json['fClose'].toString()),
+      fHigh: double.tryParse(json['fHigh'].toString()),
+      fLow: double.tryParse(json['fLow'].toString()),
+      fVolume: double.tryParse(json['fVolume'].toString()),
+
       label: json['label'],
-      change: json['change'],
-      changePercent: json['changePercent'],
+
+      change: double.tryParse(['change'].toString()),
+      changePercent: double.tryParse(['changePercent'].toString()),
     );
+  }
+
+  static List<StockChart> toList(List<dynamic> items) {
+    return items
+    .map((item) => StockChart.fromJson(item))
+    .toList();
   }
 
   Map<String, dynamic> toJson() {
