@@ -1,19 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:simulador/models/marketPrices.dart';
 import 'package:simulador/shared/typography.dart';
 import 'package:intl/intl.dart';
 
 class StockCard extends StatelessWidget {
 
-  final String ticker;
-  final String companyName;
-  final double change; 
-  final double price;
+  final MarketPricesModel marketQuote;
 
   const StockCard({
-    @required this.ticker,
-    @required this.companyName,
-    @required this.change,
-    @required this.price,
+    @required this.marketQuote,
   });
 
   @override
@@ -35,11 +30,11 @@ class StockCard extends StatelessWidget {
                 children: [
                   this._buildImage(),
                   SizedBox(width: 14),
-                  this._buildCompanyInfo(),
+                  this._buildCompanyInfo(context)
                 ],
               ),
 
-              this._buildPriceInfo()
+              Row(children: [this._buildPriceInfo()],)
             ],
           ),
         ],
@@ -52,35 +47,40 @@ class StockCard extends StatelessWidget {
       height: 54.0,
       width: 54.0,
       decoration: BoxDecoration(
-        border: Border.all(width: 3.0, color: Colors.grey.shade200),
+        border: Border.all(width: 2.0, color: Colors.grey.shade100),
         borderRadius: BorderRadius.all(Radius.circular(4)),
       ),
       child: Padding(
-        padding: EdgeInsets.all(5),
+        padding: EdgeInsets.all(4),
         // child: Image.network('https://storage.googleapis.com/iex/api/logos/$ticker.png'),
         child: FadeInImage.assetNetwork(
-          placeholder: 'assets/warning.png',
-          image: 'https://storage.googleapis.com/iex/api/logos/$ticker.png'
+          placeholder: 'assets/empty.png',
+          image: marketQuote.symbol == 'JPM' 
+            ? 'https://play-lh.googleusercontent.com/nSkpJQa6V2cjC0JEgerrwner4IelIQzg06DZY8dtGwRsq6iXcrxCX2Iop_VI9pohvnI' 
+            : 'https://storage.googleapis.com/iex/api/logos/${marketQuote.symbol}.png'
         )
       )
     );
   }
 
-  Widget _buildCompanyInfo() {
+  Widget _buildCompanyInfo(BuildContext context) {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(companyName, style: kCardTitle, overflow: TextOverflow.fade,),
+        Container(
+          width: MediaQuery.of(context).size.width*0.35,
+          child: Text(marketQuote.name, style: kCardTitle, overflow: TextOverflow.clip, softWrap: true, maxLines: 1,),
+        ),
         SizedBox(height: 2),
-        Text(ticker, style: kCardsSubtitle),
+        Text(marketQuote.symbol, style: kCardsSubtitle),
       ],
     );
   }
 
   Widget _buildPriceInfo() {
 
-    final isUp = change  > 0;
+    final isUp = marketQuote.change  > 0;
     final deepColor = isUp ? Color(0xff51cd7b) : Colors.red;
     
     final TextStyle priceChangeStyle = TextStyle(
@@ -95,7 +95,7 @@ class StockCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
 
-        Text('\$${NumberFormat().format(price)}', style: kCardTitle ),
+        Text('\$${NumberFormat().format(marketQuote.price)}', style: kCardTitle ),
 
         SizedBox(height: 4),
         Container(
@@ -106,7 +106,7 @@ class StockCard extends StatelessWidget {
 
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-            child: Text( '${NumberFormat().format(change)}' , textAlign: TextAlign.end, style: priceChangeStyle)
+            child: Text( '${NumberFormat().format(marketQuote.change)}' , textAlign: TextAlign.end, style: priceChangeStyle)
           )
         ),
       ],

@@ -2,13 +2,16 @@ class MarketPricesModel {
   final double changesPercentage;
   final double change;
   final double price;
+  final dynamic pe;
+
   final String name;
   final String symbol;
 
   MarketPricesModel({
     this.changesPercentage, 
     this.change, 
-    this.price, 
+    this.price,
+    this.pe, 
     this.name,
     this.symbol
   });
@@ -33,6 +36,7 @@ class MarketPricesModel {
       changesPercentage: json['changesPercentage'],
       change: json['change'],
       price: json['price'],
+      pe: json['pe'],
       name: formattedCompanyName,
       symbol: json['symbol']
     );

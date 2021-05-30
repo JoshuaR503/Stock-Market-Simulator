@@ -7,7 +7,6 @@ import 'package:simulador/models/stockStats.dart';
 import 'package:simulador/screens/stock/chart.dart';
 import 'package:simulador/services/database.dart';
 import 'package:simulador/services/stock.dart';
-import 'package:simulador/shared/typography.dart';
 import 'package:intl/intl.dart';
 
 const subtitleStyle = const TextStyle(
@@ -101,7 +100,7 @@ class StockScreen extends StatelessWidget {
             _buildImage()
           ],
         ),
-        SizedBox(height: 16,),
+        SizedBox(height: 8,),
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -129,39 +128,13 @@ class StockScreen extends StatelessWidget {
           )
         ),
         SizedBox(height:28,),
-        Divider(thickness: .75,),
-        SizedBox(height: 60,),
         LineChartSample2(
 
           stats: stats,
           quote: quote,
           chart: chart,
         ),
-        Divider(thickness: .75,),
-        SizedBox(height:14,),
-
-
-
-        // TextButton(
-        //   style: ButtonStyle(
-        //     backgroundColor: MaterialStateProperty.all<Color>(Color(0xffee394a)),
-        //     foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-        //   ),
-        //   onPressed: () async {},
-        //   child: Container(
-        //     height: 40,
-        //     child: Align(
-        //       alignment: Alignment.center,
-        //       child: Text('Realizar orden', style: TextStyle(fontSize: 16)),
-        //     )
-        //   ),
-        // ),
-        // SizedBox(height:14,),
-        // Divider(thickness: .75,),
-        // SizedBox(height:14,),
-
-
-
+        SizedBox(height: 28),
         Text(
           'Tu posición',
           style: TextStyle(
@@ -351,18 +324,20 @@ class StockScreen extends StatelessWidget {
 
   Widget _buildImage() {
     return Container(
-      height: 54.0,
-      width: 54.0,
+      height: 64,
+      width: 64,
       decoration: BoxDecoration(
-        border: Border.all(width: 5.0, color: Colors.grey.shade200),
+        border: Border.all(width: 2.0, color: Colors.grey.shade200),
         borderRadius: BorderRadius.all(Radius.circular(4)),
       ),
       child: Padding(
-        padding: EdgeInsets.all(5),
+        padding: EdgeInsets.all(4),
         // child: Image.network('https://storage.googleapis.com/iex/api/logos/$ticker.png'),
         child: FadeInImage.assetNetwork(
           placeholder: 'assets/warning.png',
-          image: 'https://storage.googleapis.com/iex/api/logos/$ticker.png'
+          image: ticker == 'JPM' 
+            ? 'https://play-lh.googleusercontent.com/nSkpJQa6V2cjC0JEgerrwner4IelIQzg06DZY8dtGwRsq6iXcrxCX2Iop_VI9pohvnI' 
+            : 'https://storage.googleapis.com/iex/api/logos/$ticker.png'
         )
       )
     );

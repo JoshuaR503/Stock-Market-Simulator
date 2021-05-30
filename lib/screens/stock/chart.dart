@@ -10,7 +10,7 @@ class LineChartSample2 extends StatelessWidget {
   final StockQuote quote;
   final List<StockChart> chart;
 
-  LineChartSample2({
+  const LineChartSample2({
     this.stats,
     this.quote,
     this.chart,
@@ -62,15 +62,16 @@ class LineChartSample2 extends StatelessWidget {
 
     return Stack(
       children: <Widget>[
+
         AspectRatio(
-          aspectRatio: 2.2,
+          aspectRatio: 1.9,
           child: Container(
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(4)),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(8)),
               color: Colors.white
             ),
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 4.0),
+              padding: EdgeInsets.only(top: ls[0] > 200  ? 40 : 0,),
               child: LineChart(mainData(ls, spots, color)),
             ),
           ),
@@ -85,9 +86,7 @@ class LineChartSample2 extends StatelessWidget {
     List<Color> color
   ) {
     return LineChartData(
-      gridData: FlGridData(
-        show: false,
-      ),
+      gridData: FlGridData(show: false),
       titlesData: FlTitlesData(
         show: true,
         leftTitles: SideTitles(showTitles: false),

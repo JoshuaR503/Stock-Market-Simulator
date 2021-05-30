@@ -8,6 +8,10 @@ class HoldingsService {
 
   Future<List<MarketPricesModel>> fetchHoldings(String tickers) async {
     final Response<dynamic> response = await _httpLibrary.financialModelRequest("/api/v3/quote/$tickers"); 
-    return MarketPricesModel.toList(response.data);
+    final holdings = MarketPricesModel.toList(response.data);
+
+    /// Sort by price change.
+    holdings.sort( (a, b) => b.change.compareTo(a.change) );
+    return holdings;
   }
 }

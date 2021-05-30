@@ -135,30 +135,24 @@ class _HoldingsScreenState extends State<HoldingsScreen>  {
       future: _holdingsService.fetchHoldings(tickers),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          final itemCount = snapshot.data.length;                              
+          final itemCount = snapshot.data.length;
+          
           return ListView.builder(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             itemCount: itemCount,
             itemBuilder: (context, idx) {
             
-              final MarketPricesModel price = snapshot.data[idx]; 
-
+              final MarketPricesModel quote = snapshot.data[idx]; 
+              
               return FadeIn(
                 child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 8),
                   child: GestureDetector(
                     onTap: () {
-
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => StockScreen(ticker: price.symbol)));
-
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => StockScreen(ticker: quote.symbol)));
                     },
-                    child: StockCard( 
-                      ticker: price.symbol, 
-                      companyName: price.name, 
-                      change: price.change,
-                      price: price.price
-                    ),
+                    child: StockCard( marketQuote: quote,),
                   )
                 ),
               );
