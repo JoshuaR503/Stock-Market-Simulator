@@ -34,14 +34,14 @@ class StockInfo extends StatelessWidget {
               
         SizedBox(height:28),
         LineChartSample2(stats: stats, quote: quote, chart: chart),
-        SizedBox(height: 28),
 
+        SizedBox(height: 28),
         Text('Tu posición', style: sectionTitle),
         SizedBox(height:14),
         this._buildStockPosition(),
         Divider(thickness: .75,),
 
-        SizedBox(height:14,),
+        SizedBox(height:28,),
         Text('Estadísticas', style: sectionTitle),
         SizedBox(height:14,),
         this._buildStockStats(),
@@ -211,16 +211,18 @@ class StockInfo extends StatelessWidget {
   }
 
   Widget _buildPriceInfo(double changePercent, String change) {
-    final colors = changePercent > 0 
-    ? [const Color(0xff02da89), const Color(0xff02c67d)] 
-    : [const Color(0xffff332e), const Color(0xffFF4B2B)];
+    final color = changePercent == 0 /// If change is zero, then color is grey.
+    ? [Colors.grey, Colors.grey] 
+    : changePercent > 0 /// Determine color based on change.  
+      ? [Color(0xff02da89), Color(0xff02c67d)] 
+      : [Color(0xffff332e), Color(0xffFF4B2B)];
     
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        this.gradientBox(change, colors),
+        this.gradientBox(change, color),
         SizedBox(width: 8),
-        this.gradientBox('(${changePercent.toStringAsFixed(2)}%)', colors)
+        this.gradientBox('(${changePercent.toStringAsFixed(2)}%)', color)
       ],
     );
   }

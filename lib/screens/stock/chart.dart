@@ -10,11 +10,21 @@ class LineChartSample2 extends StatelessWidget {
   final StockQuote quote;
   final List<StockChart> chart;
 
-  const LineChartSample2({
+  LineChartSample2({
     this.stats,
     this.quote,
     this.chart,
   });
+
+  final red  = [
+    const Color(0xffff332e),
+    const Color(0xffFF4B2B),
+  ];
+
+  final green  = [
+    const Color(0xff02da79),
+    const Color(0xff02da89),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -33,15 +43,7 @@ class LineChartSample2 extends StatelessWidget {
     final double chartStart = chart[0].close;
     final double chartEnd = chart[chart.length-1].close;
 
-    final red  = [
-      const Color(0xffff332e),
-      const Color(0xffFF4B2B),
-    ];
-
-    final green  = [
-      const Color(0xff02da79),
-      const Color(0xff02da89),
-    ];
+    
 
     final color = chartStart > chartEnd ? red : green;
     
@@ -62,14 +64,10 @@ class LineChartSample2 extends StatelessWidget {
 
     return Stack(
       children: <Widget>[
-        
         AspectRatio(
-          
           aspectRatio: 1.8,
           child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white
-            ),
+            decoration: BoxDecoration(color: Colors.white),
             child: Padding(
               padding: EdgeInsets.only(top: ls[0] > 200  ? 40 : 10),
               child: LineChart(mainData(ls, spots, color)),
@@ -94,9 +92,9 @@ class LineChartSample2 extends StatelessWidget {
       ),
       borderData: FlBorderData(show: false, border: Border.all(color:  Colors.red, width: 100)),
       minX: 0,
-      maxX: 125,  /// The size of the array.
-      minY: ls[3] - 10,  /// All time low 
-      maxY: ls[0] + 5,  /// Top all time high.
+      maxX: 125,          /// The size of the array.
+      minY: ls[3] - 10,   /// All time low 
+      maxY: ls[0] + 5,    /// Top all time high.
       lineBarsData: [
         LineChartBarData(
           spots: spots,

@@ -53,6 +53,4 @@ class StockScreen extends StatelessWidget {
       ),
     );
   }
-
-  
 }
