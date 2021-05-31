@@ -21,6 +21,9 @@ class StockInfo extends StatelessWidget {
     this.chart
   });
 
+  final green = [Color(0xff02da89), Color(0xff35e1a1)];
+  final red = [Color(0xffff5e58), Color(0xffff6f55)];
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -34,6 +37,16 @@ class StockInfo extends StatelessWidget {
               
         SizedBox(height:28),
         LineChartSample2(stats: stats, quote: quote, chart: chart),
+        SizedBox(height:14),
+
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _buildTradeButtons("Comprar"),
+            SizedBox(width: 14),
+            _buildTradeButtons("Vender"),            
+          ],
+        ),
 
         SizedBox(height: 28),
         Text('Tu posición', style: sectionTitle),
@@ -89,6 +102,38 @@ class StockInfo extends StatelessWidget {
         SizedBox(width: 16),
         this._buildPriceInfo(quote.changePercent * 100, quote.change.toString()),
       ],
+    );
+  }
+
+  Widget _buildTradeButtons(String title) {
+
+    final double chartStart = chart[0].close;
+    final double chartEnd = chart[chart.length-1].close;
+    final colors = chartStart > chartEnd ? red : green;
+
+
+    return Expanded(
+      flex: 1,
+      child: Container(
+        padding: EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(2)),
+          gradient: LinearGradient(begin: Alignment.topLeft, colors:colors)
+        ),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+          child: Text(
+            title, 
+            textAlign: TextAlign.center, 
+            style: TextStyle(
+              fontSize: 16,
+              letterSpacing: 1,
+              color: Colors.white,
+              fontWeight: FontWeight.bold
+            )
+          )
+        )
+      )
     );
   }
 
@@ -178,6 +223,14 @@ class StockInfo extends StatelessWidget {
   /// Utilities widgets.
   /// Utilities widgets.
   
+  List<Color> _getColors(double changePercent) {
+    return  changePercent == 0 /// If change is zero, then color is grey.
+    ? [Colors.grey, Colors.grey] 
+    : changePercent > 0 /// Determine color based on change.  
+      ? green
+      : red;
+  }
+
   Widget _buildTile({String title, String trailing}) {
     return ListTile(
       contentPadding: EdgeInsets.zero,
@@ -211,18 +264,12 @@ class StockInfo extends StatelessWidget {
   }
 
   Widget _buildPriceInfo(double changePercent, String change) {
-    final color = changePercent == 0 /// If change is zero, then color is grey.
-    ? [Colors.grey, Colors.grey] 
-    : changePercent > 0 /// Determine color based on change.  
-      ? [Color(0xff02da89), Color(0xff02c67d)] 
-      : [Color(0xffff332e), Color(0xffFF4B2B)];
-    
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        this.gradientBox(change, color),
+        this.gradientBox(change, _getColors(changePercent)),
         SizedBox(width: 8),
-        this.gradientBox('(${changePercent.toStringAsFixed(2)}%)', color)
+        this.gradientBox('(${changePercent.toStringAsFixed(2)}%)', _getColors(changePercent))
       ],
     );
   }
