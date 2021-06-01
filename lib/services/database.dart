@@ -50,6 +50,52 @@ class Database {
     return null;
   }
 
+  Future<void> handleBuyOrder({OrderData orderData}) async {
+
+    /// Get document database.
+    final documentReference = await _database
+      .collection("users")
+      .doc(_auth.getUser.uid)
+      .get();
+
+    /// Get document data.
+    final List<StockHolding> holdings = StockHolding.toList(documentReference['holdings']);
+
+    /// See if holding exists.
+    final singleHolding = holdings.where((holding) => holding.ticker == orderData.ticker);
+
+    /// If holding exists.
+    if (singleHolding.isNotEmpty) {
+
+      /// New quantity
+      final quantity = int.parse(singleHolding.first.quanity) + int.parse(orderData.quanity);
+
+      /// New Basis cost = Current Cost / Shares
+      final baseCost = singleHolding.first.baseCost + orderData.baseCost / quantity;
+      
+      /// New total cost.
+      final totalCost = singleHolding.first.totalCost + orderData.totalCost;
+
+      /// Select find holding index in List.
+      final int index = holdings.indexOf(singleHolding.first);
+
+      /// Update holding list.
+      holdings[index] = StockHolding(
+        ticker: orderData.ticker,
+        orderType: orderData.orderType,
+        quanity: quantity.toString(),
+        baseCost: baseCost,
+        totalCost: totalCost
+      );
+
+      /// Save to database.
+      await _database
+      .collection("users")
+      .doc(_auth.getUser.uid)
+      .set({ "holdings": holdings},  SetOptions(merge: true));
+    }
+  }
+
   Future<void> updateOrderHistory({
     OrderData orderData,
     HoldingData holdingData,

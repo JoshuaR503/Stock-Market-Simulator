@@ -6,6 +6,7 @@ import 'package:simulador/models/stockStats.dart';
 import 'package:intl/intl.dart';
 import 'package:simulador/screens/stock/chart.dart';
 import 'package:simulador/screens/stock/stockInfoStyles.dart';
+import 'package:simulador/services/database.dart';
 
 class StockInfo extends StatelessWidget {
 
@@ -42,9 +43,9 @@ class StockInfo extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _buildTradeButtons("Comprar"),
+            _buildTradeButtons("Comprar", () => Database().handleBuyOrder()),
             SizedBox(width: 14),
-            _buildTradeButtons("Vender"),            
+            _buildTradeButtons("Vender", () => Database().handleBuyOrder()),   
           ],
         ),
 
@@ -105,34 +106,34 @@ class StockInfo extends StatelessWidget {
     );
   }
 
-  Widget _buildTradeButtons(String title) {
+  Widget _buildTradeButtons(String title, Function callback) {
 
     final double chartStart = chart[0].close;
     final double chartEnd = chart[chart.length-1].close;
-    final colors = chartStart > chartEnd ? red : green;
+    final List<Color> colors = chartStart > chartEnd ? red : green;
 
+    final textStyle = TextStyle(
+      fontSize: 16,
+      letterSpacing: 1,
+      color: Colors.white,
+      fontWeight: FontWeight.bold
+    );
 
     return Expanded(
       flex: 1,
-      child: Container(
-        padding: EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(2)),
-          gradient: LinearGradient(begin: Alignment.topLeft, colors:colors)
-        ),
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-          child: Text(
-            title, 
-            textAlign: TextAlign.center, 
-            style: TextStyle(
-              fontSize: 16,
-              letterSpacing: 1,
-              color: Colors.white,
-              fontWeight: FontWeight.bold
-            )
+      child: GestureDetector(
+        onTap: callback,
+        child: Container(
+          padding: EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(2)),
+            gradient: LinearGradient(begin: Alignment.topLeft, colors:colors)
+          ),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+            child: Text(title, textAlign: TextAlign.center, style: textStyle)
           )
-        )
+        ),
       )
     );
   }

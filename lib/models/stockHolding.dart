@@ -5,7 +5,6 @@ class StockHolding {
   final double baseCost;
   final double totalCost;
 
-
   const StockHolding({
     this.ticker,
     this.quanity,
