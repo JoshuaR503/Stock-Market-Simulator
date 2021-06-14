@@ -4,6 +4,7 @@ import 'package:simulador/models/orderData.dart';
 import 'package:simulador/models/orderType.dart';
 import 'package:simulador/models/stockHolding.dart';
 import 'package:simulador/services/auth.dart';
+import 'dart:convert';
 
 class Database {
   final FirebaseFirestore _database = FirebaseFirestore.instance;
@@ -82,17 +83,23 @@ class Database {
       /// Update holding list.
       holdings[index] = StockHolding(
         ticker: orderData.ticker,
-        orderType: orderData.orderType,
+        orderType: 'buy',
         quanity: quantity.toString(),
         baseCost: baseCost,
         totalCost: totalCost
       );
 
-      /// Save to database.
+
+      final jsonHoldings =  holdings
+        .map((e) => e.toJson())
+        .toList();
+
+      print(jsonHoldings);
+      
       await _database
       .collection("users")
       .doc(_auth.getUser.uid)
-      .set({ "holdings": holdings},  SetOptions(merge: true));
+      .set({ "holdings": jsonHoldings}, SetOptions(merge: true));
     }
   }
 

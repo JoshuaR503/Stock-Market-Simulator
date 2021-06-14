@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:simulador/models/orderData.dart';
+import 'package:simulador/models/orderType.dart';
 import 'package:simulador/models/stockChart.dart';
 import 'package:simulador/models/stockHolding.dart';
 import 'package:simulador/models/stockQuote.dart';
@@ -7,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:simulador/screens/stock/chart.dart';
 import 'package:simulador/screens/stock/stockInfoStyles.dart';
 import 'package:simulador/services/database.dart';
+import 'package:enum_to_string/enum_to_string.dart';
 
 class StockInfo extends StatelessWidget {
 
@@ -43,7 +46,16 @@ class StockInfo extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _buildTradeButtons("Comprar", () => Database().handleBuyOrder()),
+            _buildTradeButtons("Comprar", () => Database().handleBuyOrder(
+              orderData: OrderData(
+                ticker: 'JEPI',
+                quanity: '5',
+                timestamp: DateTime.now().toString(),
+                orderType: EnumToString.convertToString(OrderType.buy),
+                baseCost: double.parse(59.71.toString()),
+                totalCost: 59.71*5
+              )
+            )),
             SizedBox(width: 14),
             _buildTradeButtons("Vender", () => Database().handleBuyOrder()),   
           ],

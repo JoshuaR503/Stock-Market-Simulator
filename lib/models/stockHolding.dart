@@ -5,7 +5,7 @@ class StockHolding {
   final double baseCost;
   final double totalCost;
 
-  const StockHolding({
+  StockHolding({
     this.ticker,
     this.quanity,
     this.orderType,
@@ -18,6 +18,14 @@ class StockHolding {
     .map((item) => StockHolding.fromJson(item))
     .toList();
   }
+
+  Map<String, dynamic> toJson() => {
+    'ticker': ticker,
+    'quanity': quanity,
+    'orderType': orderType,
+    'baseCost': baseCost,
+    'totalCost': totalCost,
+  };
 
   factory StockHolding.fromJson(Map<String, dynamic> json) {
     return StockHolding(
