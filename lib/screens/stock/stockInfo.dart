@@ -8,10 +8,12 @@ import 'package:simulador/models/stockStats.dart';
 import 'package:intl/intl.dart';
 import 'package:simulador/screens/stock/chart.dart';
 import 'package:simulador/screens/stock/stockInfoStyles.dart';
+import 'package:simulador/screens/trading/bottomSheet.dart';
 import 'package:simulador/services/database.dart';
 import 'package:enum_to_string/enum_to_string.dart';
+import 'package:simulador/services/stock.dart';
 
-class StockInfo extends StatelessWidget {
+class StockInfo extends StatefulWidget {
 
   final StockQuote quote;
   final StockStats stats;
@@ -25,6 +27,14 @@ class StockInfo extends StatelessWidget {
     this.chart
   });
 
+  @override
+  _StockInfoState createState() => _StockInfoState();
+}
+
+class _StockInfoState extends State<StockInfo> {
+
+  int stockAmount; 
+
   final green = [Color(0xff02da89), Color(0xff35e1a1)];
   final red = [Color(0xffff5e58), Color(0xffff6f55)];
 
@@ -34,30 +44,21 @@ class StockInfo extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         SizedBox(height: 16),
-        Text(quote.symbol, style: quoteSymbol),
+        Text(widget.quote.symbol, style: quoteSymbol),
         this._buildHeading(),
         SizedBox(height: 8),
         this._buildPrices(),
               
         SizedBox(height:28),
-        LineChartSample2(stats: stats, quote: quote, chart: chart),
+        LineChartSample2(stats: widget.stats, quote: widget.quote, chart: widget.chart),
         SizedBox(height:14),
 
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _buildTradeButtons("Comprar", () => Database().handleBuyOrder(
-              orderData: OrderData(
-                ticker: 'JEPI',
-                quanity: '5',
-                timestamp: DateTime.now().toString(),
-                orderType: EnumToString.convertToString(OrderType.buy),
-                baseCost: double.parse(59.71.toString()),
-                totalCost: 59.71*5
-              )
-            )),
+            _buildTradeButtons("Comprar"),
             SizedBox(width: 14),
-            _buildTradeButtons("Vender", () => Database().handleBuyOrder()),   
+            _buildTradeButtons("Vender"),   
           ],
         ),
 
@@ -79,7 +80,7 @@ class StockInfo extends StatelessWidget {
 
     final Widget leftRow = Flexible(
       child: Text(
-        quote.companyName, 
+        widget.quote.companyName, 
         maxLines: 3, 
         style: quoteCompanyName
       ),
@@ -94,7 +95,7 @@ class StockInfo extends StatelessWidget {
       ),
       child: Padding(
         padding: EdgeInsets.all(2),
-        child: stats.peRatio != 0.0 
+        child: widget.stats.peRatio != 0.0 
           ? _buildImageWidget()
           : _buildContainer()
         )
@@ -111,17 +112,17 @@ class StockInfo extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text('\$${quote.latestPrice.toString()}', style: quotePrice),
+        Text('\$${widget.quote.latestPrice.toString()}', style: quotePrice),
         SizedBox(width: 16),
-        this._buildPriceInfo(quote.changePercent * 100, quote.change.toString()),
+        this._buildPriceInfo(widget.quote.changePercent * 100, widget.quote.change.toString()),
       ],
     );
   }
 
-  Widget _buildTradeButtons(String title, Function callback) {
+  Widget _buildTradeButtons(String title) {
 
-    final double chartStart = chart[0].close;
-    final double chartEnd = chart[chart.length-1].close;
+    final double chartStart = widget.chart[0].close;
+    final double chartEnd = widget.chart[widget.chart.length-1].close;
     final List<Color> colors = chartStart > chartEnd ? red : green;
 
     final textStyle = TextStyle(
@@ -134,7 +135,9 @@ class StockInfo extends StatelessWidget {
     return Expanded(
       flex: 1,
       child: GestureDetector(
-        onTap: callback,
+        onTap: () {
+          this._displayTextInputDialog();
+        },
         child: Container(
           padding: EdgeInsets.all(12),
           decoration: BoxDecoration(
@@ -150,30 +153,94 @@ class StockInfo extends StatelessWidget {
     );
   }
 
+  Future<void> _displayTextInputDialog() async {
+   return showDialog(
+    context: context,
+    barrierDismissible: true,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text("Introduzca el número de acciones que desea comprar"),
+        content: Row(
+          children: [
+            Expanded(
+              child: TextField(
+                autofocus: true,
+                decoration: InputDecoration(
+                  fillColor: Colors.redAccent,
+                  labelText: 'Número de acciones', 
+                  
+                ),
+                keyboardType: TextInputType.number,
+                onChanged: (value) {
+                  if (value.isNotEmpty && int.tryParse(value) > 0) {
+
+                    setState(() {
+                      this.stockAmount = int.parse(value);
+                    });
+
+                  }
+                },
+              )
+            )
+          ],
+        ),
+        actions: [
+          FlatButton(
+            child: Text('Comprar'),
+            onPressed: () async {
+
+              print(this.stockAmount);
+
+              final StockQuote sq = await StockService().fetchStockQuote(this.widget.quote.symbol);
+
+              Database().handleBuyOrder(
+                orderData: OrderData(
+                  ticker: widget.quote.symbol,
+                  quanity: this.stockAmount.toString(),
+                  timestamp: DateTime.now().toString(),
+                  orderType: EnumToString.convertToString(OrderType.buy),
+                  baseCost: sq.latestPrice,
+                  totalCost: sq.latestPrice * this.stockAmount
+                )
+              );
+
+              
+
+              Navigator.of(context, rootNavigator: true).pop();
+
+              displayBottomSheet(context);
+            },
+          ),
+        ],
+      );
+    },
+  );
+ }
+
   Widget _buildStockPosition() {
     final Widget leftColumn = Column(
       children: [
-        _buildTile(title: "Cantidad de acciones", trailing: stockHolding.quanity),
+        _buildTile(title: "Cantidad de acciones", trailing: widget.stockHolding.quanity),
         Divider(thickness: .75,),
-        _buildTile(title: "Costo\npromedio", trailing: NumberFormat().format(stockHolding.baseCost)),
+        _buildTile(title: "Costo\npromedio", trailing: NumberFormat().format(widget.stockHolding.baseCost)),
         Divider(thickness: .75),
         _buildTile(
           title: "Rendimiento\nporcentaje", 
-          trailing: "${(quote.latestPrice * int.parse(stockHolding.quanity) - stockHolding.totalCost).toStringAsFixed(2)}"
+          trailing: "${(widget.quote.latestPrice * int.parse(widget.stockHolding.quanity) - widget.stockHolding.totalCost).toStringAsFixed(2)}"
         )
       ]
     );
 
     final Widget rightColumn = Column(
       children: [
-        _buildTile(title: "Valor actual", trailing: NumberFormat().format(quote.latestPrice * int.parse(stockHolding.quanity))),
+        _buildTile(title: "Valor actual", trailing: NumberFormat().format(widget.quote.latestPrice * int.parse(widget.stockHolding.quanity))),
         Divider(thickness: .75,),
-        _buildTile(title: "Precio de compra", trailing: NumberFormat().format(stockHolding.totalCost)),
+        _buildTile(title: "Precio de compra", trailing: NumberFormat().format(widget.stockHolding.totalCost)),
         Divider(thickness: .75,),
         
         _buildTile(
           title: "Rendimiento",
-          trailing: "${(quote.latestPrice * int.parse(stockHolding.quanity) - stockHolding.totalCost).toStringAsFixed(2)}"
+          trailing: "${(widget.quote.latestPrice * int.parse(widget.stockHolding.quanity) - widget.stockHolding.totalCost).toStringAsFixed(2)}"
         ),
       ]
     );
@@ -191,34 +258,34 @@ class StockInfo extends StatelessWidget {
 
     final leftColumn =  Column(
       children: [
-        _buildTile(title: 'Apertura', trailing: quote.open.toString()),
+        _buildTile(title: 'Apertura', trailing: widget.quote.open.toString()),
         Divider(thickness: .75,),
-        _buildTile(title: 'Último cierre', trailing: quote.previousClose.toString()),
+        _buildTile(title: 'Último cierre', trailing: widget.quote.previousClose.toString()),
         Divider(thickness: .75,),
-        _buildTile(title: 'Máx. intradía', trailing: quote.high.toString()),
+        _buildTile(title: 'Máx. intradía', trailing: widget.quote.high.toString()),
         Divider(thickness: .75,),
-        _buildTile(title: 'Min. intradía', trailing: quote.low.toString()),
+        _buildTile(title: 'Min. intradía', trailing: widget.quote.low.toString()),
         Divider(thickness: .75,),
-        _buildTile(title: 'Alta 52-sem.', trailing: stats.week52high.toString()),
+        _buildTile(title: 'Alta 52-sem.', trailing: widget.stats.week52high.toString()),
         Divider(thickness: .75,),
-        _buildTile(title: 'Baja 52-sem', trailing: stats.week52low.toString()),
+        _buildTile(title: 'Baja 52-sem', trailing: widget.stats.week52low.toString()),
         Divider(thickness: .75,),
       ]
     );
 
     final rightColumn = Column(
       children: [
-        _buildTile(title: 'Acciones en circulación', trailing: NumberFormat.compact().format(stats.sharesOutstanding)),
+        _buildTile(title: 'Acciones en circulación', trailing: NumberFormat.compact().format(widget.stats.sharesOutstanding)),
         Divider(thickness: .75,),
-        _buildTile(title: '10D Vol. promedio', trailing: NumberFormat.compact().format( stats.avg10Volume)),
+        _buildTile(title: '10D Vol. promedio', trailing: NumberFormat.compact().format( widget.stats.avg10Volume)),
         Divider(thickness: .75,),
-        _buildTile(title: '30D Vol. promedio', trailing: NumberFormat.compact().format( stats.avg30Volume)),
+        _buildTile(title: '30D Vol. promedio', trailing: NumberFormat.compact().format( widget.stats.avg30Volume)),
         Divider(thickness: .75,),
-        _buildTile(title: 'Cap. mercado', trailing: NumberFormat.compact().format(stats.marketcap)),
+        _buildTile(title: 'Cap. mercado', trailing: NumberFormat.compact().format(widget.stats.marketcap)),
         Divider(thickness: .75,),
-        _buildTile(title: 'PER', trailing: stats.peRatio.toStringAsFixed(2)),
+        _buildTile(title: 'PER', trailing: widget.stats.peRatio.toStringAsFixed(2)),
         Divider(thickness: .75,),
-        _buildTile(title: 'BPA', trailing: stats.ttmEPS.toStringAsFixed(2)),
+        _buildTile(title: 'BPA', trailing: widget.stats.ttmEPS.toStringAsFixed(2)),
         Divider(thickness: .75,),
       ],
     );
@@ -251,13 +318,13 @@ class StockInfo extends StatelessWidget {
       trailing: Text(trailing)
     );
   }
-  
+
   Widget _buildImageWidget() {
     return FadeInImage.assetNetwork(
       placeholder: 'assets/empty.png',
-      image: quote.symbol == 'JPM' 
+      image: widget.quote.symbol == 'JPM' 
         ? 'https://play-lh.googleusercontent.com/nSkpJQa6V2cjC0JEgerrwner4IelIQzg06DZY8dtGwRsq6iXcrxCX2Iop_VI9pohvnI' 
-        : 'https://storage.googleapis.com/iex/api/logos/${quote.symbol}.png'
+        : 'https://storage.googleapis.com/iex/api/logos/${widget.quote.symbol}.png'
     );
   }
 
@@ -271,7 +338,7 @@ class StockInfo extends StatelessWidget {
         color: Colors.grey
       ),
       child: Center(
-        child: Text(quote.symbol, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        child: Text(widget.quote.symbol, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
       ),
     );
   }

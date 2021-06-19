@@ -4,7 +4,6 @@ import 'package:simulador/models/orderData.dart';
 import 'package:simulador/models/orderType.dart';
 import 'package:simulador/models/stockHolding.dart';
 import 'package:simulador/services/auth.dart';
-import 'dart:convert';
 
 class Database {
   final FirebaseFirestore _database = FirebaseFirestore.instance;
@@ -18,6 +17,7 @@ class Database {
   }
 
   Future<StockHolding> stockHolding(String ticker) async{
+
     final docRef = await _database
       .collection("users")
       .doc(_auth.getUser.uid)
@@ -71,11 +71,11 @@ class Database {
       /// New quantity
       final quantity = int.parse(singleHolding.first.quanity) + int.parse(orderData.quanity);
 
-      /// New Basis cost = Current Cost / Shares
-      final baseCost = singleHolding.first.baseCost + orderData.baseCost / quantity;
-      
       /// New total cost.
       final totalCost = singleHolding.first.totalCost + orderData.totalCost;
+
+      /// New Basis cost per share = Total cost / Shares
+      final baseCost = totalCost / quantity;
 
       /// Select find holding index in List.
       final int index = holdings.indexOf(singleHolding.first);
@@ -89,12 +89,9 @@ class Database {
         totalCost: totalCost
       );
 
-
       final jsonHoldings =  holdings
         .map((e) => e.toJson())
         .toList();
-
-      print(jsonHoldings);
       
       await _database
       .collection("users")
