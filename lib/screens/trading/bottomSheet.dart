@@ -66,7 +66,6 @@ void displayBottomSheet(BuildContext context) {
                 SizedBox(height: height * 0.03),
                 buttonBuilder( title: 'Ver posiciones', callback: ( ) {
                   Navigator.pop(context);
-                  Navigator.pop(context);
                 }),
               ],
             )
