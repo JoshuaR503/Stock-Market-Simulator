@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:enum_to_string/enum_to_string.dart';
+
 import 'package:simulador/models/orderData.dart';
 import 'package:simulador/models/orderType.dart';
 import 'package:simulador/models/stockChart.dart';
 import 'package:simulador/models/stockHolding.dart';
 import 'package:simulador/models/stockQuote.dart';
 import 'package:simulador/models/stockStats.dart';
-import 'package:intl/intl.dart';
+
 import 'package:simulador/screens/stock/chart.dart';
 import 'package:simulador/screens/stock/stockInfoStyles.dart';
+import 'package:simulador/screens/stock/widgets/heading.dart';
 import 'package:simulador/services/database.dart';
 import 'package:simulador/services/stock.dart';
-import 'package:enum_to_string/enum_to_string.dart';
 
 class StockInfo extends StatefulWidget {
 
@@ -19,7 +22,7 @@ class StockInfo extends StatefulWidget {
   final StockHolding stockHolding;
   final List<StockChart> chart;
 
-  StockInfo({
+  const StockInfo({
     this.quote,
     this.stats,
     this.stockHolding,
@@ -44,7 +47,11 @@ class _StockInfoState extends State<StockInfo> {
       children: [
         SizedBox(height: 16),
         Text(widget.quote.symbol, style: quoteSymbol),
-        this._buildHeading(),
+        HeadingWidget(
+          companyName: widget.stats.companyName,
+          symbol: widget.quote.symbol,
+          peRatio: widget.stats.peRatio,
+        ),
         SizedBox(height: 8),
         this._buildPrices(),
               
@@ -75,38 +82,6 @@ class _StockInfoState extends State<StockInfo> {
     );
   }
 
-  Widget _buildHeading() {
-
-    final Widget leftRow = Flexible(
-      child: Text(
-        widget.quote.companyName, 
-        maxLines: 3, 
-        style: quoteCompanyName
-      ),
-    );
-
-    final Widget rightRow = Container(
-      height: 64,
-      width: 64,
-      decoration: BoxDecoration(
-        border: Border.all(width: 2.0, color: Colors.grey.shade200),
-        borderRadius: BorderRadius.all(Radius.circular(4)),
-      ),
-      child: Padding(
-        padding: EdgeInsets.all(2),
-        child: widget.stats.peRatio != 0.0 
-          ? _buildImageWidget()
-          : _buildContainer()
-        )
-    );
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [leftRow, SizedBox(width: 100), rightRow],
-    );
-  }
-
   Widget _buildPrices() {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -134,9 +109,7 @@ class _StockInfoState extends State<StockInfo> {
     return Expanded(
       flex: 1,
       child: GestureDetector(
-        onTap: () {
-          this._displayTextInputDialog();
-        },
+        onTap: this._displayTextInputDialog,
         child: Container(
           padding: EdgeInsets.all(12),
           decoration: BoxDecoration(
@@ -367,30 +340,6 @@ class _StockInfoState extends State<StockInfo> {
       contentPadding: EdgeInsets.zero,
       title: Text(title, style: subtitleStyle),
       trailing: Text(trailing)
-    );
-  }
-
-  Widget _buildImageWidget() {
-    return FadeInImage.assetNetwork(
-      placeholder: 'assets/empty.png',
-      image: widget.quote.symbol == 'JPM' 
-        ? 'https://play-lh.googleusercontent.com/nSkpJQa6V2cjC0JEgerrwner4IelIQzg06DZY8dtGwRsq6iXcrxCX2Iop_VI9pohvnI' 
-        : 'https://storage.googleapis.com/iex/api/logos/${widget.quote.symbol}.png'
-    );
-  }
-
-  Widget _buildContainer() {
-    return Container(
-      height: 54.0,
-      width: 54.0,
-      decoration: BoxDecoration(
-        border: Border.all(width: 2.0, color: Colors.grey.shade100),
-        borderRadius: BorderRadius.all(Radius.circular(4)),
-        color: Colors.grey
-      ),
-      child: Center(
-        child: Text(widget.quote.symbol, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-      ),
     );
   }
 
