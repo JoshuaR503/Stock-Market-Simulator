@@ -11,8 +11,10 @@ import 'package:simulador/models/stockStats.dart';
 
 import 'package:simulador/screens/stock/chart.dart';
 import 'package:simulador/screens/stock/stockInfoStyles.dart';
+import 'package:simulador/screens/stock/widgets/bottomSheetButton.dart';
+import 'package:simulador/screens/stock/widgets/bottomSheetStyles.dart';
 import 'package:simulador/screens/stock/widgets/heading.dart';
-import 'package:simulador/screens/trading/bottomSheet.dart';
+import 'package:simulador/screens/stock/widgets/bottomSheet.dart';
 import 'package:simulador/services/database.dart';
 import 'package:simulador/services/stock.dart';
 
@@ -132,24 +134,6 @@ class _StockInfoState extends State<StockInfo> {
   }
 
   void _displayTextInputDialog() async {
-
-    final BoxDecoration boxDecoration = BoxDecoration(
-      color: Colors.white,
-      borderRadius: new BorderRadius.only(
-        topLeft: const Radius.circular(20.0),
-        topRight: const Radius.circular(20.0)
-      )
-    );
-
-    final TextStyle orderStyle = TextStyle(
-      fontSize: 24,
-      fontWeight: FontWeight.w500,
-      height: 1.5
-    );
-
-    final double height = MediaQuery.of(context).size.height  * 0.285;
-    final List<Color> green = [Color(0xff02da89), Color(0xff24de99)];
-
     final Widget kInputFieldWidget = Container(
       decoration: BoxDecoration(
         color: Colors.white10,
@@ -173,8 +157,8 @@ class _StockInfoState extends State<StockInfo> {
       ),
     );
 
-    final Widget kButtonWidget = GestureDetector(
-      onTap: () async {
+    final kButtonWidget = BottomSheetButton(
+      callback: () async {
         final StockQuote sq = await StockService().fetchStockQuote(this.widget.quote.symbol);
         final OrderData orderData = OrderData(
           ticker: widget.quote.symbol,
@@ -191,44 +175,28 @@ class _StockInfoState extends State<StockInfo> {
 
         displayBottomSheet(context, 'Ha comprado ${this.stockAmount} unidades de ${this.widget.quote.symbol} por un total de \$${orderData.totalCost}');
       },
-      child: Container(
-        height: 48,
-        alignment: Alignment.center,
-        padding: EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(4)),
-          gradient: LinearGradient(begin: Alignment.topLeft, colors:green)
-        ),
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-          child: Text('Comprar', style: kTradeButtonStyle)
-        )
-      ),
+      title: 'Comprar',
     );
+
 
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       builder: (ctx) {
-        return Container(
-          height: height,
-          color: Colors.transparent,
-          child: Container(
-            padding: EdgeInsets.all(30),
-            decoration: boxDecoration,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text("Introduzca el número de acciones que desea comprar",
-                  textAlign: TextAlign.center,
-                  style: orderStyle
-                ),
-                SizedBox(height: 20),
-                kInputFieldWidget,
-                SizedBox(height: 10),
-                kButtonWidget,
-              ],
-            )
+        return BottomSheetStyle(
+          height: MediaQuery.of(context).size.height  * 0.285,
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text("Introduzca el número de acciones que desea comprar",
+                textAlign: TextAlign.center,
+                style: kBottomSheetTitle
+              ),
+              SizedBox(height: 20),
+              kInputFieldWidget,
+              SizedBox(height: 10),
+              kButtonWidget,
+            ],
           ),
         );
       }
