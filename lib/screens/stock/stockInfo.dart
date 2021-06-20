@@ -37,8 +37,15 @@ class _StockInfoState extends State<StockInfo> {
 
   int stockAmount; 
 
-  final green = [Color(0xff02da89), Color(0xff35e1a1)];
-  final red = [Color(0xffff5e58), Color(0xffff6f55)];
+  final List<Color> green = [Color(0xff02da89), Color(0xff35e1a1)];
+  final List<Color> red = [Color(0xffff5e58), Color(0xffff6f55)];
+
+  final TextStyle kTradeButtonStyle = TextStyle(
+    fontSize: 16,
+    letterSpacing: 1,
+    color: Colors.white,
+    fontWeight: FontWeight.bold
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -94,17 +101,9 @@ class _StockInfoState extends State<StockInfo> {
   }
 
   Widget _buildTradeButtons(String title) {
-
     final double chartStart = widget.chart[0].close;
     final double chartEnd = widget.chart[widget.chart.length-1].close;
     final List<Color> colors = chartStart > chartEnd ? red : green;
-
-    final textStyle = TextStyle(
-      fontSize: 16,
-      letterSpacing: 1,
-      color: Colors.white,
-      fontWeight: FontWeight.bold
-    );
 
     return Expanded(
       flex: 1,
@@ -118,7 +117,7 @@ class _StockInfoState extends State<StockInfo> {
           ),
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-            child: Text(title, textAlign: TextAlign.center, style: textStyle)
+            child: Text(title, textAlign: TextAlign.center, style: kTradeButtonStyle)
           )
         ),
       )
@@ -144,6 +143,61 @@ class _StockInfoState extends State<StockInfo> {
     final double height = MediaQuery.of(context).size.height  * 0.285;
     final List<Color> green = [Color(0xff02da89), Color(0xff24de99)];
 
+    final Widget kInputFieldWidget = Container(
+      decoration: BoxDecoration(
+        color: Colors.white10,
+        borderRadius: BorderRadius.all(Radius.circular(4)),
+        boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.2))]
+      ),
+      child: TextField(
+        autofocus: true,
+        textAlign: TextAlign.center,
+        onChanged: (value) {
+          if (value.isNotEmpty && int.tryParse(value) > 0) {
+            setState(() => this.stockAmount = int.parse(value));
+          }
+        },
+        keyboardType: TextInputType.number,
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          fillColor: Colors.redAccent,
+          hoverColor: Colors.redAccent
+        ),
+      ),
+    );
+
+    final Widget kButtonWidget = GestureDetector(
+      onTap: () async {
+        final StockQuote sq = await StockService().fetchStockQuote(this.widget.quote.symbol);
+        final OrderData orderData = OrderData(
+          ticker: widget.quote.symbol,
+          quanity: this.stockAmount.toString(),
+          timestamp: DateTime.now().toString(),
+          orderType: EnumToString.convertToString(OrderType.buy),
+          baseCost: sq.latestPrice,
+          totalCost: sq.latestPrice * this.stockAmount
+        );
+
+        Database().handleBuyOrder(orderData: orderData);
+        Navigator.pop(context);
+      },
+      child: Container(
+        height: 48,
+        alignment: Alignment.center,
+        padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(4)),
+          gradient: LinearGradient(begin: Alignment.topLeft, colors:green)
+        ),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+          child: Text('Aceptar', 
+            style: kTradeButtonStyle,
+          )
+        )
+      ),
+    );
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -152,89 +206,21 @@ class _StockInfoState extends State<StockInfo> {
           height: height,
           color: Colors.transparent,
           child: Container(
-            child: Container(
-              padding: EdgeInsets.all(30),
-              decoration: boxDecoration,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text("Introduzca el número de acciones que desea comprar",
-                    textAlign: TextAlign.center,
-                    style: orderStyle
-                  ),
-
-                  SizedBox(height: 15,),
-
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white10,
-                      borderRadius: BorderRadius.all(Radius.circular(4)),
-                      boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.2))]
-                    ),
-                    child: TextField(
-                      autofocus: true,
-                      textAlign: TextAlign.center,
-                      onChanged: (value) {
-
-                        if (value.isNotEmpty && int.tryParse(value) > 0) {
-                          setState(() {
-                            this.stockAmount = int.parse(value);
-                          });
-                        }
-
-                      },
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        fillColor: Colors.redAccent,
-                        hoverColor: Colors.redAccent
-                      ),
-                    ),
-                  ),
-
-                  SizedBox(height: 10,),
-
-                  GestureDetector(
-                    onTap: () async {
-                      final StockQuote sq = await StockService().fetchStockQuote(this.widget.quote.symbol);
-
-                      Database().handleBuyOrder(
-                        orderData: OrderData(
-                          ticker: widget.quote.symbol,
-                          quanity: this.stockAmount.toString(),
-                          timestamp: DateTime.now().toString(),
-                          orderType: EnumToString.convertToString(OrderType.buy),
-                          baseCost: sq.latestPrice,
-                          totalCost: sq.latestPrice * this.stockAmount
-                        )
-                      );
-
-                      Navigator.pop(context);
-
-                    },
-                    child: Container(
-                      height: 48,
-                      alignment: Alignment.center,
-                      padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(4)),
-                        gradient: LinearGradient(begin: Alignment.topLeft, colors:green)
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                        child: Text('Aceptar', 
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16
-                          ),
-                        )
-                      )
-                    ),
-                  )
-                ],
-              )
-            ),
+            padding: EdgeInsets.all(30),
+            decoration: boxDecoration,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text("Introduzca el número de acciones que desea comprar",
+                  textAlign: TextAlign.center,
+                  style: orderStyle
+                ),
+                SizedBox(height: 20),
+                kInputFieldWidget,
+                SizedBox(height: 10),
+                kButtonWidget,
+              ],
+            )
           ),
         );
       }
