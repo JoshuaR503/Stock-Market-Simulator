@@ -12,6 +12,7 @@ import 'package:simulador/models/stockStats.dart';
 import 'package:simulador/screens/stock/chart.dart';
 import 'package:simulador/screens/stock/stockInfoStyles.dart';
 import 'package:simulador/screens/stock/widgets/heading.dart';
+import 'package:simulador/screens/trading/bottomSheet.dart';
 import 'package:simulador/services/database.dart';
 import 'package:simulador/services/stock.dart';
 
@@ -35,7 +36,7 @@ class StockInfo extends StatefulWidget {
 
 class _StockInfoState extends State<StockInfo> {
 
-  int stockAmount; 
+  int stockAmount = 0; 
 
   final List<Color> green = [Color(0xff02da89), Color(0xff35e1a1)];
   final List<Color> red = [Color(0xffff5e58), Color(0xffff6f55)];
@@ -108,7 +109,9 @@ class _StockInfoState extends State<StockInfo> {
     return Expanded(
       flex: 1,
       child: GestureDetector(
-        onTap: this._displayTextInputDialog,
+        onTap: () {
+          this._displayTextInputDialog();
+        },
         child: Container(
           padding: EdgeInsets.all(12),
           decoration: BoxDecoration(
@@ -122,6 +125,10 @@ class _StockInfoState extends State<StockInfo> {
         ),
       )
     );
+  }
+
+  void successDialog() {
+
   }
 
   void _displayTextInputDialog() async {
@@ -179,7 +186,10 @@ class _StockInfoState extends State<StockInfo> {
         );
 
         Database().handleBuyOrder(orderData: orderData);
-        Navigator.pop(context);
+
+        // Navigator.pop(context);
+
+        displayBottomSheet(context, 'Ha comprado ${this.stockAmount} unidades de ${this.widget.quote.symbol} por un total de \$${orderData.totalCost}');
       },
       child: Container(
         height: 48,
@@ -191,9 +201,7 @@ class _StockInfoState extends State<StockInfo> {
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-          child: Text('Aceptar', 
-            style: kTradeButtonStyle,
-          )
+          child: Text('Comprar', style: kTradeButtonStyle)
         )
       ),
     );
@@ -224,7 +232,7 @@ class _StockInfoState extends State<StockInfo> {
           ),
         );
       }
-    );
+    ); 
   }
 
   Widget _buildStockPosition() {
@@ -312,9 +320,8 @@ class _StockInfoState extends State<StockInfo> {
   /// Utilities widgets.
   /// Utilities widgets.
   /// Utilities widgets.
-  
   List<Color> _getColors(double changePercent) {
-    return  changePercent == 0 /// If change is zero, then color is grey.
+    return changePercent == 0 /// If change is zero, then color is grey.
     ? [Colors.grey, Colors.grey] 
     : changePercent > 0 /// Determine color based on change.  
       ? green

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-void displayBottomSheet(BuildContext context) {
+void displayBottomSheet(BuildContext context, String message) {
 
   Widget buttonBuilder ({
     String title,
@@ -8,7 +8,7 @@ void displayBottomSheet(BuildContext context) {
   }) {
     final TextStyle optionStyle = TextStyle(fontSize: 16);
     final ButtonStyle kButtonStyle = ButtonStyle(
-      backgroundColor: MaterialStateProperty.all<Color>(Color(0xff2bc5aa)),
+      backgroundColor: MaterialStateProperty.all<Color>(Color(0xff02da89)),
       foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
     );
 
@@ -39,9 +39,10 @@ void displayBottomSheet(BuildContext context) {
     height: 1.5
   );
 
-  final double height = MediaQuery.of(context).size.height  * 0.5;
+  final double height = MediaQuery.of(context).size.height  * 0.32;
 
   showModalBottomSheet(
+    isDismissible: false,
     context: context,
     builder: (ctx) {
       return Container(
@@ -55,18 +56,24 @@ void displayBottomSheet(BuildContext context) {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(height: height * 0.05),
-                Image(image: AssetImage('assets/checked.png',), height: 80, width: 80, ),
-                SizedBox(height: height * 0.05),
-                Text("Su orden se ha\nrealizado con éxito ",
+                // Image(image: AssetImage('assets/checked.png',), height: 80, width: 80, ),
+                Text("$message",
                   textAlign: TextAlign.center,
                   style: orderStyle
                 ),
-                SizedBox(height: height * 0.05),
-                buttonBuilder( title: 'Realizar otra orden', callback: ( ) => Navigator.pop(context)),
-                SizedBox(height: height * 0.03),
-                buttonBuilder( title: 'Ver posiciones', callback: ( ) {
-                  Navigator.pop(context);
+                SizedBox(height: 20),
+                buttonBuilder( title: 'Ver historial de transaciones', callback: ( ) {
+                  
+
                 }),
+                SizedBox(height: height * 0.05),
+                buttonBuilder( title: 'Aceptar', callback: ( ) {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+
+                }),
+                SizedBox(height: height * 0.04),
+
               ],
             )
           ),

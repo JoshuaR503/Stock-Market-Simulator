@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
           '/': (context) => LoginScreen(),
           '/home': (context) => HomeScreen(),
           '/holdings': (context) => HoldingsScreen(),
-          '/trading': (context) => TradingScreen(),
+          // '/trading': (context) => TradingScreen(),
           '/indexes': (context) => IndexesScreen(),
           '/commodities': (context) => CommoditiesScreen(),
 
