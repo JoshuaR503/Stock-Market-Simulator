@@ -12,6 +12,7 @@ import 'package:simulador/models/stockStats.dart';
 import 'package:simulador/screens/stock/chart.dart';
 import 'package:simulador/screens/stock/stockInfoStyles.dart';
 import 'package:simulador/screens/stock/widgets/bottomSheetButton.dart';
+import 'package:simulador/screens/stock/widgets/bottomSheetInputField.dart';
 import 'package:simulador/screens/stock/widgets/bottomSheetStyles.dart';
 import 'package:simulador/screens/stock/widgets/heading.dart';
 import 'package:simulador/screens/stock/widgets/bottomSheet.dart';
@@ -129,55 +130,23 @@ class _StockInfoState extends State<StockInfo> {
     );
   }
 
-  void successDialog() {
-
-  }
-
   void _displayTextInputDialog() async {
-    final Widget kInputFieldWidget = Container(
-      decoration: BoxDecoration(
-        color: Colors.white10,
-        borderRadius: BorderRadius.all(Radius.circular(4)),
-        boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.2))]
-      ),
-      child: TextField(
-        autofocus: true,
-        textAlign: TextAlign.center,
-        onChanged: (value) {
-          if (value.isNotEmpty && int.tryParse(value) > 0) {
-            setState(() => this.stockAmount = int.parse(value));
-          }
-        },
-        keyboardType: TextInputType.number,
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          fillColor: Colors.redAccent,
-          hoverColor: Colors.redAccent
-        ),
-      ),
-    );
 
-    final kButtonWidget = BottomSheetButton(
-      callback: () async {
-        final StockQuote sq = await StockService().fetchStockQuote(this.widget.quote.symbol);
-        final OrderData orderData = OrderData(
-          ticker: widget.quote.symbol,
-          quanity: this.stockAmount.toString(),
-          timestamp: DateTime.now().toString(),
-          orderType: EnumToString.convertToString(OrderType.buy),
-          baseCost: sq.latestPrice,
-          totalCost: sq.latestPrice * this.stockAmount
-        );
+    void buyCallback() async {
+      final StockQuote sq = await StockService().fetchStockQuote(this.widget.quote.symbol);
+      final OrderData orderData = OrderData(
+        ticker: widget.quote.symbol,
+        quanity: this.stockAmount.toString(),
+        timestamp: DateTime.now().toString(),
+        orderType: EnumToString.convertToString(OrderType.buy),
+        baseCost: sq.latestPrice,
+        totalCost: sq.latestPrice * this.stockAmount
+      );
 
-        Database().handleBuyOrder(orderData: orderData);
-
-        // Navigator.pop(context);
-
-        displayBottomSheet(context, 'Ha comprado ${this.stockAmount} unidades de ${this.widget.quote.symbol} por un total de \$${orderData.totalCost}');
-      },
-      title: 'Comprar',
-    );
-
+      Database().handleBuyOrder(orderData: orderData);
+      displayBottomSheet(context, 'Ha comprado ${this.stockAmount} unidades de ${this.widget.quote.symbol} por un total de \$${orderData.totalCost}');
+    }
+    
 
     showModalBottomSheet(
       context: context,
@@ -193,9 +162,18 @@ class _StockInfoState extends State<StockInfo> {
                 style: kBottomSheetTitle
               ),
               SizedBox(height: 20),
-              kInputFieldWidget,
+              BottomSheetInputField(
+                callback: (value) {
+                  if (value.isNotEmpty && int.tryParse(value) > 0) {
+                    setState(() => this.stockAmount = int.parse(value));
+                  }
+                },
+              ),
               SizedBox(height: 10),
-              kButtonWidget,
+              BottomSheetButton(
+                callback: buyCallback,
+                title: 'Comprar',
+              ),
             ],
           ),
         );
