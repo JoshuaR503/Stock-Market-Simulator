@@ -6,14 +6,11 @@ import 'package:simulador/models/stockHolding.dart';
 import 'package:simulador/models/stockQuote.dart';
 import 'package:simulador/models/stockStats.dart';
 import 'package:intl/intl.dart';
-import 'package:simulador/screens/login/styles.dart';
 import 'package:simulador/screens/stock/chart.dart';
 import 'package:simulador/screens/stock/stockInfoStyles.dart';
-import 'package:simulador/screens/trading/bottomSheet.dart';
 import 'package:simulador/services/database.dart';
-import 'package:enum_to_string/enum_to_string.dart';
 import 'package:simulador/services/stock.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:enum_to_string/enum_to_string.dart';
 
 class StockInfo extends StatefulWidget {
 
@@ -157,29 +154,6 @@ class _StockInfoState extends State<StockInfo> {
 
   void _displayTextInputDialog() async {
 
-    Widget buttonBuilder ({
-    String title,
-    Function callback
-  }) {
-    final TextStyle optionStyle = TextStyle(fontSize: 16);
-    final ButtonStyle kButtonStyle = ButtonStyle(
-      backgroundColor: MaterialStateProperty.all<Color>(Color(0xff2bc5aa)),
-      foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-    );
-
-    return TextButton(
-      onPressed: callback,
-      style: kButtonStyle,
-      child: Container(
-        height: 34,
-        child: Align(
-          alignment: Alignment.center,
-          child: Text(title, style: optionStyle),
-        )
-      ),
-    );
-  }
-
     final BoxDecoration boxDecoration = BoxDecoration(
       color: Colors.white,
       borderRadius: new BorderRadius.only(
@@ -195,149 +169,104 @@ class _StockInfoState extends State<StockInfo> {
     );
 
     final double height = MediaQuery.of(context).size.height  * 0.285;
-
-  final green = [Color(0xff02da89), Color(0xff35e1a1)];
-
+    final List<Color> green = [Color(0xff02da89), Color(0xff24de99)];
 
     showModalBottomSheet(
-    context: context,
-    isScrollControlled: true,
-    builder: (ctx) {
-      return Container(
-        height: height,
-        color: Colors.transparent,
-        child: Container(
+      context: context,
+      isScrollControlled: true,
+      builder: (ctx) {
+        return Container(
+          height: height,
+          color: Colors.transparent,
           child: Container(
-            padding: EdgeInsets.all(30),
-            decoration: boxDecoration,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                // SizedBox(height: height * 0.05),
-                // Image(image: AssetImage('assets/checked.png',), height: 80, width: 80, ),
-                // SizedBox(height: height * 0.05),
-                Text("Introduzca el número de acciones que desea comprar",
-                  textAlign: TextAlign.center,
-                  style: orderStyle
-                ),
-                    SizedBox(height: 15,),
-                Container(
+            child: Container(
+              padding: EdgeInsets.all(30),
+              decoration: boxDecoration,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text("Introduzca el número de acciones que desea comprar",
+                    textAlign: TextAlign.center,
+                    style: orderStyle
+                  ),
+
+                  SizedBox(height: 15,),
+
+                  Container(
                     decoration: BoxDecoration(
                       color: Colors.white10,
                       borderRadius: BorderRadius.all(Radius.circular(4)),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.2),
-                          // spreadRadius: 2,
-                          // blurRadius: 2,
-                        ),
-                      ]
+                      boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.2))]
                     ),
                     child: TextField(
-                    autofocus: true,
-                    textAlign: TextAlign.center,
-                    onChanged: (newText) {},
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      fillColor: Colors.redAccent,
-                      hoverColor: Colors.redAccent
+                      autofocus: true,
+                      textAlign: TextAlign.center,
+                      onChanged: (value) {
+
+                        if (value.isNotEmpty && int.tryParse(value) > 0) {
+                          setState(() {
+                            this.stockAmount = int.parse(value);
+                          });
+                        }
+
+                      },
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        fillColor: Colors.redAccent,
+                        hoverColor: Colors.redAccent
+                      ),
                     ),
                   ),
-                ),
 
-                SizedBox(height: 10,),
+                  SizedBox(height: 10,),
 
-                Container(
-                  height: 48,
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(4)),
-                    gradient: LinearGradient(begin: Alignment.topLeft, colors:green)
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                    child: Text('Aceptar', style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16
-                    ),)
+                  GestureDetector(
+                    onTap: () async {
+                      final StockQuote sq = await StockService().fetchStockQuote(this.widget.quote.symbol);
+
+                      Database().handleBuyOrder(
+                        orderData: OrderData(
+                          ticker: widget.quote.symbol,
+                          quanity: this.stockAmount.toString(),
+                          timestamp: DateTime.now().toString(),
+                          orderType: EnumToString.convertToString(OrderType.buy),
+                          baseCost: sq.latestPrice,
+                          totalCost: sq.latestPrice * this.stockAmount
+                        )
+                      );
+
+                      Navigator.pop(context);
+
+                    },
+                    child: Container(
+                      height: 48,
+                      alignment: Alignment.center,
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(4)),
+                        gradient: LinearGradient(begin: Alignment.topLeft, colors:green)
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        child: Text('Aceptar', 
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16
+                          ),
+                        )
+                      )
+                    ),
                   )
-                ),
-
-                // SizedBox(height: height * 0.05),
-                // buttonBuilder( title: 'Realizar otra orden', callback: ( ) => Navigator.pop(context)),
-                // SizedBox(height: height * 0.03),
-                // buttonBuilder( title: 'Ver posiciones', callback: ( ) {
-                //   Navigator.pop(context);
-                // }),
-              ],
-            )
+                ],
+              )
+            ),
           ),
-        ),
-      );
-    }
-  );
-
-  //  return showDialog(
-  //   context: context,
-  //   barrierDismissible: true,
-  //   builder: (BuildContext context) {
-  //     return AlertDialog(
-  //       title: Text("Introduzca el número de acciones que desea comprar", style: TextStyle(
-  //         height: 1.5
-  //       )),
-  //       content: Row(
-  //         children: [
-  //           Expanded(
-  //             child: TextField(
-  //               autofocus: true,
-  //               decoration: InputDecoration(
-  //                 fillColor: Colors.redAccent,
-  //                 labelText: 'Número de acciones', 
-                  
-  //               ),
-  //               keyboardType: TextInputType.number,
-  //               onChanged: (value) {
-  //                 if (value.isNotEmpty && int.tryParse(value) > 0) {
-
-  //                   setState(() {
-  //                     this.stockAmount = int.parse(value);
-  //                   });
-
-  //                 }
-  //               },
-  //             )
-  //           )
-  //         ],
-  //       ),
-  //       actions: [
-  //         FlatButton(
-  //           child: Text('Comprar'),
-  //           onPressed: () async {
-  //             final StockQuote sq = await StockService().fetchStockQuote(this.widget.quote.symbol);
-
-  //             Database().handleBuyOrder(
-  //               orderData: OrderData(
-  //                 ticker: widget.quote.symbol,
-  //                 quanity: this.stockAmount.toString(),
-  //                 timestamp: DateTime.now().toString(),
-  //                 orderType: EnumToString.convertToString(OrderType.buy),
-  //                 baseCost: sq.latestPrice,
-  //                 totalCost: sq.latestPrice * this.stockAmount
-  //               )
-  //             );
-
-  //             Navigator.of(context, rootNavigator: true).pop();
-
-  //           },
-  //         ),
-  //       ],
-  //     );
-  //   },
-  // );
- }
+        );
+      }
+    );
+  }
 
   Widget _buildStockPosition() {
     final Widget leftColumn = Column(
