@@ -11,11 +11,9 @@ import 'package:simulador/models/stockStats.dart';
 
 import 'package:simulador/screens/stock/chart.dart';
 import 'package:simulador/screens/stock/stockInfoStyles.dart';
-import 'package:simulador/screens/stock/widgets/bottomSheetButton.dart';
-import 'package:simulador/screens/stock/widgets/bottomSheetInputField.dart';
-import 'package:simulador/screens/stock/widgets/bottomSheetStyles.dart';
+
 import 'package:simulador/screens/stock/widgets/heading.dart';
-import 'package:simulador/screens/stock/widgets/bottomSheet.dart';
+import 'package:simulador/screens/stock/widgets/bottomSheets.dart';
 import 'package:simulador/services/database.dart';
 import 'package:simulador/services/stock.dart';
 
@@ -64,28 +62,21 @@ class _StockInfoState extends State<StockInfo> {
           peRatio: widget.stats.peRatio,
         ),
         SizedBox(height: 8),
+
         this._buildPrices(),
-              
         SizedBox(height:28),
         LineChartSample2(stats: widget.stats, quote: widget.quote, chart: widget.chart),
         SizedBox(height:14),
-
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            _buildTradeButtons("Comprar"),
-            SizedBox(width: 14),
-            _buildTradeButtons("Vender"),   
-          ],
-        ),
-
+        
+        this._buildTradeButtons(),
         SizedBox(height: 28),
         Text('Tu posición', style: sectionTitle),
         SizedBox(height:14),
+
         this._buildStockPosition(),
         Divider(thickness: .75,),
-
         SizedBox(height:28,),
+
         Text('Estadísticas', style: sectionTitle),
         SizedBox(height:14,),
         this._buildStockStats(),
@@ -104,81 +95,69 @@ class _StockInfoState extends State<StockInfo> {
     );
   }
 
-  Widget _buildTradeButtons(String title) {
+  Widget _buildTradeButtons() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        this._buildTradeButton("Comprar"),
+        SizedBox(width: 14),
+        this._buildTradeButton("Vender"),   
+      ],
+    );
+  }
+
+  Widget _buildTradeButton(String title) {
     final double chartStart = widget.chart[0].close;
     final double chartEnd = widget.chart[widget.chart.length-1].close;
     final List<Color> colors = chartStart > chartEnd ? red : green;
 
+    final Widget kChildButton = Container(
+      padding: EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(2)),
+        gradient: LinearGradient(begin: Alignment.topLeft, colors:colors)
+      ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+        child: Text(title, textAlign: TextAlign.center, style: kTradeButtonStyle)
+      )
+    );
+
     return Expanded(
       flex: 1,
       child: GestureDetector(
-        onTap: () {
-          this._displayTextInputDialog();
-        },
-        child: Container(
-          padding: EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(2)),
-            gradient: LinearGradient(begin: Alignment.topLeft, colors:colors)
-          ),
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-            child: Text(title, textAlign: TextAlign.center, style: kTradeButtonStyle)
-          )
+        child: kChildButton,
+        onTap: () => displayInputDialogBottomSheet(
+          context: context,
+          inputFieldCallback: this.updateStockAmount,
+          inputFieldButtonCallback: this._displayPurchaseRecipt,
         ),
       )
     );
   }
 
-  void _displayTextInputDialog() async {
+  void updateStockAmount(value) {
+    setState(() => this.stockAmount = value);
+  }
 
-    void buyCallback() async {
-      final StockQuote sq = await StockService().fetchStockQuote(this.widget.quote.symbol);
-      final OrderData orderData = OrderData(
-        ticker: widget.quote.symbol,
-        quanity: this.stockAmount.toString(),
-        timestamp: DateTime.now().toString(),
-        orderType: EnumToString.convertToString(OrderType.buy),
-        baseCost: sq.latestPrice,
-        totalCost: sq.latestPrice * this.stockAmount
-      );
+  void _displayPurchaseRecipt() async {
+    final StockQuote sq = await StockService().fetchStockQuote(this.widget.quote.symbol);
+    final OrderData orderData = OrderData(
+      ticker: widget.quote.symbol,
+      quanity: this.stockAmount.toString(),
+      timestamp: DateTime.now().toString(),
+      orderType: EnumToString.convertToString(OrderType.buy),
+      baseCost: sq.latestPrice,
+      totalCost: sq.latestPrice * this.stockAmount
+    );
 
-      Database().handleBuyOrder(orderData: orderData);
-      displayBottomSheet(context, 'Ha comprado ${this.stockAmount} unidades de ${this.widget.quote.symbol} por un total de \$${orderData.totalCost}');
-    }
-    
+    Database().handleBuyOrder(orderData: orderData);
 
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (ctx) {
-        return BottomSheetStyle(
-          height: MediaQuery.of(context).size.height  * 0.285,
-          content: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text("Introduzca el número de acciones que desea comprar",
-                textAlign: TextAlign.center,
-                style: kBottomSheetTitle
-              ),
-              SizedBox(height: 20),
-              BottomSheetInputField(
-                callback: (value) {
-                  if (value.isNotEmpty && int.tryParse(value) > 0) {
-                    setState(() => this.stockAmount = int.parse(value));
-                  }
-                },
-              ),
-              SizedBox(height: 10),
-              BottomSheetButton(
-                callback: buyCallback,
-                title: 'Comprar',
-              ),
-            ],
-          ),
-        );
-      }
-    ); 
+    displayReciptBottomSheet(
+      context: context, 
+      callback: () => Navigator.of(context).pop(),
+      message: 'Ha comprado ${this.stockAmount} unidades de ${this.widget.quote.symbol} por un total de \$${orderData.totalCost}'
+    );
   }
 
   Widget _buildStockPosition() {
@@ -263,8 +242,6 @@ class _StockInfoState extends State<StockInfo> {
     );
   }
 
-  /// Utilities widgets.
-  /// Utilities widgets.
   /// Utilities widgets.
   List<Color> _getColors(double changePercent) {
     return changePercent == 0 /// If change is zero, then color is grey.

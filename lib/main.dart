@@ -9,7 +9,6 @@ import 'package:simulador/screens/home/home.dart';
 import 'package:simulador/screens/login/login.dart';
 import 'package:simulador/screens/portfolio/commodities/commoditiesScreen.dart';
 import 'package:simulador/screens/portfolio/indexes/indexesScreen.dart';
-import 'package:simulador/screens/trading/trading.dart';
 
 import 'package:simulador/services/auth.dart';
 import 'package:provider/provider.dart';
