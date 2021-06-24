@@ -4,10 +4,12 @@ class BottomSheetButton extends StatelessWidget {
 
   final String title;
   final Function callback;
+  final Color color;
 
   const BottomSheetButton({
     this.title,
-    this.callback
+    this.callback,
+    this.color = Colors.grey
   });
 
   @override

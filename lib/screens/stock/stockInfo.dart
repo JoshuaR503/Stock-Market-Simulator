@@ -11,6 +11,7 @@ import 'package:simulador/models/stockStats.dart';
 
 import 'package:simulador/screens/stock/chart.dart';
 import 'package:simulador/screens/stock/stockInfoStyles.dart';
+import 'package:simulador/screens/stock/widgets/bottomSheetButton.dart';
 
 import 'package:simulador/screens/stock/widgets/heading.dart';
 import 'package:simulador/screens/stock/widgets/bottomSheets.dart';
@@ -99,40 +100,24 @@ class _StockInfoState extends State<StockInfo> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        this._buildTradeButton("Comprar"),
+        Expanded(child: this._buildTradeButton("Comprar")),
         SizedBox(width: 14),
-        this._buildTradeButton("Vender"),   
+        Expanded(child: this._buildTradeButton("Vender"))
       ],
     );
   }
 
   Widget _buildTradeButton(String title) {
-    final double chartStart = widget.chart[0].close;
-    final double chartEnd = widget.chart[widget.chart.length-1].close;
-    final List<Color> colors = chartStart > chartEnd ? red : green;
-
-    final Widget kChildButton = Container(
-      padding: EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(2)),
-        gradient: LinearGradient(begin: Alignment.topLeft, colors:colors)
-      ),
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-        child: Text(title, textAlign: TextAlign.center, style: kTradeButtonStyle)
-      )
-    );
-
-    return Expanded(
-      flex: 1,
-      child: GestureDetector(
-        child: kChildButton,
-        onTap: () => displayInputDialogBottomSheet(
+    return BottomSheetButton(
+      title: title,
+      color: this._getColors(this.widget.quote.changePercent)[0],
+      callback: () {
+        displayInputDialogBottomSheet(
           context: context,
           inputFieldCallback: this.updateStockAmount,
           inputFieldButtonCallback: this._displayPurchaseRecipt,
-        ),
-      )
+        );
+      },
     );
   }
 
@@ -156,14 +141,14 @@ class _StockInfoState extends State<StockInfo> {
     displayReciptBottomSheet(
       context: context, 
       callback: () => Navigator.of(context).pop(),
-      message: 'Ha comprado ${this.stockAmount} unidades de ${this.widget.quote.symbol} por un total de \$${orderData.totalCost}'
+      message: 'Ha comprado ${NumberFormat().format(this.stockAmount)} unidades de ${this.widget.quote.symbol} por un total de \$${NumberFormat().format(orderData.totalCost)}'
     );
   }
 
   Widget _buildStockPosition() {
     final Widget leftColumn = Column(
       children: [
-        _buildTile(title: "Cantidad de acciones", trailing: widget.stockHolding.quanity),
+        _buildTile(title: "Cantidad de acciones", trailing:  this.compactOrFormat(int.parse(widget.stockHolding.quanity))),
         Divider(thickness: .75,),
         _buildTile(title: "Costo\npromedio", trailing: NumberFormat().format(widget.stockHolding.baseCost)),
         Divider(thickness: .75),
@@ -176,9 +161,9 @@ class _StockInfoState extends State<StockInfo> {
 
     final Widget rightColumn = Column(
       children: [
-        _buildTile(title: "Valor actual", trailing: NumberFormat().format(widget.quote.latestPrice * int.parse(widget.stockHolding.quanity))),
+        _buildTile(title: "Valor actual", trailing: this.compactOrFormat(widget.quote.latestPrice * int.parse(widget.stockHolding.quanity))),
         Divider(thickness: .75,),
-        _buildTile(title: "Precio de compra", trailing: NumberFormat().format(widget.stockHolding.totalCost)),
+        _buildTile(title: "Precio de compra", trailing: this.compactOrFormat(widget.stockHolding.totalCost)),
         Divider(thickness: .75,),
         
         _buildTile(
@@ -242,13 +227,22 @@ class _StockInfoState extends State<StockInfo> {
     );
   }
 
-  /// Utilities widgets.
+  String compactOrFormat(dynamic num) {
+    if (num > 999999) {
+      return NumberFormat.compact().format(num);
+    } else {
+      return NumberFormat().format(num);
+    }
+  }
+
   List<Color> _getColors(double changePercent) {
-    return changePercent == 0 /// If change is zero, then color is grey.
-    ? [Colors.grey, Colors.grey] 
-    : changePercent > 0 /// Determine color based on change.  
-      ? green
-      : red;
+
+    final List<Color> defaultColor = [Colors.grey, Colors.grey];
+    final List<Color> customColor = changePercent > 0 ? green : red;
+
+    return changePercent == 0
+      ? defaultColor
+      : customColor;
   }
 
   Widget _buildTile({String title, String trailing}) {

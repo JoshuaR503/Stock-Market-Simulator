@@ -13,7 +13,7 @@ final BoxDecoration kBottomSheetBD = BoxDecoration(
 final TextStyle kBottomSheetTitle = TextStyle(
   fontSize: 24,
   fontWeight: FontWeight.w500,
-  height: 1.5
+  height: 1.75
 );
 
 class BottomSheetStyle extends StatelessWidget {
