@@ -10,7 +10,9 @@ import 'package:simulador/models/stockQuote.dart';
 import 'package:simulador/models/stockStats.dart';
 
 import 'package:simulador/screens/stock/chart.dart';
+import 'package:simulador/screens/stock/helpers/helpers.dart';
 import 'package:simulador/screens/stock/stockInfoStyles.dart';
+import 'package:simulador/screens/stock/stockPosition.dart';
 import 'package:simulador/screens/stock/widgets/bottomSheetButton.dart';
 
 import 'package:simulador/screens/stock/widgets/heading.dart';
@@ -74,7 +76,10 @@ class _StockInfoState extends State<StockInfo> {
         Text('Tu posición', style: sectionTitle),
         SizedBox(height:14),
 
-        this._buildStockPosition(),
+        StockPosition(
+          stockHolding: widget.stockHolding,
+          quote: widget.quote,
+        ),
         Divider(thickness: .75,),
         SizedBox(height:28,),
 
@@ -143,77 +148,43 @@ class _StockInfoState extends State<StockInfo> {
       callback: () => Navigator.of(context).pop(),
       message: 'Ha comprado ${NumberFormat().format(this.stockAmount)} unidades de ${this.widget.quote.symbol} por un total de \$${NumberFormat().format(orderData.totalCost)}'
     );
+    
   }
 
-  Widget _buildStockPosition() {
-    final Widget leftColumn = Column(
-      children: [
-        _buildTile(title: "Cantidad de acciones", trailing:  this.compactOrFormat(int.parse(widget.stockHolding.quanity))),
-        Divider(thickness: .75,),
-        _buildTile(title: "Costo\npromedio", trailing: NumberFormat().format(widget.stockHolding.baseCost)),
-        Divider(thickness: .75),
-        _buildTile(
-          title: "Rendimiento\nporcentaje", 
-          trailing: "${(widget.quote.latestPrice * int.parse(widget.stockHolding.quanity) - widget.stockHolding.totalCost).toStringAsFixed(2)}"
-        )
-      ]
-    );
-
-    final Widget rightColumn = Column(
-      children: [
-        _buildTile(title: "Valor actual", trailing: this.compactOrFormat(widget.quote.latestPrice * int.parse(widget.stockHolding.quanity))),
-        Divider(thickness: .75,),
-        _buildTile(title: "Precio de compra", trailing: this.compactOrFormat(widget.stockHolding.totalCost)),
-        Divider(thickness: .75,),
-        
-        _buildTile(
-          title: "Rendimiento",
-          trailing: "${(widget.quote.latestPrice * int.parse(widget.stockHolding.quanity) - widget.stockHolding.totalCost).toStringAsFixed(2)}"
-        ),
-      ]
-    );
-
-    return Row(
-      children: <Widget>[
-        Expanded(child: leftColumn),
-        SizedBox(width: 40),
-        Expanded(child: rightColumn),
-      ],
-    );
-  }
+  
 
   Widget _buildStockStats() {
 
     final leftColumn =  Column(
       children: [
-        _buildTile(title: 'Apertura', trailing: widget.quote.open.toString()),
+        buildTile(title: 'Apertura', trailing: widget.quote.open.toString()),
         Divider(thickness: .75,),
-        _buildTile(title: 'Último cierre', trailing: widget.quote.previousClose.toString()),
+        buildTile(title: 'Último cierre', trailing: widget.quote.previousClose.toString()),
         Divider(thickness: .75,),
-        _buildTile(title: 'Máx. intradía', trailing: widget.quote.high.toString()),
+        buildTile(title: 'Máx. intradía', trailing: widget.quote.high.toString()),
         Divider(thickness: .75,),
-        _buildTile(title: 'Min. intradía', trailing: widget.quote.low.toString()),
+        buildTile(title: 'Min. intradía', trailing: widget.quote.low.toString()),
         Divider(thickness: .75,),
-        _buildTile(title: 'Alta 52-sem.', trailing: widget.stats.week52high.toString()),
+        buildTile(title: 'Alta 52-sem.', trailing: widget.stats.week52high.toString()),
         Divider(thickness: .75,),
-        _buildTile(title: 'Baja 52-sem', trailing: widget.stats.week52low.toString()),
+        buildTile(title: 'Baja 52-sem', trailing: widget.stats.week52low.toString()),
         Divider(thickness: .75,),
       ]
     );
 
     final rightColumn = Column(
       children: [
-        _buildTile(title: 'Acciones en circulación', trailing: NumberFormat.compact().format(widget.stats.sharesOutstanding)),
+        buildTile(title: 'Acciones en circulación', trailing: NumberFormat.compact().format(widget.stats.sharesOutstanding)),
         Divider(thickness: .75,),
-        _buildTile(title: '10D Vol. promedio', trailing: NumberFormat.compact().format( widget.stats.avg10Volume)),
+        buildTile(title: '10D Vol. promedio', trailing: NumberFormat.compact().format( widget.stats.avg10Volume)),
         Divider(thickness: .75,),
-        _buildTile(title: '30D Vol. promedio', trailing: NumberFormat.compact().format( widget.stats.avg30Volume)),
+        buildTile(title: '30D Vol. promedio', trailing: NumberFormat.compact().format( widget.stats.avg30Volume)),
         Divider(thickness: .75,),
-        _buildTile(title: 'Cap. mercado', trailing: NumberFormat.compact().format(widget.stats.marketcap)),
+        buildTile(title: 'Cap. mercado', trailing: NumberFormat.compact().format(widget.stats.marketcap)),
         Divider(thickness: .75,),
-        _buildTile(title: 'PER', trailing: widget.stats.peRatio.toStringAsFixed(2)),
+        buildTile(title: 'PER', trailing: widget.stats.peRatio.toStringAsFixed(2)),
         Divider(thickness: .75,),
-        _buildTile(title: 'BPA', trailing: widget.stats.ttmEPS.toStringAsFixed(2)),
+        buildTile(title: 'BPA', trailing: widget.stats.ttmEPS.toStringAsFixed(2)),
         Divider(thickness: .75,),
       ],
     );
@@ -227,14 +198,6 @@ class _StockInfoState extends State<StockInfo> {
     );
   }
 
-  String compactOrFormat(dynamic num) {
-    if (num > 999999) {
-      return NumberFormat.compact().format(num);
-    } else {
-      return NumberFormat().format(num);
-    }
-  }
-
   List<Color> _getColors(double changePercent) {
 
     final List<Color> defaultColor = [Colors.grey, Colors.grey];
@@ -245,13 +208,7 @@ class _StockInfoState extends State<StockInfo> {
       : customColor;
   }
 
-  Widget _buildTile({String title, String trailing}) {
-    return ListTile(
-      contentPadding: EdgeInsets.zero,
-      title: Text(title, style: subtitleStyle),
-      trailing: Text(trailing)
-    );
-  }
+  
 
   Widget _buildPriceInfo(double changePercent, String change) {
     return Row(
