@@ -13,6 +13,7 @@ import 'package:simulador/screens/stock/chart.dart';
 import 'package:simulador/screens/stock/helpers/helpers.dart';
 import 'package:simulador/screens/stock/stockInfoStyles.dart';
 import 'package:simulador/screens/stock/stockPosition.dart';
+import 'package:simulador/screens/stock/stockStats.dart';
 import 'package:simulador/screens/stock/widgets/bottomSheetButton.dart';
 
 import 'package:simulador/screens/stock/widgets/heading.dart';
@@ -85,7 +86,10 @@ class _StockInfoState extends State<StockInfo> {
 
         Text('Estadísticas', style: sectionTitle),
         SizedBox(height:14,),
-        this._buildStockStats(),
+        OverviewSection(
+          quote: widget.quote,
+          stats: widget.stats,
+        ),
       ]
     );
   }
@@ -151,55 +155,7 @@ class _StockInfoState extends State<StockInfo> {
     
   }
 
-  
-
-  Widget _buildStockStats() {
-
-    final leftColumn =  Column(
-      children: [
-        buildTile(title: 'Apertura', trailing: widget.quote.open.toString()),
-        Divider(thickness: .75,),
-        buildTile(title: 'Último cierre', trailing: widget.quote.previousClose.toString()),
-        Divider(thickness: .75,),
-        buildTile(title: 'Máx. intradía', trailing: widget.quote.high.toString()),
-        Divider(thickness: .75,),
-        buildTile(title: 'Min. intradía', trailing: widget.quote.low.toString()),
-        Divider(thickness: .75,),
-        buildTile(title: 'Alta 52-sem.', trailing: widget.stats.week52high.toString()),
-        Divider(thickness: .75,),
-        buildTile(title: 'Baja 52-sem', trailing: widget.stats.week52low.toString()),
-        Divider(thickness: .75,),
-      ]
-    );
-
-    final rightColumn = Column(
-      children: [
-        buildTile(title: 'Acciones en circulación', trailing: NumberFormat.compact().format(widget.stats.sharesOutstanding)),
-        Divider(thickness: .75,),
-        buildTile(title: '10D Vol. promedio', trailing: NumberFormat.compact().format( widget.stats.avg10Volume)),
-        Divider(thickness: .75,),
-        buildTile(title: '30D Vol. promedio', trailing: NumberFormat.compact().format( widget.stats.avg30Volume)),
-        Divider(thickness: .75,),
-        buildTile(title: 'Cap. mercado', trailing: NumberFormat.compact().format(widget.stats.marketcap)),
-        Divider(thickness: .75,),
-        buildTile(title: 'PER', trailing: widget.stats.peRatio.toStringAsFixed(2)),
-        Divider(thickness: .75,),
-        buildTile(title: 'BPA', trailing: widget.stats.ttmEPS.toStringAsFixed(2)),
-        Divider(thickness: .75,),
-      ],
-    );
-
-    return Row(
-      children: <Widget>[
-        Expanded(child: leftColumn),
-        SizedBox(width: 40),
-        Expanded(child: rightColumn)
-      ],
-    );
-  }
-
   List<Color> _getColors(double changePercent) {
-
     final List<Color> defaultColor = [Colors.grey, Colors.grey];
     final List<Color> customColor = changePercent > 0 ? green : red;
 
@@ -207,8 +163,6 @@ class _StockInfoState extends State<StockInfo> {
       ? defaultColor
       : customColor;
   }
-
-  
 
   Widget _buildPriceInfo(double changePercent, String change) {
     return Row(

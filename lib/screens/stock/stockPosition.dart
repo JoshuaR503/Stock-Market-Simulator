@@ -20,7 +20,7 @@ class StockPosition extends StatelessWidget {
   Widget build(BuildContext context) {
     final Widget leftColumn = Column(
       children: [
-        buildTile(title: "Cantidad de acciones", trailing:  compactOrFormat(int.parse(stockHolding.quanity))),
+        buildTile(title: "Cantidad de acciones", trailing:  TextHelpers.compactOrFormat(int.parse(stockHolding.quanity))),
         Divider(thickness: .75,),
         buildTile(title: "Costo\npromedio", trailing: NumberFormat().format(stockHolding.baseCost)),
         Divider(thickness: .75),
@@ -33,9 +33,9 @@ class StockPosition extends StatelessWidget {
 
     final Widget rightColumn = Column(
       children: [
-        buildTile(title: "Valor actual", trailing: compactOrFormat(quote.latestPrice * int.parse(stockHolding.quanity))),
+        buildTile(title: "Valor actual", trailing: TextHelpers.compactOrFormat(quote.latestPrice * int.parse(stockHolding.quanity))),
         Divider(thickness: .75,),
-        buildTile(title: "Precio de compra", trailing: compactOrFormat(stockHolding.totalCost)),
+        buildTile(title: "Precio de compra", trailing: TextHelpers.compactOrFormat(stockHolding.totalCost)),
         Divider(thickness: .75,),
         
         buildTile(
