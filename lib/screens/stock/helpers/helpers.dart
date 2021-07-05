@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:simulador/screens/stock/stockInfoStyles.dart';
 
-
 class TextHelpers {
   static String compactOrFormat(dynamic num) {
     if (num > 9999) {
@@ -20,7 +19,7 @@ class TextHelpers {
 Widget buildTile({String title, String trailing}) {
   return ListTile(
     contentPadding: EdgeInsets.zero,
-    title: Text(title, style: subtitleStyle),
+    title: Text(title, style: kSubtitleStyle),
     trailing: Text(trailing)
   );
 }

@@ -10,7 +10,6 @@ import 'package:simulador/models/stockQuote.dart';
 import 'package:simulador/models/stockStats.dart';
 
 import 'package:simulador/screens/stock/chart.dart';
-import 'package:simulador/screens/stock/helpers/helpers.dart';
 import 'package:simulador/screens/stock/stockInfoStyles.dart';
 import 'package:simulador/screens/stock/stockPosition.dart';
 import 'package:simulador/screens/stock/stockStats.dart';
@@ -59,7 +58,7 @@ class _StockInfoState extends State<StockInfo> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         SizedBox(height: 16),
-        Text(widget.quote.symbol, style: quoteSymbol),
+        Text(widget.quote.symbol, style: kQuoteSymbol),
         HeadingWidget(
           companyName: widget.stats.companyName,
           symbol: widget.quote.symbol,
@@ -74,7 +73,7 @@ class _StockInfoState extends State<StockInfo> {
         
         this._buildTradeButtons(),
         SizedBox(height: 28),
-        Text('Tu posición', style: sectionTitle),
+        Text('Tu posición', style: kSectionTitle),
         SizedBox(height:14),
 
         StockPosition(
@@ -84,7 +83,7 @@ class _StockInfoState extends State<StockInfo> {
         Divider(thickness: .75,),
         SizedBox(height:28,),
 
-        Text('Estadísticas', style: sectionTitle),
+        Text('Estadísticas', style: kSectionTitle),
         SizedBox(height:14,),
         OverviewSection(
           quote: widget.quote,
@@ -98,7 +97,7 @@ class _StockInfoState extends State<StockInfo> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text('\$${widget.quote.latestPrice.toString()}', style: quotePrice),
+        Text('\$${widget.quote.latestPrice.toString()}', style: kQuotePrice),
         SizedBox(width: 16),
         this._buildPriceInfo(widget.quote.changePercent * 100, widget.quote.change.toString()),
       ],
@@ -185,7 +184,7 @@ class _StockInfoState extends State<StockInfo> {
       ),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-        child: Text(text, textAlign: TextAlign.center, style: priceChangeStyle)
+        child: Text(text, textAlign: TextAlign.center, style: kPriceChangeStyle)
       )
     );
   }

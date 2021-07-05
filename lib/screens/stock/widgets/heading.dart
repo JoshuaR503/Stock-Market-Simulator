@@ -22,7 +22,7 @@ class HeadingWidget extends StatelessWidget {
       child: Text(
         companyName, 
         maxLines: 3, 
-        style: quoteCompanyName
+        style: kQuoteCompanyName
       ),
     );
 
