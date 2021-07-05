@@ -26,7 +26,7 @@ class StockPosition extends StatelessWidget {
         Divider(thickness: .75),
         buildTile(
           title: "Rendimiento\nporcentaje", 
-          trailing: "${(quote.latestPrice * int.parse(stockHolding.quanity) - stockHolding.totalCost).toStringAsFixed(2)}"
+          trailing: TextHelpers.compactOrFormat(quote.latestPrice * int.parse(stockHolding.quanity) - stockHolding.totalCost)
         )
       ]
     );
@@ -39,8 +39,8 @@ class StockPosition extends StatelessWidget {
         Divider(thickness: .75,),
         
         buildTile(
-          title: "Rendimiento",
-          trailing: "${(quote.latestPrice * int.parse(stockHolding.quanity) - stockHolding.totalCost).toStringAsFixed(2)}"
+          title: "Ganancias",
+          trailing: TextHelpers.compactOrFormat(quote.latestPrice * int.parse(stockHolding.quanity) - stockHolding.totalCost)
         ),
       ]
     );

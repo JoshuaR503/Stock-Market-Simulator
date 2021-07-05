@@ -9,6 +9,7 @@ import 'package:simulador/screens/home/home.dart';
 import 'package:simulador/screens/login/login.dart';
 import 'package:simulador/screens/portfolio/commodities/commoditiesScreen.dart';
 import 'package:simulador/screens/portfolio/indexes/indexesScreen.dart';
+import 'package:simulador/screens/search/search.dart';
 
 import 'package:simulador/services/auth.dart';
 import 'package:provider/provider.dart';
@@ -42,7 +43,7 @@ class MyApp extends StatelessWidget {
           '/': (context) => LoginScreen(),
           '/home': (context) => HomeScreen(),
           '/holdings': (context) => HoldingsScreen(),
-          // '/trading': (context) => TradingScreen(),
+          '/search': (context) => SearchScreen(),
           '/indexes': (context) => IndexesScreen(),
           '/commodities': (context) => CommoditiesScreen(),
 

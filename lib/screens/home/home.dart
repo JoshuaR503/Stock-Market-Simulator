@@ -7,6 +7,7 @@ import 'package:simulador/screens/holdings/holdings.dart';
 import 'package:simulador/screens/portfolio/portfolio.dart';
 
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
+import 'package:simulador/screens/search/search.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -19,7 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> tabs = [
     FadeIn(duration: Duration(milliseconds: 700), child: PortfolioScreen()),
     FadeIn(duration: Duration(milliseconds: 700), child: HoldingsScreen()),
-    FadeIn(duration: Duration(milliseconds: 700), child: PortfolioScreen()),
+    FadeIn(duration: Duration(milliseconds: 700), child: SearchScreen()),
     FadeIn(duration: Duration(milliseconds: 700), child: PortfolioScreen()),
   ];
 
@@ -52,8 +53,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
               /// Search
               SalomonBottomBarItem(
-                icon: Icon(FontAwesomeIcons.newspaper),
-                title: Text("Search"),
+                icon: Icon(FontAwesomeIcons.search),
+                title: Text("Búsqueda"),
                 selectedColor: Colors.black
               ),
 
