@@ -2,7 +2,11 @@
 
 Welcome to the Stock Market Simulator! This is a project I open sourced as part of a Software Engineering Virtual Experience. The simulator's user interface for trading is largely complete, with the backend development work currently in progress.
 
-![Stock Market Simulator Screenshot](img.jpg)
+|    |    |    |
+|:---:|:---:|:---:|
+| ![Stock Market Simulator Login Screen 1](1.png) | ![Stock Market Simulator Stock Indexes/Market Brief Screen 2](2.png) | ![Stock Market Simulator Details Screen 3](3.png) |
+| *Login Screen 1* | *Indexes/Market Brief Screen 2* | *Details Screen 3* |
+
 
 **Note:** This project contains sensitive Firebase data that I have since deleted, and users should not attempt to access it. If you would like to use Firebase in your own version of this project, please replace the necessary Firebase configuration files with your own.
 
