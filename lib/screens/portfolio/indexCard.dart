@@ -80,7 +80,7 @@ class MarketIndexCard extends StatelessWidget {
           padding: EdgeInsets.all(0),
           decoration: boxDecoration,
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+            padding: EdgeInsets.symmetric(horizontal: 3, vertical: 2),
             child: Text('$percentChange %',
               textAlign: TextAlign.end,
               style: changePercentStyle

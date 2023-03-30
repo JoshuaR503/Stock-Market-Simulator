@@ -1,6 +1,6 @@
 class MarketIndexModel {
   final double changesPercentage;
-  final double change;
+  final int change;
   final double price;
   final String name;
   final String symbol;
